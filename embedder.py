@@ -14,7 +14,7 @@ from openai.embeddings_utils import cosine_similarity, get_embedding
 # openai.api_key = "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"
 root_dir = os.path.expanduser("~")
 cwd = os.getcwd()
-code_root = f"{root_dir}/Downloads/whopt"
+code_root = f"{root_dir}/codex-vscode/ezcoder/dist/dist"
 #whop key
 # api_key = "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"
 
@@ -29,7 +29,7 @@ class CodeExtractor:
 
 		def __init__(self, directory):
 				self.EMBEDDING_MODEL = "text-embedding-ada-002"
-				self.max_res = 20
+				self.max_res = 70
 				self.base = 'https://api.openai.com/v1/chat/completions'
 				self.COMPLETIONS_MODEL = "text-davinci-003"
 				self.headers = {
@@ -37,8 +37,8 @@ class CodeExtractor:
 						'Authorization': 'Bearer ' + api_key,
 				}
 
-				self.MAX_SECTION_LEN =3000
-				self.SEPARATOR = "\n* "
+				self.MAX_SECTION_LEN =6000
+				self.SEPARATOR = "<|fragment|>"
 				self.ENCODING = "gpt2"
 				self.df = pd.DataFrame()
 				self.all_files = (
@@ -284,11 +284,11 @@ class CodeExtractor:
 						all_files = self.get_files_df()
 						all_files = self.add_lines_of_code(all_files)
 						all_files = self.split_code_by_lines(all_files , 5)
-						if not os.path.exists(f"{root_dir}/df1.pkl"):
+						if not os.path.exists(f"{root_dir}/df2.pkl"):
 								df['code_embedding'] = df['code'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
-								df.to_pickle(f"{root_dir}/df1.pkl")
+								df.to_pickle(f"{root_dir}/df2.pkl")
 								self.df = df
-						df = pd.read_pickle(f"{root_dir}/df1.pkl")
+						df = pd.read_pickle(f"{root_dir}/df2.pkl")
 						df['file_path'] = df['file_path'].apply(lambda x: x.replace(root_dir, ""))
 						df.to_csv("embedding.csv", index=False)
 						self.df = df
@@ -306,7 +306,7 @@ class CodeExtractor:
 				)
 				return new_df
 
-		def split_code_by_token_count(self, df: pd.DataFrame, max_tokens: int = 8100) -> pd.DataFrame:
+		def split_code_by_token_count(self, df: pd.DataFrame, max_tokens: int = 3100) -> pd.DataFrame:
 				"""Use the same tokenizer as the pre-trained model"""
 				EMBEDDING_ENCODING = 'cl100k_base'
 				tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
@@ -542,13 +542,13 @@ class CodeExtractor:
 
 
 
-extractor = CodeExtractor(f"{root_dir}/Downloads/whopt")
+extractor = CodeExtractor(f"{root_dir}/codex-vscode/ezcoder/dist")
 df = extractor.get_files_df()
 df['file_path'] = df['file_path'].apply(lambda x: x.replace(code_root, ""))
 extractor.indexCodebase(df)
 df = extractor.df
-# df = extractor.split_code_by_lines(df, 15)
-# df = extractor.add_lines_of_code(df)
+df = extractor.split_code_by_lines(df, 5)
+df = extractor.add_lines_of_code(df)
 # df.to_csv(f"{root_dir}/df_1.csv", index=False, header=True)
 
 
@@ -565,29 +565,29 @@ def ask(query):
 			print("\n")
 		except:
 			print("Sorry, I didn't understand that.")
-ask("imports and exports")
-ask("important and vulnerable code")
-ask("code complexity")
+ask("purpose of project")
+# ask("important and vulnerable code")
+# ask("code complexity")
 
 
-df.to_pickle("split_codr.pkl")
+# df.to_pickle("split_codr.pkl")
 
-df = extractor.extract_functions_from_directory(f"{root_dir}/Downloads/whopt")
-
-
-def filter_functions_by_keyword(df: pd.DataFrame, keyword: str) -> pd.DataFrame:
-		"""
-		Filters the functions in the given data frame by searching for the keyword in the function name.
-		"""
-		return df[df["code"].str.contains("id", case=False, regex=False, na=False)]
+# df = extractor.extract_functions_from_directory(f"{root_dir}/Downloads/whopt")
 
 
-def filter_functions_by_path(df: pd.DataFrame, keyword: str) -> pd.DataFrame:
-		"""
-		Filters the functions in the given data frame by searching for the keyword in the function name.
-		"""
-		return df[df["file_path"].str.contains("lib", case=False, regex=False, na=False)]
+# def filter_functions_by_keyword(df: pd.DataFrame, keyword: str) -> pd.DataFrame:
+# 		"""
+# 		Filters the functions in the given data frame by searching for the keyword in the function name.
+# 		"""
+# 		return df[df["code"].str.contains("id", case=False, regex=False, na=False)]
 
 
-filter_functions_by_keyword(df, "token")
-filter_functions_by_path(df, "dist")
+# def filter_functions_by_path(df: pd.DataFrame, keyword: str) -> pd.DataFrame:
+# 		"""
+# 		Filters the functions in the given data frame by searching for the keyword in the function name.
+# 		"""
+# 		return df[df["file_path"].str.contains("lib", case=False, regex=False, na=False)]
+
+
+# filter_functions_by_keyword(df, "token")
+# filter_functions_by_path(df, "dist")
