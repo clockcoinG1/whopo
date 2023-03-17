@@ -11,7 +11,6 @@ import requests
 import tiktoken
 from flask import jsonify
 from openai.embeddings_utils import cosine_similarity, get_embedding
-
 # openai.api_key = "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"
 root_dir = os.path.expanduser("~")
 cwd = os.getcwd()
@@ -30,6 +29,7 @@ class CodeExtractor:
 
 		def __init__(self, directory):
 				self.EMBEDDING_MODEL = "text-embedding-ada-002"
+				self.max_res = 20
 				self.base = 'https://api.openai.com/v1/chat/completions'
 				self.COMPLETIONS_MODEL = "text-davinci-003"
 				self.headers = {
@@ -37,7 +37,7 @@ class CodeExtractor:
 						'Authorization': 'Bearer ' + api_key,
 				}
 
-				self.MAX_SECTION_LEN = 1500
+				self.MAX_SECTION_LEN =3000
 				self.SEPARATOR = "\n* "
 				self.ENCODING = "gpt2"
 				self.df = pd.DataFrame()
@@ -53,7 +53,7 @@ class CodeExtractor:
 				else:
 						raise ValueError(f"{directory} is not a directory")
 
-		def split_code_by_lines(self, df: pd.DataFrame, max_lines: int = 50) -> pd.DataFrame:
+		def split_code_by_lines(self, df: pd.DataFrame, max_lines: int = 1) -> pd.DataFrame:
 				new_rows = []
 
 				for index, row in df.iterrows():
@@ -281,17 +281,17 @@ class CodeExtractor:
 
 		def indexCodebase(self, df):
 				try:
-						all_funcs = self.get_files_df()
-						all_funcs = self.add_lines_of_code(all_funcs)
-						if not os.path.exists(f"{root_dir}/df.pkl"):
+						all_files = self.get_files_df()
+						all_files = self.add_lines_of_code(all_files)
+						all_files = self.split_code_by_lines(all_files , 5)
+						if not os.path.exists(f"{root_dir}/df1.pkl"):
 								df['code_embedding'] = df['code'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
-								df.to_pickle(f"{root_dir}/df.pkl")
+								df.to_pickle(f"{root_dir}/df1.pkl")
 								self.df = df
-						df = pd.read_pickle(f"{root_dir}/df.pkl")
+						df = pd.read_pickle(f"{root_dir}/df1.pkl")
 						df['file_path'] = df['file_path'].apply(lambda x: x.replace(root_dir, ""))
 						df.to_csv("embedding.csv", index=False)
 						self.df = df
-						df.head()
 				except Exception:
 						print("Failed to index codebase")
 
@@ -306,7 +306,7 @@ class CodeExtractor:
 				)
 				return new_df
 
-		def split_code_by_token_count(self, df: pd.DataFrame, max_tokens: int = 500) -> pd.DataFrame:
+		def split_code_by_token_count(self, df: pd.DataFrame, max_tokens: int = 8100) -> pd.DataFrame:
 				"""Use the same tokenizer as the pre-trained model"""
 				EMBEDDING_ENCODING = 'cl100k_base'
 				tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
@@ -408,19 +408,13 @@ class CodeExtractor:
 				encoding = tiktoken.get_encoding(self.ENCODING)
 				separator_len = len(encoding.encode(self.SEPARATOR))
 
-				relevant_code = self.df_search(df=self.df, code_query=question, n=5)
+				relevant_code = self.df_search(df=self.df, code_query=question,n=self.max_res)
 				chosen_sections = []
 				chosen_sections_len = 0
 
 				for _, row in relevant_code.iterrows():
-						code_str = f"File: {row['file_name']}\n" \
-											f"Path: {row['file_path']}\n" \
-											f"Similarity: {row['similarities']}\n" \
-											f"Lines of Code: {row['lines_of_code']}\n" \
-											f"Code:\n{row['code']}\n"
-
+						code_str = f"File: {row['file_name']}Path: {row['file_path']} Similarity: {row['similarities']} \nCode:\n{row['code']}\n"
 						code_str_len = len(encoding.encode(code_str))
-
 						if chosen_sections_len + separator_len + code_str_len > self.MAX_SECTION_LEN:
 								break
 
@@ -428,18 +422,16 @@ class CodeExtractor:
 						chosen_sections_len += separator_len + code_str_len
 
 				# Useful diagnostic information
-				print(f"Selected {len(chosen_sections)} document sections:")
 				chosen_sections_str = "".join(chosen_sections)
-				print(chosen_sections_str)
+				print(f"Selected {len(chosen_sections_str.split())} document sections:")
 
-				return f'\nCode base context from embeddings dataframe:\n\n{chosen_sections_str}\n\n<|/knowledge|>\n<|system|> If you are uncertain or need more context, you can output commands to the project directory CLI with the subprocess output checked by the agent.\n<|/system|>\n><|im_start|>\n{question}'
-
+				return f'\nCodebase context from embeddings dataframe:\n\n{chosen_sections_str}\n\n<|/knowledge|>\n<|system|> If you are uncertain or need more context, you can output commands to the project directory CLI with the subprocess output checked by the agent.\n<|/system|>\n><|im_start|>\n{question}'
 
 		def answer_query_with_context(self, query: str, show_prompt: bool = True) -> str:
 				COMPLETIONS_API_PARAMS = {
 						# We use temperature of 0.0 because it gives the most predictable, factual answer.
 						"temperature": 0.85,
-						"max_tokens": 200,
+						"max_tokens": 3500,
 						"model": self.COMPLETIONS_MODEL,
 				}
 				prompt = self.construct_prompt(
@@ -503,25 +495,27 @@ class CodeExtractor:
 				EMBEDDING_ENCODING = 'cl100k_base'
 				encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 				enc_prompt  = encoder.encode(prompt)
-				print(f"\033[1;37m{enc_prompt}\033[0m")
-				messages = []
 				codebaseContext = self.construct_prompt(question=prompt)
-				print(codebaseContext)
+				cbc_prompt  = encoder.encode(codebaseContext)
+
+				print(f"\033[1;37m{enc_prompt}\t\tTokens:{str(len(enc_prompt) + len(cbc_prompt) )}\033[0m")
+				avail_tokens= 3596 - (len(enc_prompt)  + len(cbc_prompt))
+				print(f"\n\033[1;37mTOTAL OUTPUT TOKENS AVAILABLE:{avail_tokens}\n\033[0m")
 				r = requests.post(
 						self.base, headers=self.headers, stream=True,
 						json={
 								"model": "gpt-3.5-turbo",
 								"messages": [
-										{"role": "system", "content": f"You are ASSISTANT helping the USER with optimizing and analyzing a codebase. You are intelligent, helpful, and an expert developer, who always gives the correct answer and only does what is instructed. You always answer truthfully and don't make things up."},
-										{"role": "user", "content": f"{codebaseContext}\n"},
-										{"role": "user", "content": f"USER: {prompt}\nASSISTANT:"}
+										{"role": "system", "content": f"You are the ASSISTANT helping the USER with optimizing and analyzing a codebase. You are intelligent, helpful, and an expert developer, who always gives the correct answer and only does what is instructed. You always answer truthfully and don't make things up."},
+										{"role": "user", "content": f"\n{codebaseContext}\n"},
+										{"role": "user", "content": f"{prompt}"}
 								],
 								"temperature": 0.8,
 								"top_p": 1,
 								"n": 1,
-								"stop": ["\nUSER:"],
+								"stop": ["<|/im_end|>"],
 								"stream": True,
-								"max_tokens": 2100,
+								"max_tokens": int(avail_tokens),
 								"presence_penalty": 0,
 								"frequency_penalty": 0,
 						}
@@ -543,7 +537,7 @@ class CodeExtractor:
 																message += data["choices"][0]["delta"]["content"]
 																print(data["choices"][0]["delta"]["content"], flush=True, end="")
 														else:
-																message += " "
+																message += "\n"
 				return message.strip()
 
 
@@ -551,26 +545,29 @@ class CodeExtractor:
 extractor = CodeExtractor(f"{root_dir}/Downloads/whopt")
 df = extractor.get_files_df()
 df['file_path'] = df['file_path'].apply(lambda x: x.replace(code_root, ""))
-df = extractor.split_code_by_lines(df, 5)
-df = extractor.add_lines_of_code(df)
-df.to_csv(f"{root_dir}/df_1.csv", index=False, header=True)
 extractor.indexCodebase(df)
 df = extractor.df
+# df = extractor.split_code_by_lines(df, 15)
+# df = extractor.add_lines_of_code(df)
+# df.to_csv(f"{root_dir}/df_1.csv", index=False, header=True)
 
 
 # df['code_embedding'] = df['code'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
 
 def ask(query):
-	question = input()
+	question = input(f"\nSYSTEM: Embedding query for context: {query}\nUSER:")
 	if question == "q":
 		print("bye")
 		exit(0)
 	else:
 		try:
-			extractor.chatbot(prompt=f"\nUSER: {question}\n")
+			extractor.chatbot(prompt=f"{question}")
+			print("\n")
 		except:
 			print("Sorry, I didn't understand that.")
+ask("imports and exports")
 ask("important and vulnerable code")
+ask("code complexity")
 
 
 df.to_pickle("split_codr.pkl")
