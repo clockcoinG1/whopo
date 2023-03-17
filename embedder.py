@@ -16,9 +16,10 @@ root_dir = os.path.expanduser("~")
 cwd = os.getcwd()
 code_root = f"{root_dir}/codex-vscode/ezcoder/dist/dist"
 #whop key
-# api_key = "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"
-
-api_key ="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"
+api_key = "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"
+EMBEDDING_ENCODING = 'cl100k_base'
+tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
+# api_key ="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"
 openai.api_key = api_key
 
 
@@ -281,9 +282,9 @@ class CodeExtractor:
 
 		def indexCodebase(self, df):
 				try:
-						all_files = self.get_files_df()
-						all_files = self.add_lines_of_code(all_files)
-						all_files = self.split_code_by_lines(all_files , 5)
+						# all_files = self.get_files_df()
+						# all_files = self.add_lines_of_code(all_files)
+						# all_files = self.split_code_by_lines(all_files , 5)
 						if not os.path.exists(f"{root_dir}/df2.pkl"):
 								df['code_embedding'] = df['code'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
 								df.to_pickle(f"{root_dir}/df2.pkl")
@@ -306,7 +307,17 @@ class CodeExtractor:
 				)
 				return new_df
 
-		def split_code_by_token_count(self, df: pd.DataFrame, max_tokens: int = 3100) -> pd.DataFrame:
+
+		def extract_tokens(self, df: pd.DataFrame):
+				"""
+				Extract tokens from code snippets
+				"""
+				EMBEDDING_ENCODING = 'cl100k_base'
+				tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
+				df["tokens"] = [list(tokenizer.encode(code).tokens) for code in df["code"]]
+				return df
+
+		def split_code_by_token_count(self, df: pd.DataFrame, max_tokens: int = 8100) -> pd.DataFrame:
 				"""Use the same tokenizer as the pre-trained model"""
 				EMBEDDING_ENCODING = 'cl100k_base'
 				tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
@@ -328,15 +339,12 @@ class CodeExtractor:
 								# Find the first occurrence of two newline characters in the code
 								split_point = None
 
-								# We have added the verbose debugging to see the value of some variables while running the code.
-								# In each iteration, we print the token count, i.e., how many tokens we have in the code.
-								# If the token count is greater than max_tokens, we will try to split the code into two parts.
-								# The goal is to create two sets of codes with as few a number of tokens as possible but not exceeding the max_tokens limit.
-								print(f"Token count: {token_count}")
 								for i in range(halfway_point, len(tokens) - 1):
-										if tokens[i].value == "\n" and tokens[i + 1].value == "\n":
+										if tokens[i] == "\n" and tokens[i + 1] == "\n":
+												print("SPLIT POINT")
 												split_point = i
 												break
+
 								# If we found a place to split the code, then we create two new rows with the first set of codes and the second set of codes, respectively.
 								if split_point:
 										# Split the code into two parts
@@ -352,10 +360,8 @@ class CodeExtractor:
 										new_row2 = row.copy()
 										new_row2["code"] = second_half
 										new_rows.append(new_row2)
-								# If we are unable to split the code, then we keep the code as it is.
 								else:
-										new_rows.append(row)
-
+										continue
 				return pd.DataFrame(new_rows).reset_index(drop=True)
 
 		def extract_interfaces(self, filepath: str) -> List[str]:
@@ -446,32 +452,37 @@ class CodeExtractor:
 				print("===\n", prompt)
 				return response["choices"][0]["text"].strip(" \n")
 
-		def gpt_4(self, prompt=""):
+		def gpt_4(self, prompt="what time is it"):
 				codebaseContext = self.construct_prompt(question=prompt)
-				print(codebaseContext)
-
 				prompt = (
-						f"SYSTEM: You are the ASSISTANT helping the USER with a typescript react project startup.\n"
-						f"You are intelligent, helpful, and an expert developer, who always gives the correct answer and only does what is instructed. "
-						f"You always answer truthfully and if you need more context output the required context and prompt to get it right.  don't make things up.\n\n{codebaseContext}\nUSER: {prompt}\nASSISTANT:"
+						f"SYSTEM: You are the ASSISTANT helping the USER code up their system.  the CODEBASE is stored in the embeddings dataframe.\n"
+						f"You always answer truthfully and if you need more context output the required context and prompt to get it right.  don't make things up.\n\n{codebaseContext}\n{prompt}\nASSISTANT:"
 				)
-
+				EMBEDDING_ENCODING = 'cl100k_base'
+				encoder  = tiktoken.get_encoding(EMBEDDING_ENCODING)
+				enc_prompt  = encoder.encode(prompt)
+				print(f"Total length of enc_prompt{len(enc_prompt)}")
+				api_key ="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"
 				r = requests.post(
-						f"{self.base}/completions",
-						headers=self.headers,
+						f"https://api.openai.com/v1/completions",
+						headers={
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + api_key,
+						},
 						json={
 								"model": "chat-davinci-003-alpha",
-								"prompt": prompt,
+								"prompt": f"SYSTEM: You are using the GPT-4 API.\n\n{codebaseContext}\nUSER: {prompt}\nASSISTANT:",
 								"temperature": 0.8,
 								"top_p": 1,
 								"n": 1,
+								"best_of": 1,
+								"stream": True,
 								"stop": ["\nUSER:"],
-								"max_tokens": 8100,
+								"max_tokens": 8100 - len(enc_prompt),
 								"presence_penalty": 0,
 								"frequency_penalty": 0,
 						}
 				)
-
 				for line in r.iter_lines():
 						message = ""
 						if line:
@@ -480,15 +491,14 @@ class CodeExtractor:
 										break
 								else:
 										data = json.loads(data[5:])
-										if data["object"] == "chat.completion.chunk":
-												if data["choices"][0]["finish_reason"] == "stop":
-														break
-												else:
-														if "content" in data["choices"][0]["delta"]:
-																message += data["choices"][0]["delta"]["content"]
-																print(data["choices"][0]["delta"]["content"], flush=True, end="")
-														else:
-																message += " "
+										if data["object"] == "text_completion":
+												print(data["choices"][0]["text"], end="", flush=True)
+												# if data["choices"][0]["finish_reason"] == "stop":
+												# 		break
+										else:
+											break
+
+				print(f"\x1b[32m====== RESULT ========\x1b[0m")
 				return message.strip()
 
 		def chatbot(self, prompt="", brand="Whop"):
@@ -545,14 +555,17 @@ class CodeExtractor:
 extractor = CodeExtractor(f"{root_dir}/codex-vscode/ezcoder/dist")
 df = extractor.get_files_df()
 df['file_path'] = df['file_path'].apply(lambda x: x.replace(code_root, ""))
-extractor.indexCodebase(df)
+df["tokens"] = [list(tokenizer.encode(code)) for code in df["code"]]
+df["token_count"] = [len(code) for code in df["tokens"]]
+df.sort_values("token_count")
 df = extractor.df
 df = extractor.split_code_by_lines(df, 5)
-df = extractor.add_lines_of_code(df)
-# df.to_csv(f"{root_dir}/df_1.csv", index=False, header=True)
+df = extractor.split_code_by_token_count(df, 500)
+extractor.indexCodebase(df)
 
+extractor.split_code_by_token_count(extractor.df, 100)
+extractor.gpt_4("What does the code do?")
 
-# df['code_embedding'] = df['code'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
 
 def ask(query):
 	question = input(f"\nSYSTEM: Embedding query for context: {query}\nUSER:")
@@ -561,11 +574,14 @@ def ask(query):
 		exit(0)
 	else:
 		try:
+			extractor.gpt_4(prompt=f"{question}")
 			extractor.chatbot(prompt=f"{question}")
 			print("\n")
 		except:
 			print("Sorry, I didn't understand that.")
+
 ask("purpose of project")
+# Refactored version that keeps tje dial
 # ask("important and vulnerable code")
 # ask("code complexity")
 
@@ -590,4 +606,58 @@ ask("purpose of project")
 
 
 # filter_functions_by_keyword(df, "token")
-# filter_functions_by_path(df, "dist")
+
+
+max_tokens = 8090
+new_rows = []
+
+for index, row in df.iterrows():
+		code = row["code"]
+		# Tokenize the code
+		tokens = list(tokenizer.encode(code))
+		# Get the number of tokens in the code
+		token_count = len(tokens)
+
+		if token_count <= max_tokens:
+				new_rows.append(row)
+		else:
+				# Get the halfway point of the code
+				halfway_point = token_count // 2
+				# Find the first occurrence of two newline characters in the code
+				split_point = None
+
+				for i in range(halfway_point, len(tokens) - 1):
+						if tokens[i] == "\n" and tokens[i + 1] == "\n":
+								split_point = i
+								break
+
+				# If we found a place to split the code, then we create two new rows with the first set of codes and the second set of codes, respectively.
+				if split_point:
+						# Split the code into two parts
+						first_half = "".join(token.value for token in tokens[: split_point + 1])
+						second_half = "".join(token.value for token in tokens[split_point + 1 :])
+
+						# Create a new row for the first half
+						new_row1 = row.copy()
+						new_row1["code"] = first_half
+						new_rows.append(new_row1)
+
+						# Create a new row for the second half
+						new_row2 = row.copy()
+						new_row2["code"] = second_half
+						new_rows.append(new_row2)
+			# If we are unable to split the code, then we delete the row
+				else:
+					new_rows.remove(row)
+
+df2 =  pd.DataFrame(new_rows).reset_index(drop=True)
+df2.sort_values("token_count")
+over = df2[df2["token_count"] > 8000]["code"].astype("string")
+for code in over:
+		try:
+				print(code)
+		except:
+				pass
+# print the full code column contents for over
+
+pd.set_option('display.max_colwidth', 100)
