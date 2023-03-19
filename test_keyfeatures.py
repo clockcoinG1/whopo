@@ -9,7 +9,7 @@ import json
 from get_rel_code import api_key, root_dir
 import tqdm
 from openai.embeddings_utils import cosine_similarity, get_embedding
-
+openai.api_key = "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"
 
 def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
     message = ""
@@ -93,22 +93,24 @@ def df_search(df, summary_query, n=3, pprint=True, n_lines=7):
     df['summary_similarities'] = df.summary_embedding.apply(lambda x: cosine_similarity(x, embedding))
     res = df.sort_values('summary_similarities', ascending=False).head(n)
     res_str = ""
-    if pprint:
-        for r in res.iterrows():
-            print(f"{r[1].file_path}/n {r[1].summary} /n score={r[1].summary_similarities}")
-            res_str += f"{r[1].file_path}/n {r[1].summary} /n score={r[1].summary_similarities}"
-            res_str += "\n".join(r[1].summary.split("\n")
-            print('-' * 70)
-    return res
-
-df2 = get_tokens(df, "summary")
-df2.sort_values('tokens_summary')
-df2['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
-df2.to_pickle("summary_pickled.pkl")
-df_search(df2, "server side rendering", 20, pprint=True, n_lines=20)
+    for r in res.iterrows():
+        print(f"{r[1].file_path}/n {r[1].summary} /n score={r[1].summary_similarities}")
+        res_str += f"{r[1].file_path}/n {r[1].summary} /n score={r[1].summary_similarities}"
+        # res_str += "\n".join(r[1].summary.split("\n")
+        print('-' * 71)
+    return res, res_str
 
 
-df = pd.read_pickle('df1.pkl')
+df = pd.read_pickle('summary_pickled.pkl')
+# df = get_tokens(df, "summary")
+# df.sort_values('tokens_summary')
+x, y = df_search(df, "Next.js", 20, pprint=True, n_lines=20)
+print(x, y)
+# df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
+
+
+
+
 #for column fiklepath remove the root dir from each row. "/Downloads/whopt
 df["file_path"]=df["file_path"].str.replace("/Downloads/whopt","")
 
