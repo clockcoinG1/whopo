@@ -35,6 +35,14 @@ def get_context_code(root_dir, df, code_query):
             code_pairs.append((filep, code))
     return code_pairs
 
+
+def get_tokens(df = pd.DataFrame):
+        EMBEDDING_ENCODING = 'cl100k_base'
+        encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
+        enc_prompt = encoder.encode(str(prompt))
+        tokens = len(encoder.encode(code) + enc_prompt) or 1
+        max_token = 500 + tokens
+
 def generate_table(context_code_pairs, prompt, message="", model="chat-davinci-003-alpha"):
 		for filepath, code in context_code_pairs:
 					prompt = f"\nSYSTEM: You are the ASSISTANT helping the USER with optimizing and analyzing a codebase. You are intelligent, helpful, and an expert developer, who always gives the correct answer and only does what is instructed. You always answer truthfully and don't make things up.\nUSER:{code}\nUSER:Please summarize the key features of the specified file within the project directory, and present the information in a concise bullet-point format. Focus on aspects such as the file's content.\nASSISTANT: Sure, here are the key features of the {filepath} file:\n - "
