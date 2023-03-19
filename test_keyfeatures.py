@@ -48,6 +48,7 @@ def generate_tab2(context_code_pairs, df,model="chat-davinci-003-alpha"):
             }
         )
         summary = ""
+        print(f"{file_path}")
         for line in r.iter_lines():
             data = line.decode('utf-8')
             if data.startswith('data: ') and data != 'data: [DONE]':
@@ -69,90 +70,7 @@ def generate_tab2(context_code_pairs, df,model="chat-davinci-003-alpha"):
         df.loc[df['file_path'] == filepath, 'summary'] = summary.strip()
     return message
 
-
+df["summary"][0]
 
 
 last_result= generate_tab2(context_code_pairs,df )
-
-""" - Take the codebase provided.
-- Load the text into a DataFrame.
-- Pick some code snippets from files in that directory.
-- Call the function `get_context_code` which we had defined earlier, in order to extract the context info for the code snippet.
-- Take the context information along with some prompt information as input into the function `generate_table`.
-- The function `generate_table` should update the DataFrame such that the new column `key_features` for the modified table should have the bullet points describing the file.
- """
-
-# define the root dir
-
-
-# define the text of all files
-text = extract_all_text_files(root_dir)
-
-# create a DataFrame object
-df = pd.DataFrame(columns=["file_name", "file_path", "code", "key_features"])
-
-# load all messages into the DataFrame object
-context = pd.DataFrame()
-for i, (filep, filen, code) in enumerate(get_code_snippets(text)):
-    df.loc[i] = {"file_name": filen, "file_path": filep, "code": code.strip(), "key_features": ""}
-
-# extract context from code snippets
-context_code_pairs = get_context_code(root_dir, df, "os.path.join")
-            
-# generate a summary of the key features and update the DataFrame
-df = generate_table(context_code_pairs, df)
-df.head()
-
-import math
-
-def split_text(text, num_segments):
-    segment_size = math.ceil(len(text) / num_segments)
-    segments = [text[i:i+segment_size] for i in range(0, len(text), segment_size)]
-    return segments
-
-def generate_summary(model="text-davinci-002", top_p=0.5, prompt=None, segments=[], api_key='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'):
-    # encode the prompt
-    tokenizer = openai.api_key = api_key# your api key here
-    encoded_prompt = tokenizer.encode(prompt)
-
-    # define the request headers and data
-    headers = {"Content-Type": "application/json",
-               "Authorization": f"Bearer {api_key}"}
-    data = {"model": model,
-            "prompt": encoded_prompt,
-            "temperature": 0.7,
-            "top_p": top_p,
-            "n": 1,
-            "stream": False,
-            "max_tokens": 500,
-            "stop": "\n\n"}
-
-    # generate a summary for each segment
-    summaries = []
-    for segment in segments:
-        # generate a summary for the segment
-        data["prompt"] = encoded_prompt + tokenizer.encode(segment.strip())
-        response = requests.post("https://api.openai.com/v1/completions", headers=headers, json=data)
-        response_data = response.json()
-
-        # extract the summary from the response data
-        summary = response_data["choices"][0]["text"].strip()
-        summaries.append(summary)
-
-    # join all summaries together
-    summarized_summary = "\n".join(summaries)
-
-    return summarized_summary
-
-
-# define the prompt
-prompt = "Please generate a summary of the codebase."
-
-# split the input text into three equal parts
-segments = split_text(text, 3)
-
-# generate the summarized summary
-summarized_summary = generate_summary(model="text-davinci-002", prompt=prompt, segments=segments, api_key=api_key)
-
-# print the summarized summary
-print(summarized_summary)
