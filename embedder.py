@@ -33,11 +33,11 @@ class CodeExtractor:
 				self.last_result = ""
 				self.max_res = 50
 				self.base = 'https://api.openai.com/v1/chat/completions'
-				self.COMPLETIONS_MODEL = "text-davinci-003"
 				self.headers = {
 						'Content-Type': 'application/json',
 						'Authorization': 'Bearer ' + api_key,
 				}
+				self.COMPLETIONS_MODEL = "text-davinci-003"
 
 				self.MAX_SECTION_LEN = 500
 				self.SEPARATOR = "<|im_sep|>"
@@ -507,7 +507,8 @@ class CodeExtractor:
 												continue
 				# return message.strip()
 								self.last_result = message
-		def chatbot(self, prompt="", brand="Whop"):
+
+  	def chatbot(self, prompt="", brand="Whop"):
 				EMBEDDING_ENCODING = 'cl100k_base'
 				encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 				enc_prompt  = encoder.encode(prompt)
@@ -566,7 +567,7 @@ df["token_count"] = [len(code) for code in df["tokens"]]
 extractor.df = df.sort_values("token_count")
 df = extractor.split_code_by_token_count(df, 500)
 extractor.indexCodebase(extractor.df)
-df2 = extractor.df_search(df=extractor.df, code_query="export",n=20)
+df2 = extractor.df_search(df=extractor.df, code_query="SDK",n=20)
 
 code = ""
 for x in df2.iterrows():
@@ -580,31 +581,38 @@ for x in df2.iterrows():
 	for x in file:
 		code += x
 	code += ("\n<|EOF|>\n")
-print(code)
+print(len(code))
 last_result = ""
 newc = code.split(r"<|EOF|>")
 message_temp = f"| variable names | function names | imports | exports | summary | importance | complexity | relevance |\n| -------------- | ------------- | ------- | ------- | ------- | ---------- | ---------- | --------- |\n"
 print(message_temp)
 for i in newc:
-		print(len(i))
+		print(i)
 		codebaseContext = i
 		prompt = (
-				# f"SYSTEM: You are an agent operating with other agents to provide information about a codebase or project. You will be passed the full file contents of certain files from the directory that may be relevant to the USER prompt. Return a tablke row with the columns variable names , function names, imports, exports, summary, importance, complexity, and relevance to user prompt 'What are the exports in the SDK?'. For complexity and relevance columns give the code a score from 1 - 10. Use the character '|' as the separator and end each row with a newline.",
-    		# "Variable names / Function names | imports | exports | file summary | importance |  complexity |  relevance to user prompt 'What are the exports in the SDK?'|",
-      	# "For complexity and relevance columns give the provided code a score from 1 - 10. Use the character '|' as the separator",
-				f"SYSTEM: Print the file name followed by a concise but detailed list of the file's 'imports', 'exports', 'variable names', 'function names',  Give the user a concise file summary. For complexity and relevance columns give the provided code a score from 1 - 10. Use the character '|' as the separator and end each row with a newline. Add any important notes before printing <|im_end|>\n",
-				f"USER: {codebaseContext}\n",
-				f"ASSISTANT: The code analysis is complete! Here is the final table with the columns variable names, function names, imports, exports, summary, importance, complexity, and relevance to user prompt 'What are the exports in the SDK?':"
+      	"For complexity and relevance columns give the provided code a score from 1 - 10. Use the character '|' as the separator\n",
+				f"{i}",
+				f"You are an agent operating with other agents to provide information about a codebase or project. You will be passed the full file contents of certain files from the directory that may be relevant to the USER prompt. Return a tablke row with the columns variable names , function names, imports, exports, summary, importance, complexity, and relevance to user prompt 'What are the exports in the SDK?'. For complexity and relevance columns give the code a score from 1 - 10. Use the character '|' as the separator and end each row with a newline.",
+				message_temp,
+			# 	f"SYSTEM: You are helping the USER analyze the above file. Create a table row using the below template and return it back to the USER. Replace the text between the 2 sets of square brackets.",
+
+			# f"SYSTEM: You are helping the USER analyze the above file. Create a table row using the below template and return it back to the USER. Replace the text between the 2 sets of square brackets.",
+			# 	"Access variable names: \n\t[[VARIABLE1, VARIABLE2, ...]]\n"
+			# 	"\nAccess function names: \n\t[[FUNCTION1, FUNCTION2, ...]]\n"
+			# 	"\nAccess file imports: \n\t[[IMPORT1, IMPORT2, ...]]\n"
+			# 	"\nAccess file exports: \n\t[[EXPORT1, EXPORT2, ...]]\n"
+			# 	"\nAccess file summary: \n\t[[FILE SUMMARY]]\n"
+			# 	"\nAccess file importance: \n\t[[IMPORTANCE (1-10)]]\n"
+			# 	"\nAccess file complexity: \n\t[[COMPLEXITY (1-10)]]\n"
+			# 	"\nAccess file relevance to prompt: \n\t[[RELEVANCE (1-10)]]\n"
+
 						)
 		EMBEDDING_ENCODING = 'cl100k_base'
 		encoder  = tiktoken.get_encoding(EMBEDDING_ENCODING)
 		enc_prompt  = encoder.encode(str(prompt))
 		len(enc_prompt)
-		# print(f"\033[91mINPUT TOKENS:{str((len(enc_prompt) + len(codebaseContext)))}\033[0m", flush=True)
-		# print(f"\033[92mAVAILABLE TOKENS:{str((8090 - (len(enc_prompt) + len(codebaseContext))))}\033[0m", end="\n\n")
-		# print('\x1b[1;37;40m')
 		tokens = len(encoder.encode(codebaseContext) + enc_prompt) or 1
-		api ="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"
+		api = "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"#"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"
 		r = requests.post(
 				f"https://api.openai.com/v1/completions",
 				headers={
@@ -612,42 +620,40 @@ for i in newc:
 				'Authorization': 'Bearer ' + api,
 				},
 				json={
-						"model": "chat-davinci-003-alpha",
+						"model": "code-davinci-002",# "chat-davinci-003-alpha",
 						"prompt": prompt,
-						"temperature": 0.4,
+						"temperature": 0.8,
 						"top_p": 1,
 						"n": 1,
 						"best_of": 1,
 						"stream": True,
-						"stop": ["<|im_end|>"],
-						"max_tokens": 7000 - tokens,
+						"stop": ["\n", "END", "<|im_end|>"],
+						"max_tokens": tokens + 500,
 						"presence_penalty": 0,
 						"frequency_penalty": 0,
 				}
 		)
 		message = ""
 		if(r.status_code) == 200:
-				last_result = handle_lines(r, last_result, message)
-
-async def handle_lines(r, last_result, message):
-	for line in r.iter_lines():
-		if line:
-			data = line
-			if b"[DONE]" in data:
-				print("-" * 40, flush=True)
-				break
-			else:
-				data = json.loads(data[5:])
-				if data["object"] == "text_completion":
-					if data["choices"][0]["text"]:
-						message += data["choices"][0]["text"]
-						yield print(f'{data["choices"][0]["text"]}',flush=False, end="")
-				else:
-					continue
-			last_result += f"{message}\n"
+			for line in r.iter_lines():
+				if line:
+					data = line
+					if b"[DONE]" in data:
+						print("-" * 40, flush=True)
+						break
+					else:
+						data = json.loads(data[5:])
+						if data["object"] == "text_completion":
+							if data["choices"][0]["text"]:
+								message += data["choices"][0]["text"]
+								print(f'{data["choices"][0]["text"]}',flush=False, end="")
+						else:
+							continue
+					last_result += f"{message}\n"
 
 
-with open("info75.txt", "w") as f:
+
+with open("info745.txt", "w") as f:
  f.write(last_result)
 		# return message.strip()
 		# print(f"""
