@@ -570,19 +570,26 @@ def run_chat_loop():
 
 
 if len(sys.argv) == 1:
-	print "Must specify a directory as the first argument"
+print( "Must specify a directory as the first argument")
 	exit()
 
 DIR = sys.argv[1]
 
 if __name__ == '__main__':
-	extractor = CodeExtractor(directory)
+	if DIR:
+		code_root = DIR
+	extractor = CodeExtractor(code_root)
 	df = extractor.get_files_df()
+	# SPLIT by lines or do .split_by_tokens for more granular / sourcemapped files 
 	df = extractor.split_code_by_lines(df,5)
+
+	# get token totals
 	df["tokens"] = [list(tokenizer.encode(code)) for code in df["code"]]
 	df["token_count"] = [len(code) for code in df["tokens"]]
 	df["token_count"].sum()
+
 	name = f"codebase_pickle-{str(uuid.uuid4())}.pkl"
 	extractor.df = df
 	extractor.indexCodebase(extractor.df, pickle=name)
-	df2 = extractor.df_search(df=extractor.df, code_query="SDK",n=20)
+	extractor.df = extractor.df_search(df=extractor.df, code_query="#",n=20)
+	extractor.chatbot("What are the comments")
