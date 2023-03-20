@@ -1,27 +1,10 @@
 import numpy as np
 from pathlib import Path
-<<<<<<< HEAD
-import openai
-=======
->>>>>>> cc87d40 (added configuration.py and cleaning up excess code)
 import requests
 import tiktoken
 import pandas as pd
 import os
 import json
-<<<<<<< HEAD
-from get_rel_code import api_key, root_dir
-import tqdm
-from openai.embeddings_utils import cosine_similarity, get_embedding
-openai.api_key = "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"
-base = "https://api.openai.com/v1/completions"
-chat_base = 'https://api.openai.com/v1/chat/completions'
-headers = {
-	'Content-Type': 'application/json',
-	'Authorization': 'Bearer ' + api_key,
-}
-
-=======
 from get_rel_code import api_key, get_context_code
 import tqdm
 from embedder import CodeExtractor
@@ -29,7 +12,6 @@ from openai.embeddings_utils import cosine_similarity, get_embedding
 import uuid
 from constants import  TOKEN_COUNT, root_dir, proj_dir, oai_api_key_embedder, base, chat_base, EMBEDDING_ENCODING, headers
 openai.api_key = oai_api_key_embedder
->>>>>>> cc87d40 (added configuration.py and cleaning up excess code)
 
 def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
 	message = ""
@@ -42,10 +24,6 @@ def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
 	for filepath, code in context_code_pairs:
 		# filepath  = filepath.replace("/Downloads/whopt","")
 		prompt = f"\nSYSTEM: You are the ASSISTANT helping the USER with optimizing and analyzing a codebase. You are intelligent, helpful, and an expert developer, who always gives the correct answer and only does what is instructed. You always answer truthfully and don't make things up.\nUSER:{code}\nUSER:Please summarize the key features of the specified file within the project directory, and present the information in a concise bullet-point format. Focus on aspects such as the file's content.\nASSISTANT: Sure, here are the key features of the {filepath} file:\n - "
-<<<<<<< HEAD
-		EMBEDDING_ENCODING = 'cl100k_base'
-=======
->>>>>>> cc87d40 (added configuration.py and cleaning up excess code)
 		encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 		enc_prompt = encoder.encode(str(prompt))
 		tokens = len(encoder.encode(code) + enc_prompt) or 1
@@ -90,14 +68,6 @@ def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
 							message.strip()
 							continue
 		
-<<<<<<< HEAD
-		df.loc[df['file_path'] == filepath, 'summary'] = summary.strip()
-	return message
-
-
-
-
-=======
 		# df.loc[df['file_path'] == filepath, 'summary'] = summary.strip()
 	try: 
 		with tqdm.pandas() as tq:
@@ -111,7 +81,6 @@ def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
 	except:
 		print("embedding error")
 		return message
->>>>>>> cc87d40 (added configuration.py and cleaning up excess code)
 
 
 def get_tokens(df, colname):
@@ -122,11 +91,7 @@ def get_tokens(df, colname):
 	for _, row in tqdm.tqdm(df.iterrows()):
 		
 		filepath = row["file_path"]
-<<<<<<< HEAD
-		emb_data = "file path: " + filepath + "\n" + row["summary"]
-=======
 		emb_data = "file path: " + filepath + "\n" + str(row["summary"])
->>>>>>> cc87d40 (added configuration.py and cleaning up excess code)
 		tokens = len(encoder.encode(emb_data )) 
 		df.loc[df['file_path'] == filepath, 'tokens_summary'] = tokens
 	df[['tokens_summary']] = df[['tokens_summary']].applymap(np.int64)
@@ -146,59 +111,30 @@ def df_search(df, summary_query, n=3, pprint=True):
 
 
 
-<<<<<<< HEAD
-def q_and_a(question = "What isthe most important file", total = 10, MAX_SECTION_LEN = 7000) -> str:
-		SEPARATOR = "<|im_sep|>"
-		encoding = tiktoken.get_encoding('cl100k_base')
-		separator_len = len(encoding.encode(SEPARATOR))
-		
-		relevant_notes = df_search(df, question, total, pprint=True)
-		chosen_sections = []
-		chosen_sections_len = 0
-
-=======
 def q_and_a(encoding, df, question = "What isthe most important file", total = 10, MAX_SECTION_LEN = 7000) -> str:
 		SEPARATOR = "<|im_sep|>"
 		separator_len = len(encoding.encode(SEPARATOR))
 		relevant_notes = df_search(df, question, total, pprint=True)
 		chosen_sections = []
 		chosen_sections_len = 0
->>>>>>> cc87d40 (added configuration.py and cleaning up excess code)
 		for _, row in relevant_notes.iterrows():
 				notes_str = f"Path: {row['file_path']}\nSummary:\n{row['summary']}"
 				notes_str_len = len(encoding.encode(notes_str))
 				if chosen_sections_len + separator_len + notes_str_len > MAX_SECTION_LEN:
 						break
-<<<<<<< HEAD
-
 				chosen_sections.append(SEPARATOR + notes_str)
 				chosen_sections_len += separator_len + notes_str_len
-
-=======
-				chosen_sections.append(SEPARATOR + notes_str)
-				chosen_sections_len += separator_len + notes_str_len
->>>>>>> cc87d40 (added configuration.py and cleaning up excess code)
 		
 		chosen_sections_str = f"".join(chosen_sections)
 		print(f"Selected {len(chosen_sections)} document sections:")
 		return f'''<|start_context|>\n Project notes to help assistant with answering query "{question}" \n context: {chosen_sections_str}\n<|end_context|>\n<|im_start|>'''
 
 
-<<<<<<< HEAD
-def chatbot(prompt=""):
-			EMBEDDING_ENCODING = 'cl100k_base'
-			encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
-			enc_prompt  = encoder.encode(prompt)
-			codebaseContext = q_and_a(question=prompt)
-			cbc_prompt  = encoder.encode(codebaseContext)
-
-=======
 def chatbot(df, prompt=""):
 			encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 			enc_prompt  = encoder.encode(prompt)
 			codebaseContext = q_and_a(encoder, df, question=prompt)
 			cbc_prompt  = encoder.encode(codebaseContext)
->>>>>>> cc87d40 (added configuration.py and cleaning up excess code)
 			print(f"\033[1;37m{enc_prompt}\t\tTokens:{str(len(enc_prompt) + len(cbc_prompt) )}\033[0m")
 			avail_tokens= 3596 - (len(enc_prompt)  + len(cbc_prompt))
 			print(f"\n\033[1;37mTOTAL OUTPUT TOKENS AVAILABLE:{avail_tokens}\n\033[0m")
@@ -239,23 +175,6 @@ def chatbot(df, prompt=""):
 															print(data["choices"][0]["delta"]["content"], flush=True, end="")
 													else:
 															message += "\n"
-<<<<<<< HEAD
-			return message.strip()
-
-if __name__ == '__main__':
-
-
-	df = pd.read_pickle('summary_pickled.pkl')
-	generate_summary(context_code_pairs, df)
-	# context_pairs = df_search(df, "sdk", 1, pprint=True)
-	# last_result = generate_summary(context_code_pairs,df )
-	df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
-	df["file_path"]=df["file_path"].str.replace("/Downloads/whopt","")
-	df_search( df, "security")
-	df["summary"][0]
-	chatbot("what is the best way to change this to a stanalone app?")
-	q_and_a("API")
-=======
 				return message.strip()
 
 def generate_summary_for_directory(directory, df):
@@ -309,9 +228,6 @@ if __name__ == '__main__':
 	df["summary"][0]
 	chatbot("what is the best way to change this to a stanalone app?")
 	q_and_a(ce.df, "API")
->>>>>>> cc87d40 (added configuration.py and cleaning up excess code)
-
-
 
 	def ask(query, gpt=False):
 		print(f"{query}\n\nUSER:", flush=False, end="  ")
