@@ -84,14 +84,15 @@ def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
 
 
 def get_tokens(df, colname):
+
 	EMBEDDING_ENCODING = "cl100k_base"
 	encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
-	colname = "summary"
 	code_type = list(df[df.columns[df.columns.to_series().str.contains(colname)]])
-	for _, row in tqdm.tqdm(df.iterrows()):
+	df = ce.df
+	for _, row in tqdm.tqdm(ce.df.iterrows()):
 		
 		filepath = row["file_path"]
-		emb_data = "file path: " + filepath + "\n" + str(row["summary"])
+		emb_data = "file path: " + filepath + "\n" + str(row[colname])
 		tokens = len(encoder.encode(emb_data )) 
 		df.loc[df['file_path'] == filepath, 'tokens_summary'] = tokens
 	df[['tokens_summary']] = df[['tokens_summary']].applymap(np.int64)
@@ -197,24 +198,27 @@ if __name__ == '__main__':
 		or :
 		 df = ce.split_code_by_lines(df,5)
 	"""
+	encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 	ce  = CodeExtractor(f"{root_dir}{proj_dir}")
 	ce.df = ce.get_files_df()
-	encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
-	ce.df = ce.split_code_by_token_count(df, 200)
+	ce.df["tokens"] = [list(tokenizer.encode(code)) for code in ce.df["code"]]
+	ce.df["token_count"] = [len(code) for code in ce.df["tokens"]]
+	ce.df = ce.split_code_by_token_count(ce.df, 100)
 	ce.indexCodebase(ce.df, pickle=name)
 	ce.df["token_count"].sum()
 
 	name = f"codebase_pickle-{str(uuid.uuid4()).split('-')[0]}.pkl"
-	ce.df_search(ce.df, "sdk",15, pprint = True) 
-	
-	context_code_pairs = get_rel_context_summary(root_dir,ce.df , 'import')
+	context_pairs = ce.df_search(ce.df, "comments",15, pprint = True) 
+	context_code_pairs = get_rel_context_summary(root_dir, ce.df , 'import')
+
+	generate_summary(context_code_pairs|)
+
 	
 	# make summary of code 
-	generate_summary(context_code_pairs,|)
 
+	ce.df  = get_tokens(ce.df,"summary")
 	# SEARCH for matching summary
 	context_pairs = df_search(ce.df, "server", 10, pprint=True)
-	ce.df  = get_tokens(ce.df,"summary")
 	ce.df.sort_values(["summary"])
 	# last_result = generate_summary(context_code_pairs,df )
 	df["file_path"]=df["file_path"].str.replace(os.getenv("HOME"),"")
