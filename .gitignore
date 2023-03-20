@@ -1,4 +1,7 @@
 **.csv
 **.pkl
 info*.txt
-tmp/*
+temp/
+markserv/
+__pycache__/
+*.tmp
