@@ -1,3 +1,4 @@
+import uuid
 import datetime
 import json
 import os
@@ -14,20 +15,19 @@ import tiktoken
 from flask import jsonify
 from openai.embeddings_utils import cosine_similarity, get_embedding
 import tqdm
-# openai.api_key = "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"
+
 root_dir = os.path.expanduser("~")
 cwd = os.getcwd()
-code_root = f"{root_dir}/Downloads/whopt"
-#whop key
+code_root = f"{root_dir}/parsero"
+
 api_key = "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"
 EMBEDDING_ENCODING = 'cl100k_base'
 tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
-# api_key ="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"
+
 openai.api_key = "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"
 
 
 class CodeExtractor:
-
 		def __init__(self, directory):
 				self.EMBEDDING_MODEL = "text-embedding-ada-002"
 				self.last_result = ""
@@ -91,17 +91,17 @@ class CodeExtractor:
 				if line.startswith("def "):
 						return line[len("def ") : line.index("(")].strip()
 
-				# Standard and async functions
+				
 				function_match = re.match(r"\s*(async\s+)?function\s+(\w+)\s*\(", line)
 				if function_match:
 						return function_match.group(2)
 
-				# TypeScript arrow functions
+				
 				arrow_function_match = re.match(r"\s*const\s+(\w+)\s*=\s*(async\s+)?\(", line)
 				if arrow_function_match:
 						return arrow_function_match.group(1)
 
-				# TypeScript arrow functions with destructuring and type annotations
+				
 				arrow_function_destructuring_match = re.match(
 						r"\s*const\s+(\w+)\s*=\s*(async\s+)?\(([^()]+)\)\s*=>",
 						line,
@@ -109,7 +109,7 @@ class CodeExtractor:
 				if arrow_function_destructuring_match:
 						return arrow_function_destructuring_match.group(1)
 
-				# React FunctionComponent and other generics
+				
 				tsx_pattern = re.compile(
 						r'(?:(?:class|const)\s+(?P<class_name>\w+)(?::\s*\w+)?\s+?=\s+?(?:\w+\s*<.*?>)?\s*?\(\s*?\)\s*?=>\s*?{)|(?:function\s+(?P<function_name>\w+)\s*\(.*?\)\s*?{)',
 						re.MULTILINE,
@@ -282,16 +282,16 @@ class CodeExtractor:
 						}
 				)
 
-		def indexCodebase(self, df):
+		def indexCodebase(self, df, pickle="split_codr.pkl"):
 				try:
-						if not os.path.exists(f"{root_dir}/df6.pkl"):
+						if not os.path.exists(f"{code_root}/{pickle}") or os.path.exists(f"{code_root}/{pickle}"):
 								df['code_embedding'] = df['code'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
-								df.to_pickle(f"{root_dir}/df6.pkl")
+								df.to_pickle(f"{code_root}/{pickle}")
 								self.df = df
-						df = pd.read_pickle(f"{root_dir}/df6.pkl")
-						df['file_path'] = df['file_path'].apply(lambda x: x.replace(root_dir, ""))
-						now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 						df.to_csv("embedding_" + now + ".csv", index=False)
+						df = pd.read_pickle(f"{code_root}/{pickle}")
+						df['file_path'] = df['file_path'].apply(lambda x: x.replace(code_root, ""))
+						now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 						self.df = df
 						print("Indexed codebase")
 				except Exception:
@@ -330,11 +330,11 @@ class CodeExtractor:
 						if token_count <= max_tokens:
 								new_rows.append(row)
 						else:
-								# else for each max token chunk, create a new row with the chunked row["code"] until all rows are token_count <= max_tokens
-								# Get the halfway point of the code
+								
+								
 								start_token = 0
 								while start_token < token_count:
-										# tokenize and encode the chunked code
+										
 										end_token = start_token + max_tokens
 										chunk_code = "".join(code[start_token:end_token])
 										new_row = row.copy()
@@ -360,24 +360,8 @@ class CodeExtractor:
 
 				return interfaces
 
-		def extract_interface(self, line: str) -> Optional[str]:
-				if line.startswith("interface "):
-						intf = " ".join(line.split(" ")[1:]).strip()
-						return intf
-
-		def write_to_csv(self):
-				df_functions = self.get_functions_df()
-				df_functions_split = self.split_code_by_token_count(df_functions)
-				df_functions_split.to_csv("functions.csv", index=False)
-
-				df_classes = self.get_classes_df()
-				df_classes_split = self.split_code_by_token_count(df_classes)
-				df_classes_split.to_csv("classes.csv", index=False)
-
-				print(f"Wrote {len(df_functions_split)} functions and {len(df_classes_split)} classes in {self.directory}")
-
 		def df_search(self, df, code_query, n=3, pprint=True, n_lines=7):
-				# Replace the `get_embedding` function with the GPT-4 embeddings function call
+				
 				result = get_embedding(engine="text-embedding-ada-002", text=code_query)
 				embedding = result
 
@@ -414,7 +398,7 @@ class CodeExtractor:
 						chosen_sections.append(self.SEPARATOR + code_str)
 						chosen_sections_len += separator_len + code_str_len
 
-				# Useful diagnostic information
+				
 				chosen_sections_str = f"".join(chosen_sections)
 				print(f"Selected {len(chosen_sections)} document sections:")
 				return f'''<|start_context|>\n Project code to help assistant with answering query "{question}" \n context: {chosen_sections_str}\n<|end_context|>\n<|im_start|>'''
@@ -425,7 +409,7 @@ class CodeExtractor:
 								res_str += f"\n score: {str(round(r[1].similarities, 3))} \t Path : {r[1].file_path} \n"
 								n_lines = 5
 								res_str += "\n".join(r[1].code.split("\n")[:n_lines])
-								# res_str += '-' * 70
+								
 								print('-' * 70)
 								print(f" score: {str(round(r[1].similarities, 3))} \t Path : {r[1].file_path} ")
 								print('-' * 70)
@@ -434,7 +418,7 @@ class CodeExtractor:
 
 		def answer_query_with_context(self, query: str, show_prompt: bool = True) -> str:
 				COMPLETIONS_API_PARAMS = {
-						# We use temperature of 0.0 because it gives the most predictable, factual answer.
+						
 						"temperature": 0.85,
 						"max_tokens": 3500,
 						"model": self.COMPLETIONS_MODEL,
@@ -505,10 +489,10 @@ class CodeExtractor:
 													print(f'{data["choices"][0]["text"]}',flush= True, end="")
 											else:
 												continue
-				# return message.strip()
+				
 								self.last_result = message
 
-  	def chatbot(self, prompt="", brand="Whop"):
+		def chatbot(self, prompt="", brand="Whop"):
 				EMBEDDING_ENCODING = 'cl100k_base'
 				encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 				enc_prompt  = encoder.encode(prompt)
@@ -557,159 +541,6 @@ class CodeExtractor:
 																message += "\n"
 				return message.strip()
 
-
-### run model
-extractor = CodeExtractor(code_root)
-df = extractor.get_files_df()
-df = extractor.split_code_by_lines(df, 5)
-df["tokens"] = [list(tokenizer.encode(code)) for code in df["code"]]
-df["token_count"] = [len(code) for code in df["tokens"]]
-extractor.df = df.sort_values("token_count")
-df = extractor.split_code_by_token_count(df, 500)
-extractor.indexCodebase(extractor.df)
-df2 = extractor.df_search(df=extractor.df, code_query="SDK",n=20)
-
-code = ""
-for x in df2.iterrows():
-	filep = x[1]["file_path"]
-	filen = x[1]["file_name"]
-	file = open(root_dir + filep)
-	# join the code into a consolidated single string
-	print(f"<|path: {filep} |>")
-	# print(f"<|contents: {x} |>")
-	code += ("<|file: {filep}|>")
-	for x in file:
-		code += x
-	code += ("\n<|EOF|>\n")
-print(len(code))
-last_result = ""
-newc = code.split(r"<|EOF|>")
-message_temp = f"| variable names | function names | imports | exports | summary | importance | complexity | relevance |\n| -------------- | ------------- | ------- | ------- | ------- | ---------- | ---------- | --------- |\n"
-print(message_temp)
-for i in newc:
-		print(i)
-		codebaseContext = i
-		prompt = (
-      	"For complexity and relevance columns give the provided code a score from 1 - 10. Use the character '|' as the separator\n",
-				f"{i}",
-				f"You are an agent operating with other agents to provide information about a codebase or project. You will be passed the full file contents of certain files from the directory that may be relevant to the USER prompt. Return a tablke row with the columns variable names , function names, imports, exports, summary, importance, complexity, and relevance to user prompt 'What are the exports in the SDK?'. For complexity and relevance columns give the code a score from 1 - 10. Use the character '|' as the separator and end each row with a newline.",
-				message_temp,
-			# 	f"SYSTEM: You are helping the USER analyze the above file. Create a table row using the below template and return it back to the USER. Replace the text between the 2 sets of square brackets.",
-
-			# f"SYSTEM: You are helping the USER analyze the above file. Create a table row using the below template and return it back to the USER. Replace the text between the 2 sets of square brackets.",
-			# 	"Access variable names: \n\t[[VARIABLE1, VARIABLE2, ...]]\n"
-			# 	"\nAccess function names: \n\t[[FUNCTION1, FUNCTION2, ...]]\n"
-			# 	"\nAccess file imports: \n\t[[IMPORT1, IMPORT2, ...]]\n"
-			# 	"\nAccess file exports: \n\t[[EXPORT1, EXPORT2, ...]]\n"
-			# 	"\nAccess file summary: \n\t[[FILE SUMMARY]]\n"
-			# 	"\nAccess file importance: \n\t[[IMPORTANCE (1-10)]]\n"
-			# 	"\nAccess file complexity: \n\t[[COMPLEXITY (1-10)]]\n"
-			# 	"\nAccess file relevance to prompt: \n\t[[RELEVANCE (1-10)]]\n"
-
-						)
-		EMBEDDING_ENCODING = 'cl100k_base'
-		encoder  = tiktoken.get_encoding(EMBEDDING_ENCODING)
-		enc_prompt  = encoder.encode(str(prompt))
-		len(enc_prompt)
-		tokens = len(encoder.encode(codebaseContext) + enc_prompt) or 1
-		api = "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"#"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"
-		r = requests.post(
-				f"https://api.openai.com/v1/completions",
-				headers={
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + api,
-				},
-				json={
-						"model": "code-davinci-002",# "chat-davinci-003-alpha",
-						"prompt": prompt,
-						"temperature": 0.8,
-						"top_p": 1,
-						"n": 1,
-						"best_of": 1,
-						"stream": True,
-						"stop": ["\n", "END", "<|im_end|>"],
-						"max_tokens": tokens + 500,
-						"presence_penalty": 0,
-						"frequency_penalty": 0,
-				}
-		)
-		message = ""
-		if(r.status_code) == 200:
-			for line in r.iter_lines():
-				if line:
-					data = line
-					if b"[DONE]" in data:
-						print("-" * 40, flush=True)
-						break
-					else:
-						data = json.loads(data[5:])
-						if data["object"] == "text_completion":
-							if data["choices"][0]["text"]:
-								message += data["choices"][0]["text"]
-								print(f'{data["choices"][0]["text"]}',flush=False, end="")
-						else:
-							continue
-					last_result += f"{message}\n"
-
-
-
-with open("info745.txt", "w") as f:
- f.write(last_result)
-		# return message.strip()
-		# print(f"""
-
-	# 		path: {filep}\n
-	# 		{'-'*20}\n
-	# 		contents: {i}\n
-	# 		{'-'*20}\n
-	# 		""")
-		#
-for file_path, code in df.iterrows():
-		print(f"""
-	path: {code.file_path}\n
-	{'-' * 10}\n
-  {code.code}\n
-	{'-' * 10}\n
-		""")
-		file = root_dir + file["file_path"]
-
-		code = code["code"].split(";")
-
-if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        raise SystemExit("Usage: python script.py root_folder data_path")
-    else:
-        root_dir = sys.argv[1]
-        data = sys.argv[2]
-        df = pd.read_csv(data)
-            with open(file, "r") as f:
-                for line in f:
-                    for y in code:
-                    # y = y.replace(" ", "")
-                        print("code", y)
-                        if y.__contains__("<="):
-                            y = y.replace("<=", "<")
-                        if y.__contains__("<"):
-                            print("yes")
-                            print("line", line)
-                            if " < " in line:
-                                print("triggered !")
-                                print(f"{line}<|{y}")
-
-
-total_tokens_in_context = tokenizer.encode(res_str)
-# iterate over dataframe in batches and summarize code sections
-
-for gpt in [True, False]:
-		extractor.MAX_SECTION_LEN = 9000
-		for i, batch in tqdm(extractor.df.iterrows(), total=extractor.df.shape[0]):
-				if i > 10:
-						break
-				extractor.summarize(batch.code, batch.sentence_target, gpt=gpt, n_return=1)
-
-extractor.max_res = 150
-extractor.MAX_SECTION_LEN = 9000
-extractor.gpt_4("Summarize the most important components of WhopSDK")
 def ask(query, gpt=False):
 	print(f"{query}\n\nUSER:", flush=False, end="  ")
 	question = input()
@@ -729,44 +560,22 @@ def ask(query, gpt=False):
 		except:
 			print("Sorry, I didn't understand that.")
 
-while True:
-	print("QUERY:", flush=False, end="  ")
-	question = input()
-	ask(input)
+def run_chat_loop():
+	while True:
+		print("QUERY:", flush=False, end="  ")
+		question = input()
+		ask(input)
 
 
-df = extractor.split_code_by_lines(df,1)
-# extractor.pkdf = df['file_path'].apply(lambda x: x.replace(code_root, ""))
-extractor.split_code_by_token_count(extractor.df, 50)
 
-
-"""
-halfway_point = token_count // 2
-# Find the first occurrence of two newline characters in the code
-split_point = None
-
-for i in range(halfway_point, len(tokens) - 1):
-	if tokens[i] == "\n" and tokens[i + 1] == "\n":
-			print("SPLIT POINT")
-			split_point = i
-			break
-
-# If we found a place to split the code, then we create two new rows with the first set of codes and the second set of codes, respectively.
-if split_point:
-	# Split the code into two parts
-	first_half = "".join(token.value for token in tokens[: split_point + 1])
-	second_half = "".join(token.value for token in tokens[split_point + 1 :])
-
-	# Create a new row for the first half
-	new_row1 = row.copy()
-	new_row1["code"] = first_half
-	new_rows.append(new_row1)
-
-	# Create a new row for the second half
-	new_row2 = row.copy()
-	new_row2["code"] = second_half
-	new_rows.append(new_row2)
-else:
-
-return pd.DataFrame(new_rows)
-"""
+if __name__ == '__main__':
+	extractor = CodeExtractor("./markserv")
+	df = extractor.get_files_df()
+	df = extractor.split_code_by_lines(df,5)
+	df["tokens"] = [list(tokenizer.encode(code)) for code in df["code"]]
+	df["token_count"] = [len(code) for code in df["tokens"]]
+	df["token_count"].sum()
+	name = f"codebase_pickle-{str(uuid.uuid4())}.pkl"
+	extractor.df = df
+	extractor.indexCodebase(extractor.df, pickle=name)
+	df2 = extractor.df_search(df=extractor.df, code_query="SDK",n=20)
