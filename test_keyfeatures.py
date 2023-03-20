@@ -16,6 +16,8 @@ headers = {
 	'Content-Type': 'application/json',
 	'Authorization': 'Bearer ' + api_key,
 }
+
+
 def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
 	message = ""
 	try:
@@ -26,7 +28,7 @@ def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
 	
 	comp_type = "finish_reason" if not model or model != "chat-davinci-003-alpha" else "finish_details"
 	for filepath, code in context_code_pairs:
-		filepath  = filepath.replace("/Downloads/whopt","")
+		# filepath  = filepath.replace("/Downloads/whopt","")
 		prompt = f"\nSYSTEM: You are the ASSISTANT helping the USER with optimizing and analyzing a codebase. You are intelligent, helpful, and an expert developer, who always gives the correct answer and only does what is instructed. You always answer truthfully and don't make things up.\nUSER:{code}\nUSER:Please summarize the key features of the specified file within the project directory, and present the information in a concise bullet-point format. Focus on aspects such as the file's content.\nASSISTANT: Sure, here are the key features of the {filepath} file:\n - "
 		EMBEDDING_ENCODING = 'cl100k_base'
 		encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
@@ -44,9 +46,9 @@ def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
 				"top_p": 0.05,
 				"stream": True,
 				"n": 1,
-				"logit_bias": {
-					[27, 91, 320, 62, 437, 91, 29, 198] : -100
-					},
+				# "logit_bias": {
+				# 	"[27, 91, 320, 62, 437, 91, 29, 198]" : -100
+				# 	},
 				"stop": ["\nSYSTEM:", "\nUSER:", "\nASSISTANT:", "\n\n", ],
 				"max_tokens": 500 + tokens,
 				"presence_penalty": 1,
@@ -76,7 +78,10 @@ def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
 		df.loc[df['file_path'] == filepath, 'summary'] = summary.strip()
 	return message
 
-generate_summary([df ])
+
+
+
+generate_summary(context_code_pairs, df)
 
 
 
@@ -182,12 +187,10 @@ def chatbot(prompt=""):
 			return message.strip()
 
 if __name__ == '__main__':
-	chatbot("what is the best way to change this to a stanalone app?")
-	q_and_a("API")
 
-	y = df_search(df, "sdk", 1, pprint=True)
 
 	df = pd.read_pickle('summary_pickled.pkl')
+	y = df_search(df, "sdk", 1, pprint=True)
 	
 	df
 	print(x, y)
@@ -199,6 +202,8 @@ if __name__ == '__main__':
 	df_search( df, "security")
 	last_result = generate_summary(context_code_pairs,df )
 	df["summary"][0]
+	chatbot("what is the best way to change this to a stanalone app?")
+	q_and_a("API")
 
 
 
