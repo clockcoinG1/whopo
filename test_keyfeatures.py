@@ -24,8 +24,7 @@ def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
 		if not model:
 			model="chat-davinci-003-alpha"
 	except NameError:
-		model="chat-davinci-003-alpha"
-	
+		model="chat-davinci-003-alpha"	
 	comp_type = "finish_reason" if not model or model != "chat-davinci-003-alpha" else "finish_details"
 	for filepath, code in context_code_pairs:
 		# filepath  = filepath.replace("/Downloads/whopt","")
@@ -80,8 +79,6 @@ def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
 
 
 
-
-generate_summary(context_code_pairs, df)
 
 
 
@@ -190,17 +187,12 @@ if __name__ == '__main__':
 
 
 	df = pd.read_pickle('summary_pickled.pkl')
-	y = df_search(df, "sdk", 1, pprint=True)
-	
-	df
-	print(x, y)
-
+	generate_summary(context_code_pairs, df)
+	# context_pairs = df_search(df, "sdk", 1, pprint=True)
+	# last_result = generate_summary(context_code_pairs,df )
 	df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
-	
-
 	df["file_path"]=df["file_path"].str.replace("/Downloads/whopt","")
 	df_search( df, "security")
-	last_result = generate_summary(context_code_pairs,df )
 	df["summary"][0]
 	chatbot("what is the best way to change this to a stanalone app?")
 	q_and_a("API")

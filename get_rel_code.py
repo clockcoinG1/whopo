@@ -6,7 +6,7 @@ import pandas as pd
 import os
 import json
 # api_key = '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'
-root_dir = '/Users/clockcoin'
+root_dir = '/Users/clockcoin/parsero/'
 api_key ="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"
 # models = openai.Model.list()
 
@@ -23,7 +23,8 @@ def extract_all_text_files(root_dir: str) -> str:
 		return text
 
 def get_context_code(root_dir, df, code_query):
-    df2 = df.query(f'code.str.contains("{code_query}", regex=False)', engine='python')
+    
+		df2 = df.query(f'code.str.contains("{code_query}", regex=False)', engine='python')
     code_pairs = []
 
     for _, row in df2.iterrows():
@@ -99,11 +100,11 @@ def generate_table(context_code_pairs, prompt, message="", model="chat-davinci-0
 														return message
 
 if __name__ == '__main__':
-
-		df = pd.read_csv('embedding_2023-03-18-18-34-42.csv')
-		info = generate_table([], df, "What is this")
+		df["file_path"] = df["file_path"].str.replace(r"^./", r"")
+		context_code_pairs = get_context_code(root_dir, df, "http")
+		info = generate_table(context_code_pairs, df, "token")
 		code_query = 'secu'
-		context_code_pairs = get_context_code(root_dir, df, code_query)
+		df.
 		prompt = "For complexity and relevance columns give the provided code a score from 1 - 10. Use the character '|' as the separator\nYou are an agent operating with other agents to provide information about a codebase or project. You will be passed the full file contents of certain files from the directory that may be relevant to the USER prompt. Return a table row with the columns variable names , function names, imports, exports, summary, importance, complexity, and relevance to user prompt 'What are the exports in the SDK?'. For complexity and relevance columns give the code a score from 1 - 10. Use the character '|' as the separator and end each row with a newline."
 		message = ""
 		last_result= generate_table(context_code_pairs, prompt, message)
