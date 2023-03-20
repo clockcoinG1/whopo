@@ -570,7 +570,7 @@ def run_chat_loop():
 
 
 if len(sys.argv) == 1:
-print( "Must specify a directory as the first argument")
+	print( "Must specify a directory as the first argument")
 	exit()
 
 DIR = sys.argv[1]
