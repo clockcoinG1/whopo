@@ -1,7 +1,7 @@
 import openai
 TOKEN_COUNT = 500
 root_dir = ""
-proj_dir = "markserv"
+proj_dir = "llama"
 oai_api_key_embedder= "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"
 base = "https://api.openai.com/v1/completions"
 chat_base = 'https://api.openai.com/v1/chat/completions'

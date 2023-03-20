@@ -1,39 +1,10 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 **.csv
 **.pkl
 info*.txt
 temp/
-markserv/
+.mypy_cache/
 __pycache__/
 *.tmp
-=======
-markserv
-<<<<<<< HEAD
->>>>>>> b97a445 (added configuration.py and cleaning up excess code)
-=======
-tmp
->>>>>>> db36d37 (added configuration.py and cleaning up excess code)
-=======
-markserv/**/*
-markserv/*
-*csv
-temp/**/*
-temp/*
-
->>>>>>> 8460ef4 (added configuration.py and cleaning up excess code)
-=======
-markserv
-=======
-markserv/
->>>>>>> f0f67ff (better)
-*csv
-temp/
-lock/*
-<<<<<<< HEAD
->>>>>>> 006fe33 (added configuration.py and cleaning up excess code)
-=======
-.mypy_cache/
->>>>>>> cc87d40 (added configuration.py and cleaning up excess code)
+*.pkl
+llama

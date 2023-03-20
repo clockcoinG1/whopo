@@ -6,6 +6,7 @@ import re
 from glob import glob
 import sys
 from typing import List, Optional
+import sys
 
 import altair as alt
 import openai
@@ -568,8 +569,14 @@ def run_chat_loop():
 
 
 
+if len(sys.argv) == 1:
+	print "Must specify a directory as the first argument"
+	exit()
+
+DIR = sys.argv[1]
+
 if __name__ == '__main__':
-	extractor = CodeExtractor("./markserv")
+	extractor = CodeExtractor(directory)
 	df = extractor.get_files_df()
 	df = extractor.split_code_by_lines(df,5)
 	df["tokens"] = [list(tokenizer.encode(code)) for code in df["code"]]
