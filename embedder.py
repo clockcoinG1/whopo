@@ -541,11 +541,6 @@ class CodeExtractor:
 																message += "\n"
 				return message.strip()
 
-
-
-
-
-
 def ask(query, gpt=False):
 	print(f"{query}\n\nUSER:", flush=False, end="  ")
 	question = input()
@@ -570,6 +565,8 @@ def run_chat_loop():
 		print("QUERY:", flush=False, end="  ")
 		question = input()
 		ask(input)
+
+
 
 if __name__ == '__main__':
 	extractor = CodeExtractor("./markserv")
