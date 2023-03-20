@@ -22,30 +22,6 @@ def extract_all_text_files(root_dir: str) -> str:
 								f.close()
 		return text
 
-<<<<<<< HEAD
-def get_context_code(root_dir, df, code_query):
-    
-		df2 = df.query(f'code.str.contains("{code_query}", regex=False)', engine='python')
-    code_pairs = []
-
-    for _, row in df2.iterrows():
-        filep = row["file_path"]
-        filen = row["file_name"]
-        with open(root_dir + filep) as file:
-            code = f"FILE: {filep}\n"
-            for line in file:
-                code += line
-            code_pairs.append((filep, code))
-    return code_pairs
-
-
-def get_tokens(df = pd.DataFrame):
-        EMBEDDING_ENCODING = 'cl100k_base'
-        encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
-        enc_prompt = encoder.encode(str(prompt))
-        tokens = len(encoder.encode(code) + enc_prompt) or 1
-        max_token = 500 + tokens
-=======
 def generate_summary_for_directory(directory, df):
     result = {}
     with os.scandir(directory) as entries:
@@ -92,7 +68,6 @@ def get_tokens(df = pd.DataFrame):
 				enc_prompt = encoder.encode(str(prompt))
 				tokens = len(encoder.encode(code) + enc_prompt) or 1
 				max_token = 500 + tokens
->>>>>>> cc87d40 (added configuration.py and cleaning up excess code)
 
 def generate_table(context_code_pairs, prompt, message="", model="chat-davinci-003-alpha"):
 		for filepath, code in context_code_pairs:
@@ -149,16 +124,6 @@ def generate_table(context_code_pairs, prompt, message="", model="chat-davinci-0
 														return message
 
 if __name__ == '__main__':
-<<<<<<< HEAD
-		df["file_path"] = df["file_path"].str.replace(r"^./", r"")
-		context_code_pairs = get_context_code(root_dir, df, "http")
-		info = generate_table(context_code_pairs, df, "token")
-		code_query = 'secu'
-		df.
-		prompt = "For complexity and relevance columns give the provided code a score from 1 - 10. Use the character '|' as the separator\nYou are an agent operating with other agents to provide information about a codebase or project. You will be passed the full file contents of certain files from the directory that may be relevant to the USER prompt. Return a table row with the columns variable names , function names, imports, exports, summary, importance, complexity, and relevance to user prompt 'What are the exports in the SDK?'. For complexity and relevance columns give the code a score from 1 - 10. Use the character '|' as the separator and end each row with a newline."
-		message = ""
-		last_result= generate_table(context_code_pairs, prompt, message)
-=======
 		# df["file_path"] = df["file_path"].str.replace(r"^./", r"")
 		# context_code_pairs = get_context_code(root_dir, df, "http")
 		# info = generate_table(context_code_pairs, df, "token")
@@ -166,4 +131,3 @@ if __name__ == '__main__':
 		# prompt = "For complexity and relevance columns give the provided code a score from 1 - 10. Use the character '|' as the separator\nYou are an agent operating with other agents to provide information about a codebase or project. You will be passed the full file contents of certain files from the directory that may be relevant to the USER prompt. Return a table row with the columns variable names , function names, imports, exports, summary, importance, complexity, and relevance to user prompt 'What are the exports in the SDK?'. For complexity and relevance columns give the code a score from 1 - 10. Use the character '|' as the separator and end each row with a newline."
 		# message = ""
 		# last_result= generate_table(context_code_pairs, prompt, message)
->>>>>>> cc87d40 (added configuration.py and cleaning up excess code)
