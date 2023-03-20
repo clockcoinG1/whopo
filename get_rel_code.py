@@ -1,13 +1,14 @@
+
 import openai
 import requests
 import tiktoken
 import pandas as pd
 import os
 import json
-
+# api_key = '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'
 root_dir = '/Users/clockcoin'
 api_key ="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"
-
+# models = openai.Model.list()
 
 def extract_all_text_files(root_dir: str) -> str:
 		text = ''
@@ -43,6 +44,13 @@ def get_tokens(df = pd.DataFrame):
         tokens = len(encoder.encode(code) + enc_prompt) or 1
         max_token = 500 + tokens
 
+import os
+import sys
+import json
+import requests
+import base64
+import tiktoken
+
 
 def generate_table(context_code_pairs, prompt, message="", model="chat-davinci-003-alpha"):
 		for filepath, code in context_code_pairs:
@@ -77,9 +85,9 @@ def generate_table(context_code_pairs, prompt, message="", model="chat-davinci-0
 
 
 					comp_type = "finish_reason" if model != "chat-davinci-003-alpha" else "finish_details"
-					
-					print(f"\n
-					message += f"\n
+					# convert line to utf-8 string
+					print(f"\n## FILE : {filepath}" ,  end="\n")
+					message += f"\n## FILE : {filepath}"
 					for line in r.iter_lines():
 									data = line.decode('utf-8')
 									if data.startswith('data: ') and data != 'data: [DONE]':
@@ -96,10 +104,10 @@ def generate_table(context_code_pairs, prompt, message="", model="chat-davinci-0
 																		print("\n", flush=False, end="")
 																		message.strip()
 																		continue
-
-						return message
+														return message
 
 if __name__ == '__main__':
+
 		df = pd.read_csv('embedding_2023-03-18-18-34-42.csv')
 		info = generate_table([], df, "What is this")
 		code_query = 'secu'
