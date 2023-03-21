@@ -1,4 +1,5 @@
 import os
+MAX_TOKEN_COUNT = 500
 TOKEN_COUNT = 500
 root_dir = os.path.expanduser("~")
 proj_dir = "/parsero/llama"

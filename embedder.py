@@ -45,7 +45,7 @@ EMBEDDING_ENCODING = 'cl100k_base'
 class CodeExtractor:
 		def __init__(self, directory):
 				self.code_root = code_root
-        self.df = pd.DataFrame
+				self.df = pd.DataFrame
 				self.EMBEDDING_MODEL = "text-embedding-ada-002"
 				self.last_result = ""
 				self.max_res = 50
@@ -300,21 +300,21 @@ class CodeExtractor:
 
 
 
-    def indexCodebase(self, df, pickle="split_codr.pkl"):
-        try:
-            if not os.path.exists(f"{self.code_root}/{pickle}"):
-                df['code_embedding'] = df['code'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
-                df.to_pickle(f"{self.code_root}/{pickle}")
-                self.df = df
-                print("Indexed codebase: " + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-            else:
-                self.df = pd.read_pickle(f"{self.code_root}/{pickle}")
-        except EmptyDataError as e:
-            print(f"Empty data error: {e}")
-        except Exception as e:
-            print(f"Failed to index codebase: {e}")
-        else:
-            print("Codebase indexed successfully")
+		def indexCodebase(self, df, pickle="split_codr.pkl"):
+				try:
+						if not os.path.exists(f"{self.code_root}/{pickle}"):
+								df['code_embedding'] = df['code'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
+								df.to_pickle(f"{self.code_root}/{pickle}")
+								self.df = df
+								print("Indexed codebase: " + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+						else:
+								self.df = pd.read_pickle(f"{self.code_root}/{pickle}")
+				except EmptyDataError as e:
+						print(f"Empty data error: {e}")
+				except Exception as e:
+						print(f"Failed to index codebase: {e}")
+				else:
+						print("Codebase indexed successfully")
 
 
 
