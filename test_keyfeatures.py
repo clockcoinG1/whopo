@@ -24,6 +24,7 @@ from constants import (
 
 openai.api_key = oai_api_key_embedder
 tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
+
 def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
 	message = ""
 	try:
