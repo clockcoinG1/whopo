@@ -1,6 +1,7 @@
 import numpy as np
 from pathlib import Path
 import requests
+import sys
 import tiktoken
 import pandas as pd
 import os
@@ -8,7 +9,7 @@ import re
 import json
 from get_rel_code import api_key, get_context_code, get_rel_context_summary
 import tqdm
-from CodebaseIndexer import indexCodebase
+from CodeBaseIndexer import indexCodebase
 from embedder import CodeExtractor
 import openai
 from openai.embeddings_utils import cosine_similarity, get_embedding
@@ -215,7 +216,7 @@ def generate_summary_for_directory(directory, df):
     result = {}
     with os.scandir(directory) as entries:
         for entry in entries:
-            if entry.name.endswith('.py') or entry.name.endswith('.cpp') or entry.name.endswith('.ts') or entry.name.endswith('.js') or entry.name.endswith('.ant'):
+            if entry.name.endswith(('.py', '.cpp', '.ts', '.js', '.ant')):
                 file_path = os.path.join(directory, entry.name)
                 if df[df['file_path'] == file_path]['summary'].empty:
                     summary = generate_summary_for_file(file_path)
@@ -227,12 +228,19 @@ def generate_summary_for_directory(directory, df):
 
 
 
+
 if __name__ == '__main__':
+	if len(sys.argv) == 1:
+		print( "Must specify a directory as the first argument")
+		exit()
+	# total_context_int = sys.argv[4] if len(sys.argv) > 4 else 20
+	# token_count = sys.argv[5] if len(sys.argv) > 5 else 200
+	root_dir = os.getcwd()
+	proj_dir = sys.argv[1] if len(sys.argv) > 2 else "llama"
+	context_prompt = sys.argv[2] if len(sys.argv) > 2 else "Important code"
+	gpt_prompt = sys.argv[3] if len(sys.argv) > 3 else "What does this code do?"
 	ce  = CodeExtractor(f"{root_dir}{proj_dir}")
 	df = ce.get_files_df()
 	df = indexCodebase(df, "code", pickle="test_emb")
 	df = generate_summary(df)
 	chatbot(df , "models used and todo items",20)
-	# df = ce.split_code_by_token_count(df, MAX_TOKEN_COUNT)
-	# ce.indexCodebase(df)
-	# df = indexCodebase(df, "summary", pickle="test_sum")

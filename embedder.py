@@ -32,10 +32,10 @@ from constants import (
 
 openai.api_key = oai_api_key_embedder
 tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
+code_root = proj_dir
 
 """ root_dir = os.path.expanduser("~")
 cwd = os.getcwd()
-code_root = f"{root_dir}/parsero"
 
 api_key = "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"
 EMBEDDING_ENCODING = 'cl100k_base'
