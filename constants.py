@@ -1,6 +1,6 @@
-import openai
+import os
 TOKEN_COUNT = 500
-root_dir = ""
+root_dir = os.path.expanduser("~")
 proj_dir = "llama"
 oai_api_key_embedder= "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"
 base = "https://api.openai.com/v1/completions"

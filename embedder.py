@@ -18,7 +18,8 @@ from openai.embeddings_utils import cosine_similarity, get_embedding
 import tqdm
 from constants import (
 	oai_api_key_embedder,
-	root_dir, 
+	root_dir,
+	proj_dir,
 	api_key, 
 	EMBEDDING_ENCODING, 
 )
@@ -295,13 +296,13 @@ class CodeExtractor:
 						if not os.path.exists(f"{code_root}/{pickle}") or os.path.exists(f"{code_root}/{pickle}"):
 								df['code_embedding'] = df['code'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
 								df.to_pickle(f"{code_root}/{pickle}")
-								self.df = df
-						df.to_csv("embedding_" + now + ".csv", index=False)
-						df = pd.read_pickle(f"{code_root}/{pickle}")
+								# df.to_csv("embedding_" + now + ".csv", index=False)
+						else:
+							df = pd.read_pickle(f"{code_root}/{pickle}")
 						df['file_path'] = df['file_path'].apply(lambda x: x.replace(code_root, ""))
 						now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 						self.df = df
-						print("Indexed codebase")
+						print("Indexed codebase: " + now )
 				except Exception:
 						print("Failed to index codebase")
 
@@ -580,8 +581,8 @@ if len(sys.argv) == 1:
 	exit()
 
 
-
 if __name__ == '__main__':
+
 	DIR = sys.argv[1]
 	code_root = sys.argv[1] if len(sys.argv) > 2 else "llama"
 	gpt_prompt = sys.argv[3] if len(sys.argv) > 3 else "What does this code do?"
@@ -604,4 +605,4 @@ if __name__ == '__main__':
 	extractor.df = df
 	extractor.indexCodebase(extractor.df, pickle=name)
 	extractor.df = extractor.df_search(df=extractor.df, code_query="ggml",n=10)
-	extractor.chatbot("What is Llama?")
+	extractor.chatbot("What is Llama LLM ?")
