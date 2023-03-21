@@ -25,7 +25,7 @@ from constants import (
 openai.api_key = oai_api_key_embedder
 tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
 
-def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
+def generate_summary(df,model="chat-davinci-003-alpha"):
 	message = ""
 	try:
 		if not model:
@@ -33,8 +33,10 @@ def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
 	except NameError:
 		model="chat-davinci-003-alpha"	
 	comp_type = "finish_reason" if not model or model != "chat-davinci-003-alpha" else "finish_details"
-	for filepath, code in context_code_pairs:
-		# filepath  = filepath.replace("/Downloads/whopt","")
+	for _, row in tqdm.tqdm(df.iterrows()):
+		code = row["code"]
+		filepath = row["file_path"]
+		filename = row["file_name"]
 		prompt = f"\nSYSTEM: You are the ASSISTANT helping the USER with optimizing and analyzing a codebase. You are intelligent, helpful, and an expert developer, who always gives the correct answer and only does what is instructed. You always answer truthfully and don't make things up.\nUSER:{code}\nUSER:Please summarize the key features of the specified file within the project directory, and present the information in a concise bullet-point format. Focus on aspects such as the file's content.\nASSISTANT: Sure, here are the key features of the {filepath} file:\n - "
 		encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 		enc_prompt = encoder.encode(str(prompt))
@@ -54,8 +56,8 @@ def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
 				# "logit_bias": {
 				# 	"[27, 91, 320, 62, 437, 91, 29, 198]" : -100
 				# 	},
-				"stop": ["\nSYSTEM:", "\nUSER:", "\nASSISTANT:", "\n\n", ],
-				"max_tokens": 500 + tokens,
+				"stop": ["\nSYSTEM:", "\nUSER:", "\nASSISTANT:","<|im_end|>" ],
+				"max_tokens": 3000 + tokens,
 				"presence_penalty": 1,
 				"frequency_penalty": 1,
 			}
@@ -79,11 +81,12 @@ def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
 							print("\n", flush=True, end="\n")
 							message.strip()
 							continue
-		
-		# df.loc[df['file_path'] == filepath, 'summary'] = summary.strip()
+					if 'summary' not in df.columns:
+						df['summary'] = summary.strip()
+
+					df.loc[df['file_name'] == filename, 'summary'] = df.loc[df['file_name'] == filename, 'summary'] + summary.strip()
 	try: 
-		with tqdm.pandas() as tq:
-			if df[df['file_path'] == file_path]['summary'].empty:
+			if df[df['file_path'] == filepath]['summary'].empty:
 				df.loc[df['file_path'] == filepath, 'summary'] = "NA"
 				df.loc[df['file_path'] == filepath, 'summary'] = summary.strip()
 				df  = df[pd.notna(df['summary'])]
@@ -121,7 +124,7 @@ def df_search(df, summary_query, n=3, pprint=True):
 		
 	return res
 
-
+generate_summary(df)
 
 
 def q_and_a(encoding, df, question = "What isthe most important file", total = 10, MAX_SECTION_LEN = 7000) -> str:
@@ -216,15 +219,17 @@ if __name__ == '__main__':
 	ce.df["tokens"] = [list(tokenizer.encode(code)) for code in ce.df["code"]]
 	ce.df["token_count"] = [len(code) for code in ce.df["tokens"]]
 	ce.df = ce.split_code_by_token_count(ce.df, 100)
-	ce.indexCodebase(ce.df, pickle=name)
 	ce.df["token_count"].sum()
 
 	name = f"codebase_pickle-{str(uuid.uuid4()).split('-')[0]}.pkl"
-	context_pairs = ce.df_search(ce.df, "comments",15, pprint = True) 
+	ce.indexCodebase(ce.df, pickle=name)
+	context_pairs = ce.df_search(ce.df, "params",15, pprint = True) 
 	context_code_pairs = get_rel_context_summary(root_dir, ce.df , 'import')
 
-	generate_summary(context_code_pairs, ce.df)
-
+	rez = generate_summary(ce.df)
+	for _ , row in ce.df.iterrows():
+			print(row["file_name"])
+			print(row["summary"])
 	
 	# make summary of code 
 
