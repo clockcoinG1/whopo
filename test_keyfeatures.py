@@ -5,15 +5,25 @@ import tiktoken
 import pandas as pd
 import os
 import json
-from get_rel_code import api_key, get_context_code
+from get_rel_code import api_key, get_context_code, get_rel_context_summary
 import tqdm
 from embedder import CodeExtractor
+import openai
 from openai.embeddings_utils import cosine_similarity, get_embedding
 import uuid
-import openai
-from constants import  TOKEN_COUNT, root_dir, proj_dir, oai_api_key_embedder,  chat_base, EMBEDDING_ENCODING, headers
-openai.api_key = oai_api_key_embedder
+from constants import (
+	TOKEN_COUNT,
+	root_dir,
+	proj_dir,
+	oai_api_key_embedder,
+	chat_base,
+	base,
+	EMBEDDING_ENCODING,
+	headers
+)
 
+openai.api_key = oai_api_key_embedder
+tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
 def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
 	message = ""
 	try:
@@ -199,7 +209,7 @@ if __name__ == '__main__':
 		or :
 		 df = ce.split_code_by_lines(df,5)
 	"""
-	encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
+
 	ce  = CodeExtractor(f"{root_dir}{proj_dir}")
 	ce.df = ce.get_files_df()
 	ce.df["tokens"] = [list(tokenizer.encode(code)) for code in ce.df["code"]]
