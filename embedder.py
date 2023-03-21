@@ -16,17 +16,24 @@ import tiktoken
 from flask import jsonify
 from openai.embeddings_utils import cosine_similarity, get_embedding
 import tqdm
+from constants import (
+	oai_api_key_embedder,
+	root_dir, 
+	api_key, 
+	EMBEDDING_ENCODING, 
+)
 
-root_dir = os.path.expanduser("~")
+openai.api_key = oai_api_key_embedder
+tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
+
+""" root_dir = os.path.expanduser("~")
 cwd = os.getcwd()
 code_root = f"{root_dir}/parsero"
 
 api_key = "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"
 EMBEDDING_ENCODING = 'cl100k_base'
-tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
 
-openai.api_key = "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"
-
+ """
 
 class CodeExtractor:
 		def __init__(self, directory):
@@ -44,7 +51,7 @@ class CodeExtractor:
 				self.SEPARATOR = "<|im_sep|>"
 				self.ENCODING = "gpt2"
 				self.df = pd.DataFrame
-				self.pkdf = pd.read_pickle(f"{root_dir}/df2.pkl")
+				# self.pkdf = pd.read_pickle(f"{root_dir}/df2.pkl")
 				self.all_files = (
 						glob(os.path.join(directory, "**", "*.py"), recursive=True)
 						+ glob(os.path.join(directory, "**", "*.ts"), recursive=True)
@@ -328,7 +335,7 @@ class CodeExtractor:
 						code = row["code"]
 						tokens = row["tokens"]
 						token_count = row["token_count"]
-						if token_count <= max_tokens:
+						if int(token_count) <= int(max_tokens):
 								new_rows.append(row)
 						else:
 								
@@ -568,28 +575,33 @@ def run_chat_loop():
 		ask(input)
 
 
-
 if len(sys.argv) == 1:
 	print( "Must specify a directory as the first argument")
 	exit()
 
-DIR = sys.argv[1]
+
 
 if __name__ == '__main__':
-	if DIR:
-		code_root = DIR
+	DIR = sys.argv[1]
+	code_root = sys.argv[1] if len(sys.argv) > 2 else "llama"
+	gpt_prompt = sys.argv[3] if len(sys.argv) > 3 else "What does this code do?"
+	total_context_int = sys.argv[4] if len(sys.argv) > 4 else 20
+	token_count = sys.argv[5] if len(sys.argv) > 5 else 200
+	context_prompt = sys.argv[6] if len(sys.argv) > 6 else "Important code"
+
 	extractor = CodeExtractor(code_root)
 	df = extractor.get_files_df()
-	# SPLIT by lines or do .split_by_tokens for more granular / sourcemapped files 
-	df = extractor.split_code_by_lines(df,5)
-
-	# get token totals
 	df["tokens"] = [list(tokenizer.encode(code)) for code in df["code"]]
 	df["token_count"] = [len(code) for code in df["tokens"]]
 	df["token_count"].sum()
+	# SPLIT by lines or do .split_by_tokens for more granular / sourcemapped files 
+	# df = extractor.split_code_by_lines(df,5)
+	df = extractor.split_code_by_token_count(df,token_count)
+
+	# get token totals
 
 	name = f"codebase_pickle-{str(uuid.uuid4())}.pkl"
 	extractor.df = df
 	extractor.indexCodebase(extractor.df, pickle=name)
-	extractor.df = extractor.df_search(df=extractor.df, code_query="#",n=20)
-	extractor.chatbot("What are the comments")
+	extractor.df = extractor.df_search(df=extractor.df, code_query=context_prompt,n=total_context_int)
+	extractor.chatbot(gpt_prompt)

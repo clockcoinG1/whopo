@@ -21,8 +21,6 @@ blinker==1.5
 blobfile==2.0.1
 Brotli==1.0.9
 cachetools==5.3.0
-certifi @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_5d968ni_yn/croot/certifi_1671487774636/work/certifi
-cffi @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_ab19r4bji3/croot/cffi_1670423206034/work
 charset-normalizer==2.1.1
 click==8.1.3
 cmaes==0.9.1
@@ -44,7 +42,6 @@ flake8==6.0.0
 Flask==2.2.2
 Flask-Cors==3.0.10
 Flask-PyMongo==2.3.0
-flit_core @ file:///opt/conda/conda-bld/flit-core_1644941570762/work/source/flit_core
 fonttools==4.38.0
 frozenlist==1.3.3
 fsspec==2023.1.0
@@ -159,7 +156,6 @@ threadpoolctl==3.1.0
 tiktoken==0.2.0
 tokenizers==0.13.2
 toml==0.10.2
-tomli @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_d0e5ffbf-5cf1-45be-8693-c5dff8108a2awhthtjlq/croots/recipe/tomli_1657175508477/work
 toolz==0.12.0
 torch==1.13.1
 torch-audiomentations==0.11.0
@@ -171,7 +167,6 @@ tornado==6.2
 tqdm==4.65.0
 transformers==4.26.1
 typer==0.7.0
-typing_extensions @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_10a8_u2ijw/croot/typing_extensions_1669923788997/work
 tzdata==2022.7
 tzlocal==4.2
 urllib3==1.26.14
