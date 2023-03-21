@@ -10,7 +10,8 @@ import tqdm
 from embedder import CodeExtractor
 from openai.embeddings_utils import cosine_similarity, get_embedding
 import uuid
-from constants import  TOKEN_COUNT, root_dir, proj_dir, oai_api_key_embedder, base, chat_base, EMBEDDING_ENCODING, headers
+import openai
+from constants import  TOKEN_COUNT, root_dir, proj_dir, oai_api_key_embedder,  chat_base, EMBEDDING_ENCODING, headers
 openai.api_key = oai_api_key_embedder
 
 def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
@@ -76,11 +77,11 @@ def generate_summary(context_code_pairs, df,model="chat-davinci-003-alpha"):
 				df.loc[df['file_path'] == filepath, 'summary'] = summary.strip()
 				df  = df[pd.notna(df['summary'])]
 				print("embedding summaries...\n\n")
-				ce.df['summary_embedding'] = ce.df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
+				df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
 				return message
 	except:
 		print("embedding error")
-		return message
+	return message
 
 
 def get_tokens(df, colname):
@@ -176,7 +177,7 @@ def chatbot(df, prompt=""):
 															print(data["choices"][0]["delta"]["content"], flush=True, end="")
 													else:
 															message += "\n"
-				return message.strip()
+			return message.strip()
 
 def generate_summary_for_directory(directory, df):
     result = {}
@@ -211,7 +212,7 @@ if __name__ == '__main__':
 	context_pairs = ce.df_search(ce.df, "comments",15, pprint = True) 
 	context_code_pairs = get_rel_context_summary(root_dir, ce.df , 'import')
 
-	generate_summary(context_code_pairs|)
+	generate_summary(context_code_pairs, ce.df)
 
 	
 	# make summary of code 

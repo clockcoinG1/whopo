@@ -105,7 +105,6 @@ pyarrow==11.0.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycodestyle==2.10.0
-pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1636257122734/work
 pycryptodomex==3.17
 pydeck==0.8.0
 pyDeprecate==0.3.2

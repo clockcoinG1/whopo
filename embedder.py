@@ -335,7 +335,7 @@ class CodeExtractor:
 						code = row["code"]
 						tokens = row["tokens"]
 						token_count = row["token_count"]
-						if int(token_count) <= int(max_tokens):
+						if token_count <= max_tokens:
 								new_rows.append(row)
 						else:
 								
@@ -588,7 +588,7 @@ if __name__ == '__main__':
 	total_context_int = sys.argv[4] if len(sys.argv) > 4 else 20
 	token_count = sys.argv[5] if len(sys.argv) > 5 else 200
 	context_prompt = sys.argv[6] if len(sys.argv) > 6 else "Important code"
-
+	# code_root = 'llama'
 	extractor = CodeExtractor(code_root)
 	df = extractor.get_files_df()
 	df["tokens"] = [list(tokenizer.encode(code)) for code in df["code"]]
@@ -596,12 +596,12 @@ if __name__ == '__main__':
 	df["token_count"].sum()
 	# SPLIT by lines or do .split_by_tokens for more granular / sourcemapped files 
 	# df = extractor.split_code_by_lines(df,5)
-	df = extractor.split_code_by_token_count(df,token_count)
+	df = extractor.split_code_by_token_count(df,200)
 
-	# get token totals
+	# get token totals total_context_int = 10
 
 	name = f"codebase_pickle-{str(uuid.uuid4())}.pkl"
 	extractor.df = df
 	extractor.indexCodebase(extractor.df, pickle=name)
-	extractor.df = extractor.df_search(df=extractor.df, code_query=context_prompt,n=total_context_int)
-	extractor.chatbot(gpt_prompt)
+	extractor.df = extractor.df_search(df=extractor.df, code_query="ggml",n=10)
+	extractor.chatbot("What is Llama?")
