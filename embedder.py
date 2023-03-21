@@ -1,3 +1,9 @@
+import datetime
+import os
+import pandas as pd
+from pandas.errors import EmptyDataError
+
+
 import uuid
 import datetime
 import json
@@ -38,6 +44,8 @@ EMBEDDING_ENCODING = 'cl100k_base'
 
 class CodeExtractor:
 		def __init__(self, directory):
+				self.code_root = code_root
+        self.df = pd.DataFrame
 				self.EMBEDDING_MODEL = "text-embedding-ada-002"
 				self.last_result = ""
 				self.max_res = 50
@@ -51,7 +59,6 @@ class CodeExtractor:
 				self.MAX_SECTION_LEN = 500
 				self.SEPARATOR = "<|im_sep|>"
 				self.ENCODING = "gpt2"
-				self.df = pd.DataFrame
 				# self.pkdf = pd.read_pickle(f"{root_dir}/df2.pkl")
 				self.all_files = (
 						glob(os.path.join(directory, "**", "*.py"), recursive=True)
@@ -291,20 +298,26 @@ class CodeExtractor:
 						}
 				)
 
-		def indexCodebase(self, df, pickle="split_codr.pkl"):
-				try:
-						if not os.path.exists(f"{code_root}/{pickle}") or os.path.exists(f"{code_root}/{pickle}"):
-								df['code_embedding'] = df['code'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
-								df.to_pickle(f"{code_root}/{pickle}")
-								# df.to_csv("embedding_" + now + ".csv", index=False)
-						else:
-							df = pd.read_pickle(f"{code_root}/{pickle}")
-						df['file_path'] = df['file_path'].apply(lambda x: x.replace(code_root, ""))
-						now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-						self.df = df
-						print("Indexed codebase: " + now )
-				except Exception:
-						print("Failed to index codebase")
+
+
+    def indexCodebase(self, df, pickle="split_codr.pkl"):
+        try:
+            if not os.path.exists(f"{self.code_root}/{pickle}"):
+                df['code_embedding'] = df['code'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
+                df.to_pickle(f"{self.code_root}/{pickle}")
+                self.df = df
+                print("Indexed codebase: " + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+            else:
+                self.df = pd.read_pickle(f"{self.code_root}/{pickle}")
+        except EmptyDataError as e:
+            print(f"Empty data error: {e}")
+        except Exception as e:
+            print(f"Failed to index codebase: {e}")
+        else:
+            print("Codebase indexed successfully")
+USER: add pandas errors abd tqdm for progress of embedding if  is KeyError:{ str(e)}:
+ASSISTANT:  Here is the SOTA python genius version:
+
 
 		def add_lines_of_code(self, df: pd.DataFrame) -> pd.DataFrame:
 				new_df = (
@@ -576,12 +589,12 @@ def run_chat_loop():
 		ask(input)
 
 
-if len(sys.argv) == 1:
+""" if len(sys.argv) == 1:
 	print( "Must specify a directory as the first argument")
 	exit()
 
 
-if __name__ == '__main__':
+ if __name__ == '__main__':
 
 	DIR = sys.argv[1]
 	code_root = sys.argv[1] if len(sys.argv) > 2 else "llama"
@@ -605,4 +618,4 @@ if __name__ == '__main__':
 	extractor.df = df
 	extractor.indexCodebase(extractor.df, pickle=name)
 	extractor.df = extractor.df_search(df=extractor.df, code_query="ggml",n=10)
-	extractor.chatbot("What is Llama LLM ?")
+	extractor.chatbot("What is Llama LLM ?") """

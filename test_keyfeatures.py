@@ -25,7 +25,7 @@ from constants import (
 openai.api_key = oai_api_key_embedder
 tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
 
-def generate_summary(df,model="chat-davinci-003-alpha"):
+def generate_summary(df,model="chat-davinci-003-alpha", proj_dir = "llama"):
 	message = ""
 	try:
 		if not model:
@@ -81,21 +81,31 @@ def generate_summary(df,model="chat-davinci-003-alpha"):
 							print("\n", flush=True, end="\n")
 							message.strip()
 							continue
-					if 'summary' not in df.columns:
-						df['summary'] = summary.strip()
+							# df.loc[df['file_path'] == filepath, 'summary'] = "NA"
+							# print("embedding summaries...\n\n")
+							# df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
+							
+						# else:
+						# 	df.loc[df['file_path'] == filepath, 'summary'] = df.loc[df['file_path'] == filepath, 'summary'] + summary.strip()
+				# except:
+						# print("embedding error")
+			try:
+				old_sum = df[df['file_name'] == filename ]['summary'].values[0]
+				df.loc[df['file_name'] == filename, 'summary'] = summary.strip()
+			except KeyError:
+				df['summary'] = ''
+				df.loc[df['file_name'] == filename, 'summary'] = summary.strip()
 
-					df.loc[df['file_name'] == filename, 'summary'] = df.loc[df['file_name'] == filename, 'summary'] + summary.strip()
+	df  = df[pd.notna(df['summary'])]
+	proj_dir = re.sub(r'[^a-zA-Z]', '', proj_dir)
 	try: 
-			if df[df['file_path'] == filepath]['summary'].empty:
-				df.loc[df['file_path'] == filepath, 'summary'] = "NA"
-				df.loc[df['file_path'] == filepath, 'summary'] = summary.strip()
-				df  = df[pd.notna(df['summary'])]
-				print("embedding summaries...\n\n")
-				df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
-				return message
+		print("Embedding summaries...")
+		df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
+		df.to_pickle(f"{proj_dir}.pkl")
+		print(f'Saved vectors to "{proj_dir}.pkl"')
 	except:
-		print("embedding error")
-	return message
+			print('error getting embedding...')
+	return df
 
 
 def get_tokens(df, colname):
@@ -105,6 +115,7 @@ def get_tokens(df, colname):
 	code_type = list(df[df.columns[df.columns.to_series().str.contains(colname)]])
 	df = ce.df
 	for _, row in tqdm.tqdm(ce.df.iterrows()):
+		print(row)
 		
 		filepath = row["file_path"]
 		emb_data = "file path: " + filepath + "\n" + str(row[colname])
@@ -124,7 +135,6 @@ def df_search(df, summary_query, n=3, pprint=True):
 		
 	return res
 
-generate_summary(df)
 
 
 def q_and_a(encoding, df, question = "What isthe most important file", total = 10, MAX_SECTION_LEN = 7000) -> str:
@@ -147,6 +157,7 @@ def q_and_a(encoding, df, question = "What isthe most important file", total = 1
 
 
 def chatbot(df, prompt=""):
+			df["summary"] = "" 
 			encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 			enc_prompt  = encoder.encode(prompt)
 			codebaseContext = q_and_a(encoder, df, question=prompt)
@@ -197,7 +208,7 @@ def generate_summary_for_directory(directory, df):
     result = {}
     with os.scandir(directory) as entries:
         for entry in entries:
-            if entry.name.endswith('.py'):
+            if entry.name.endswith('.py') or entry.name.endswith('.cpp') or entry.name.endswith('.ts') or entry.name.endswith('.js') or entry.name.endswith('.ant'):
                 file_path = os.path.join(directory, entry.name)
                 if df[df['file_path'] == file_path]['summary'].empty:
                     summary = generate_summary_for_file(file_path)
@@ -206,6 +217,8 @@ def generate_summary_for_directory(directory, df):
                 else:
                     result[file_path] = df[df['file_path'] == file_path]['summary'].values[0]
     return result
+
+
 
 if __name__ == '__main__':
 	"""
@@ -216,9 +229,15 @@ if __name__ == '__main__':
 
 	ce  = CodeExtractor(f"{root_dir}{proj_dir}")
 	ce.df = ce.get_files_df()
+	
+	if 'summary' not in ce.df.columns:
+						ce.df['summary'] = ""
+	
 	ce.df["tokens"] = [list(tokenizer.encode(code)) for code in ce.df["code"]]
 	ce.df["token_count"] = [len(code) for code in ce.df["tokens"]]
-	ce.df = ce.split_code_by_token_count(ce.df, 100)
+	ce.df = ce.split_code_by_token_count(ce.df, 400)
+	ce.df["tokens"] = [list(tokenizer.encode(code)) for code in ce.df["code"]]
+	ce.df["token_count"] = [len(code) for code in ce.df["tokens"]]
 	ce.df["token_count"].sum()
 
 	name = f"codebase_pickle-{str(uuid.uuid4()).split('-')[0]}.pkl"
@@ -226,7 +245,7 @@ if __name__ == '__main__':
 	context_pairs = ce.df_search(ce.df, "params",15, pprint = True) 
 	context_code_pairs = get_rel_context_summary(root_dir, ce.df , 'import')
 
-	rez = generate_summary(ce.df)
+	rez3 = generate_summary(ce.df)
 	for _ , row in ce.df.iterrows():
 			print(row["file_name"])
 			print(row["summary"])
