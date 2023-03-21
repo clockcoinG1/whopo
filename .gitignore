@@ -1,10 +1,6 @@
-
-**.csv
-**.pkl
-info*.txt
-temp/
-.mypy_cache/
-__pycache__/
-*.tmp
-*.pkl
+llama.pkl
+*pkl
+*csv
 llama
+__pycache__
+.mypy_cache
