@@ -315,8 +315,7 @@ class CodeExtractor:
             print(f"Failed to index codebase: {e}")
         else:
             print("Codebase indexed successfully")
-USER: add pandas errors abd tqdm for progress of embedding if  is KeyError:{ str(e)}:
-ASSISTANT:  Here is the SOTA python genius version:
+
 
 
 		def add_lines_of_code(self, df: pd.DataFrame) -> pd.DataFrame:
