@@ -137,15 +137,15 @@ def df_search(df, summary_query, n=3, pprint=True):
 
 
 
-def q_and_a(encoding, df, question = "What isthe most important file", total = 10, MAX_SECTION_LEN = 7000) -> str:
+def q_and_a(df, question = "What isthe most important file", total = 10, MAX_SECTION_LEN = 7000) -> str:
 		SEPARATOR = "<|im_sep|>"
-		separator_len = len(encoding.encode(SEPARATOR))
+		separator_len = len(encoder.encode(SEPARATOR))
 		relevant_notes = df_search(df, question, total, pprint=True)
 		chosen_sections = []
 		chosen_sections_len = 0
 		for _, row in relevant_notes.iterrows():
 				notes_str = f"Path: {row['file_path']}\nSummary:\n{row['summary']}"
-				notes_str_len = len(encoding.encode(notes_str))
+				notes_str_len = len(encoder.encode(notes_str))
 				if chosen_sections_len + separator_len + notes_str_len > MAX_SECTION_LEN:
 						break
 				chosen_sections.append(SEPARATOR + notes_str)
@@ -157,10 +157,9 @@ def q_and_a(encoding, df, question = "What isthe most important file", total = 1
 
 
 def chatbot(df, prompt=""):
-			df["summary"] = "" 
 			encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 			enc_prompt  = encoder.encode(prompt)
-			codebaseContext = q_and_a(encoder, df, question=prompt)
+			codebaseContext = q_and_a(df, question=prompt)
 			cbc_prompt  = encoder.encode(codebaseContext)
 			print(f"\033[1;37m{enc_prompt}\t\tTokens:{str(len(enc_prompt) + len(cbc_prompt) )}\033[0m")
 			avail_tokens= 3596 - (len(enc_prompt)  + len(cbc_prompt))
@@ -242,7 +241,7 @@ if __name__ == '__main__':
 
 	name = f"codebase_pickle-{str(uuid.uuid4()).split('-')[0]}.pkl"
 	ce.indexCodebase(ce.df, pickle=name)
-	context_pairs = ce.df_search(ce.df, "params",15, pprint = True) 
+	context_pairs = ce.df_search(rez3, "params",15, pprint = True) 
 	context_code_pairs = get_rel_context_summary(root_dir, ce.df , 'import')
 
 	rez3 = generate_summary(ce.df)
@@ -251,23 +250,29 @@ if __name__ == '__main__':
 			print(row["summary"])
 	
 	# make summary of code 
-
-	ce.df  = get_tokens(ce.df,"summary")
+	df = rez3
+	ce.df  = get_tokens(rez3,"summary")
 	# SEARCH for matching summary
-	context_pairs = df_search(ce.df, "server", 10, pprint=True)
-	ce.df.sort_values(["summary"])
-	# last_result = generate_summary(context_code_pairs,df )
-	df["file_path"]=df["file_path"].str.replace(os.getenv("HOME"),"")
-	for file_path, summary in new_summaries.items():
-		if summary:
-				df.loc[df['file_path'] == filepath, 'summary'] = summary.strip()
+	context_pairs = df_search(rez3, "server", 10, pprint=True)
+
+	df["file_path"]=df["file_path"].str.replace(os.getenv("HOME") + root_dir + proj_dir,"")
+
+
+				# df.loc[df['file_path'] == filepath, 'summary'] = summary.strip
 # USER: df where "summary" column rows are not NaN
 # Assistant: OK here is how to get pandas to replace NaN with an empty string:
 
 
-	df["summary"][0]
-	chatbot("what is the best way to change this to a stanalone app?")
-	q_and_a(ce.df, "API")
+	for _ ,y in df.iterrows():
+			fp = y["file_path"]
+			fn = y["file_name"]
+			fn = y["file_name"]
+
+			print("\033[33;40m"+str(_) +"\t\t" +fp + "\t\t" + fn + f"\t\tINDEX:  {str(_)}" + "\033[0m")
+			print("\033[33;40m"+y + "\033[0m")
+			print()
+	chatbot(df , "What is ggml?")
+	q_and_a(context_pairs, "API")
 
 	def ask(query, gpt=False):
 		print(f"{query}\n\nUSER:", flush=False, end="  ")
