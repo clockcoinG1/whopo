@@ -4,9 +4,11 @@ import requests
 import tiktoken
 import pandas as pd
 import os
+import re
 import json
 from get_rel_code import api_key, get_context_code, get_rel_context_summary
 import tqdm
+from CodebaseIndexer import indexCodebase
 from embedder import CodeExtractor
 import openai
 from openai.embeddings_utils import cosine_similarity, get_embedding
@@ -14,6 +16,7 @@ import uuid
 from constants import (
 	TOKEN_COUNT,
 	root_dir,
+	MAX_TOKEN_COUNT,
 	proj_dir,
 	oai_api_key_embedder,
 	chat_base,
@@ -24,8 +27,10 @@ from constants import (
 
 openai.api_key = oai_api_key_embedder
 tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
+encoder = tokenizer
 
 def generate_summary(df,model="chat-davinci-003-alpha", proj_dir = "llama"):
+	df["file_path"]=df["file_path"].str.replace(os.getenv("HOME") + root_dir + proj_dir,"")
 	message = ""
 	try:
 		if not model:
@@ -41,7 +46,7 @@ def generate_summary(df,model="chat-davinci-003-alpha", proj_dir = "llama"):
 		encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 		enc_prompt = encoder.encode(str(prompt))
 		tokens = len(encoder.encode(code) + enc_prompt) or 1
-		max_token = 500 + tokens
+		max_token = 500 + MAX_TOKEN_COUNT
 		r = requests.post(
 			base,
 			headers=headers,
@@ -97,12 +102,14 @@ def generate_summary(df,model="chat-davinci-003-alpha", proj_dir = "llama"):
 				df.loc[df['file_name'] == filename, 'summary'] = summary.strip()
 
 	df  = df[pd.notna(df['summary'])]
-	proj_dir = re.sub(r'[^a-zA-Z]', '', proj_dir)
+	proj_dir_pikl = re.sub(r'[^a-zA-Z]', '', proj_dir)
 	try: 
+		df["summary_tokens"] = [list(tokenizer.encode(summary)) for summary in df["summary"]]
+		df["summary_token_count"] = [len(summary) for summary in df["summary_tokens"]]
 		print("Embedding summaries...")
 		df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
-		df.to_pickle(f"{proj_dir}.pkl")
-		print(f'Saved vectors to "{proj_dir}.pkl"')
+		df.to_pickle(f"{proj_dir_pikl}.pkl")
+		print(f'Saved vectors to "{proj_dir_pikl}.pkl"')
 	except:
 			print('error getting embedding...')
 	return df
@@ -139,6 +146,7 @@ def df_search(df, summary_query, n=3, pprint=True):
 
 def q_and_a(df, question = "What isthe most important file", total = 10, MAX_SECTION_LEN = 7000) -> str:
 		SEPARATOR = "<|im_sep|>"
+		encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 		separator_len = len(encoder.encode(SEPARATOR))
 		relevant_notes = df_search(df, question, total, pprint=True)
 		chosen_sections = []
@@ -156,10 +164,10 @@ def q_and_a(df, question = "What isthe most important file", total = 10, MAX_SEC
 		return f'''<|start_context|>\n Project notes to help assistant with answering query "{question}" \n context: {chosen_sections_str}\n<|end_context|>\n<|im_start|>'''
 
 
-def chatbot(df, prompt=""):
+def chatbot(df, prompt="", n = 4):
 			encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 			enc_prompt  = encoder.encode(prompt)
-			codebaseContext = q_and_a(df, question=prompt)
+			codebaseContext = q_and_a(df, question=prompt, total = n)
 			cbc_prompt  = encoder.encode(codebaseContext)
 			print(f"\033[1;37m{enc_prompt}\t\tTokens:{str(len(enc_prompt) + len(cbc_prompt) )}\033[0m")
 			avail_tokens= 3596 - (len(enc_prompt)  + len(cbc_prompt))
@@ -220,72 +228,11 @@ def generate_summary_for_directory(directory, df):
 
 
 if __name__ == '__main__':
-	"""
-		Split by token count
-		or :
-		 df = ce.split_code_by_lines(df,5)
-	"""
-
 	ce  = CodeExtractor(f"{root_dir}{proj_dir}")
-	ce.df = ce.get_files_df()
-	
-	if 'summary' not in ce.df.columns:
-						ce.df['summary'] = ""
-	
-	ce.df["tokens"] = [list(tokenizer.encode(code)) for code in ce.df["code"]]
-	ce.df["token_count"] = [len(code) for code in ce.df["tokens"]]
-	ce.df = ce.split_code_by_token_count(ce.df, 400)
-	ce.df["tokens"] = [list(tokenizer.encode(code)) for code in ce.df["code"]]
-	ce.df["token_count"] = [len(code) for code in ce.df["tokens"]]
-	ce.df["token_count"].sum()
-
-	name = f"codebase_pickle-{str(uuid.uuid4()).split('-')[0]}.pkl"
-	ce.indexCodebase(ce.df, pickle=name)
-	context_pairs = ce.df_search(rez3, "params",15, pprint = True) 
-	context_code_pairs = get_rel_context_summary(root_dir, ce.df , 'import')
-
-	rez3 = generate_summary(ce.df)
-	for _ , row in ce.df.iterrows():
-			print(row["file_name"])
-			print(row["summary"])
-	
-	# make summary of code 
-	df = rez3
-	ce.df  = get_tokens(rez3,"summary")
-	# SEARCH for matching summary
-	context_pairs = df_search(rez3, "server", 10, pprint=True)
-
-	df["file_path"]=df["file_path"].str.replace(os.getenv("HOME") + root_dir + proj_dir,"")
-
-
-				# df.loc[df['file_path'] == filepath, 'summary'] = summary.strip
-# USER: df where "summary" column rows are not NaN
-# Assistant: OK here is how to get pandas to replace NaN with an empty string:
-
-
-	for _ ,y in df.iterrows():
-			fp = y["file_path"]
-			fn = y["file_name"]
-			fn = y["file_name"]
-
-			print("\033[33;40m"+str(_) +"\t\t" +fp + "\t\t" + fn + f"\t\tINDEX:  {str(_)}" + "\033[0m")
-			print("\033[33;40m"+y + "\033[0m")
-			print()
-	chatbot(df , "What is ggml?")
-	q_and_a(context_pairs, "API")
-
-	def ask(query, gpt=False):
-		print(f"{query}\n\nUSER:", flush=False, end="  ")
-		question = input()
-		if question == "q":
-			print("bye")
-			exit(0)
-			chatbot(prompt=f"{question}")
-			print("\n")
-			print("Sorry, I didn't understand that.")
-
-	while True:
-		print("QUERY:", flush=False, end="  ")
-		question = input()
-		ask(input)
-
+	df = ce.get_files_df()
+	df = indexCodebase(df, "code", pickle="test_emb")
+	df = generate_summary(df)
+	chatbot(df , "models used and todo items",20)
+	# df = ce.split_code_by_token_count(df, MAX_TOKEN_COUNT)
+	# ce.indexCodebase(df)
+	# df = indexCodebase(df, "summary", pickle="test_sum")
