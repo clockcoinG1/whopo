@@ -109,6 +109,6 @@ def write_md_files(df: pd.DataFrame, proj_dir: str = proj_dir) -> None:
 								f.write(header)
 						f.write(f"# {filename}\n\n")
 						f.write(f"## Summary\n\n{summ}\n\n")
-						f.write(f"## Code\n\n```python\n{row['code']}\n```\n\n")
+						f.write(f"## Code Length\n\n```python\n{len(row['code'])}\n```\n\n")
 						f.write(f"## Filepath\n\n```{filepath}```\n\n")
 						print(f"\033[1;33;44mwrote markdown files: {proj_dir}/docs/{row['file_path'].split('/')[-1]}.md root\033[0m")

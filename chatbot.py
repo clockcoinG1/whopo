@@ -181,7 +181,7 @@ def chatbot(df, prompt="What does this code do?", n = 4):
 							"temperature": 2,
 							"top_p": 0.05,
 							"n": 1,
-							"stop": ["<|/im_end|>"],
+							"stop": ["\nSYSTEM:", "\nUSER:", "\nASSISTANT:","<|im_end|>" ],
 							"stream": True,
 							"max_tokens": 8000 - int(avail_tokens),
 							"presence_penalty": 0,
