@@ -268,8 +268,10 @@ if __name__ == '__main__':
 		write_md_files(df, os.getcwd() + proj_dir)
 		proj_dir_pikl = re.sub(r'[^a-zA-Z]', '', proj_dir)
 		df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002') if x else None)
-		rez  = df_search_sum(df, "What does the code do", pprint=True)
-		chatbot(df, rez , n)
+		while True: 
+			ask = input("\033[33mAsk about the files, code, summaries:\033[0m\n\033[44mUSER:  \033[0m")
+			rez  = df_search_sum(df, ask, pprint=True)
+			chatbot(df, rez , n)
 
 """ ```
 
@@ -279,7 +281,6 @@ if __name__ == '__main__':
 		# try:
 		# 	# prompt = "What does this code do?" n = 10
 		# 	# question = q_and_a(df, prompt, n, 2000)
-		# 	while True: 
 		# except:
 		# 	print("error")
 ERROR: TypeError: unsupported operand type(s) for *: 'NoneType' and 'float'
