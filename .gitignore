@@ -5,7 +5,5 @@ llama
 __pycache__
 .mypy_cache
 Untitled-2.py
-parsero/pycop/docs/CodeBaseIndexer.py.md
-parsero/pycop/docs/test_keyfeatures.py.md
-pycop/docs/CodeBaseIndexer.py.md
-pycop/docs/test_keyfeatures.py.md
+parsero/pycop/
+

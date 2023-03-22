@@ -81,7 +81,7 @@ def generate_summary(
 				# 	"[27, 91, 320, 62, 437, 91, 29, 198]" : -100
 				# 	},
 				"stop": ["\nSYSTEM:", "\nUSER:", "\nASSISTANT:","<|im_end|>" ],
-				"max_tokens": 3000 + tokens,
+				"max_tokens": 500 + tokens,
 				"presence_penalty": 1,
 				"frequency_penalty": 1,
 			}
@@ -138,13 +138,14 @@ def get_tokens(df, colname):
 
 def df_search(df, summary_query, n=3, pprint=True):
 	embedding = get_embedding(engine="text-embedding-ada-002", text=summary_query)
-	df['summary_similarities'] = df.summary_embedding.apply(lambda x: cosine_similarity(x, embedding) if x else None)
+	#df.summary_embedding
+	df= df.loc[df.summary_embedding.notnull(), 'summary_embedding']
+	embedding = get_embedding(engine="text-embedding-ada-002", text=summary_query)
+	df['summary_similarities'] = df.summary_embedding.apply(lambda x: cosine_similarity(x, embedding))
 	res = df.sort_values('summary_similarities', ascending=False).head(n)
 	res_str = ""
 	for r in res.iterrows():
-		
 		res_str += f"{r[1].file_path}\n {r[1].summary} \n score={r[1].summary_similarities}"
-		
 	return res
 
 
@@ -165,15 +166,10 @@ def q_and_a(df, question = "What isthe most important file", total = 10, MAX_SEC
 		
 		chosen_sections_str = f"".join(chosen_sections)
 		print(f"Selected {len(chosen_sections)} document sections:")
-		return f'''<|start_context|>\n Project notes to help assistant with answering query "{question}" \n context: {chosen_sections_str}\n<|end_context|>\n<|im_start|>'''
-
+		return f'''<|start_context|>\n Project notes to help assistant with answering query "{question}" \n context: {chosen_sections_str}\n<|end_context|>\n<|im_sep|>'''
 
 def chatbot(df, prompt="What does this code do?", n = 4):
-			enc_prompt  = encoder.encode(prompt)
-			cbc_prompt  = q_and_a(df , prompt, n )
-			print(f"\033[1;37m{enc_prompt}\t\tTokens:{str(len(enc_prompt) + len(cbc_prompt) )}\033[0m")
-			avail_tokens= 3596 - (len(enc_prompt)  + len(cbc_prompt))
-			print(f"\n\033[1;37mTOTAL OUTPUT TOKENS AVAILABLE:{avail_tokens}\n\033[0m")
+			avail_tokens = len(encoder.encode(prompt))
 			r = requests.post(
 					chat_base, headers=headers, stream=True,
 					json={
@@ -212,6 +208,7 @@ def chatbot(df, prompt="What does this code do?", n = 4):
 															message += "\n"
 			return message.strip()
 
+
 def generate_summary_for_directory(directory, df):
 		result = {}
 		with os.scandir(directory) as entries:
@@ -225,6 +222,22 @@ def generate_summary_for_directory(directory, df):
 								else:
 										result[file_path] = df[df['file_path'] == file_path]['summary'].values[0]
 		return result
+
+
+def df_search_sum(df, summary_query, n=3, pprint=True, n_lines=7):
+		embedding  = get_embedding(engine="text-embedding-ada-002", text=summary_query)
+		df['summary_simmilarities'] = df.summary_embedding.apply(lambda x: cosine_similarity(x, embedding) if x is not None else 0.8)
+		res = df.sort_values('summary_embedding', ascending=False).head(n)
+		res_str = ""
+		if pprint:
+				for r in res.iterrows():
+						print(r[1].file_path + " " + "  score=" + str(round(r[1]["summary_simmilarities"], 3)))
+						res_str += r[1].file_path + " " + "  score=" + str(round(r[1]["summary_simmilarities"], 3))
+						print("\n".join(r[1].summary.split("\n")[:n_lines]))
+						res_str += "\n".join(r[1].summary.split("\n")[:n_lines])
+						res_str += '-' * 70
+						print('-' * 70)
+		return res_str
 
 if __name__ == '__main__':
 		parser = argparse.ArgumentParser(description='Code summarization chatbot')
@@ -255,12 +268,22 @@ if __name__ == '__main__':
 		write_md_files(df, os.getcwd() + proj_dir)
 		proj_dir_pikl = re.sub(r'[^a-zA-Z]', '', proj_dir)
 		df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002') if x else None)
-		try:
-			# prompt = "What does this code do?" n = 10
-			# question = q_and_a(df, prompt, n, 2000)
-			while True: 
-				ask = input("USER:  ")
-				q = q_and_a(df , prompt, n )
-				chatbot(df, q , n)
-		except:
-			print("error")
+		rez  = df_search_sum(df, "What does the code do", pprint=True)
+		chatbot(df, rez , n)
+
+""" ```
+
+		# a = q_and_a(e, question=p)
+		# chatbot(e,a)
+		# q = q_and_a(df , ask  , prompt, n )
+		# try:
+		# 	# prompt = "What does this code do?" n = 10
+		# 	# question = q_and_a(df, prompt, n, 2000)
+		# 	while True: 
+		# except:
+		# 	print("error")
+ERROR: TypeError: unsupported operand type(s) for *: 'NoneType' and 'float'
+USER: The above causes the avove error. It is because some of the summaries are empty. Lets ignore getting the similarity score for those and set it to 0.8
+ASSISTANT: Fixed Code: ```python
+
+ """
