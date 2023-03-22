@@ -32,9 +32,9 @@ tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
 encoder = tokenizer
 
 def generate_summary(
-    df: pd.DataFrame,
-    model: str = "chat-davinci-003-alpha",
-    proj_dir: str = "llama",
+		df: pd.DataFrame,
+		model: str = "chat-davinci-003-alpha",
+		proj_dir: str = "llama",
 ) -> pd.DataFrame:
 	"""
 	Generate a summary of each file in the dataframe using the OpenAI API.
@@ -47,9 +47,9 @@ def generate_summary(
 	Returns:
 			pd.DataFrame: The dataframe with the summaries added.
 	"""
-	df["file_path"] = df["file_path"].str.replace(
-			os.getenv("HOME") , ""
-	)
+	# df["file_path"] = df["file_path"].str.replace(
+	# 		root_dir , ""
+	# )
 	message = ""
 	try:
 		if not model:
@@ -117,21 +117,7 @@ def generate_summary(
 				old_sum = df[df['file_name'] == filename ]['summary'].values[0]
 				df.loc[df['file_name'] == filename, 'summary'] = summary.strip()
 			except KeyError:
-				df['summary'] = ''
 				df.loc[df['file_name'] == filename, 'summary'] = summary.strip()
-
-	df  = df[pd.notna(df['summary'])]
-	proj_dir_pikl = re.sub(r'[^a-zA-Z]', '', proj_dir)
-	try: 
-		df["summary_tokens"] = [list(tokenizer.encode(summary)) for summary in df["summary"]]
-		df["summary_token_count"] = [len(summary) for summary in df["summary_tokens"]]
-		print("Embedding summaries...")
-		df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
-		df.to_pickle(f"{proj_dir_pikl}.pkl")
-		print(f'Saved vectors to "{proj_dir_pikl}.pkl"')
-		write_md_files(df)
-	except:
-			print('error getting embedding...')
 	return df
 
 def get_tokens(df, colname):
@@ -152,7 +138,7 @@ def get_tokens(df, colname):
 
 def df_search(df, summary_query, n=3, pprint=True):
 	embedding = get_embedding(engine="text-embedding-ada-002", text=summary_query)
-	df['summary_similarities'] = df.summary_embedding.apply(lambda x: cosine_similarity(x, embedding))
+	df['summary_similarities'] = df.summary_embedding.apply(lambda x: cosine_similarity(x, embedding) if x else None)
 	res = df.sort_values('summary_similarities', ascending=False).head(n)
 	res_str = ""
 	for r in res.iterrows():
@@ -160,6 +146,7 @@ def df_search(df, summary_query, n=3, pprint=True):
 		res_str += f"{r[1].file_path}\n {r[1].summary} \n score={r[1].summary_similarities}"
 		
 	return res
+
 
 def q_and_a(df, question = "What isthe most important file", total = 10, MAX_SECTION_LEN = 7000) -> str:
 		SEPARATOR = "<|im_sep|>"
@@ -182,10 +169,8 @@ def q_and_a(df, question = "What isthe most important file", total = 10, MAX_SEC
 
 
 def chatbot(df, prompt="What does this code do?", n = 4):
-			encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 			enc_prompt  = encoder.encode(prompt)
-			codebaseContext = q_and_a(df, question=prompt, total = n)
-			cbc_prompt  = encoder.encode(codebaseContext)
+			cbc_prompt  = q_and_a(df , prompt, n )
 			print(f"\033[1;37m{enc_prompt}\t\tTokens:{str(len(enc_prompt) + len(cbc_prompt) )}\033[0m")
 			avail_tokens= 3596 - (len(enc_prompt)  + len(cbc_prompt))
 			print(f"\n\033[1;37mTOTAL OUTPUT TOKENS AVAILABLE:{avail_tokens}\n\033[0m")
@@ -195,11 +180,10 @@ def chatbot(df, prompt="What does this code do?", n = 4):
 							"model": "gpt-3.5-turbo",
 							"messages": [
 									{"role": "system", "content": f"You are the ASSISTANT helping the USER with optimizing and analyzing a codebase. You are intelligent, helpful, and an expert developer, who always gives the correct answer and only does what is instructed. You always answer truthfully and don't make things up."},
-									{"role": "user", "content": f"\n{codebaseContext}\n"},
 									{"role": "user", "content": f"{prompt}"}
 							],
-							"temperature": 0.8,
-							"top_p": 1,
+							"temperature": 2,
+							"top_p": 0.05,
 							"n": 1,
 							"stop": ["<|/im_end|>"],
 							"stream": True,
@@ -229,42 +213,54 @@ def chatbot(df, prompt="What does this code do?", n = 4):
 			return message.strip()
 
 def generate_summary_for_directory(directory, df):
-    result = {}
-    with os.scandir(directory) as entries:
-        for entry in entries:
-            if entry.name.endswith(('.py', '.cpp', '.ts', '.js', '.ant')):
-                file_path = os.path.join(directory, entry.name)
-                if df[df['file_path'] == file_path]['summary'].empty:
-                    summary = generate_summary_for_file(file_path)
-                    df.loc[df['file_path'] == file_path, 'summary'] = summary
-                    result[file_path] = summary
-                else:
-                    result[file_path] = df[df['file_path'] == file_path]['summary'].values[0]
-    return result
+		result = {}
+		with os.scandir(directory) as entries:
+				for entry in entries:
+						if entry.name.endswith(('.py', '.cpp', '.ts', '.js', '.ant')):
+								file_path = os.path.join(directory, entry.name)
+								if df[df['file_path'] == file_path]['summary'].empty:
+										summary = generate_summary_for_file(file_path)
+										df.loc[df['file_path'] == file_path, 'summary'] = summary
+										result[file_path] = summary
+								else:
+										result[file_path] = df[df['file_path'] == file_path]['summary'].values[0]
+		return result
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Code summarization chatbot')
-    parser.add_argument('directory', type=str, help='directory to summarize')
-    parser.add_argument('--root', type=str, default='root directory', help='Where root of project is')
-    parser.add_argument('-n', type=str, default='Important code', help='context prompt')
-    parser.add_argument('-p', type=str, default='What does this code do?', help='gpt prompt')
-    parser.add_argument('--context', type=int, default=20, help='context length')
-    parser.add_argument('--max_tokens', type=int, default=500, help='maximum number of tokens in summary')
-    args = parser.parse_args()
-    proj_dir = args.directory
-    root_dir = args.root
-    prompt = args.p
-    n = args.n
-    if not os.path.exists(root_dir + "/" + proj_dir):
-        print(f"Directory {root_dir + args.directory} does not exist")
-        sys.exit()
-    context_prompt = args.context
+		parser = argparse.ArgumentParser(description='Code summarization chatbot')
+		parser.add_argument('directory', type=str, help='directory to summarize')
+		parser.add_argument('--root', type=str, default='root directory', help='Where root of project is')
+		parser.add_argument('-n', type=str, default='Important code', help='context prompt')
+		parser.add_argument('-p', type=str, default='What does this code do?', help='gpt prompt')
+		parser.add_argument('--context', type=int, default=20, help='context length')
+		parser.add_argument('--max_tokens', type=int, default=500, help='maximum number of tokens in summary')
 
-    ce = CodeExtractor(f"{root_dir}{proj_dir}")
-    df = ce.get_files_df()
-    df = indexCodebase(df, "code", pickle="test_emb",embed=True)
-    df = split_code_by_token_count(df, args.max_tokens, "code" )
-    df = indexCodebase(df, "summary", pickle="test_emb", embed=False)
-    df = generate_summary(df)
+		args = parser.parse_args()
+		print(args)
+		proj_dir = args.directory
+		root_dir = args.root
+		prompt = args.p
+		n = args.n
+		if not os.path.exists(root_dir + "/" + proj_dir):
+				print(f"Directory {root_dir + args.directory} does not exist")
+				sys.exit()
+		context_prompt = args.context
 
-    chatbot(df, prompt, n)
+		ce = CodeExtractor(f"{root_dir}{proj_dir}")
+		df = ce.get_files_df()
+		df = split_code_by_token_count(df, args.max_tokens , "code" )
+		df = indexCodebase(df, "code", pickle="safsf.pkl")
+		# df = split_code_by_token_count(df, 500, "code" )
+		df = generate_summary(df)
+		write_md_files(df, os.getcwd() + proj_dir)
+		proj_dir_pikl = re.sub(r'[^a-zA-Z]', '', proj_dir)
+		df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002') if x else None)
+		try:
+			# prompt = "What does this code do?" n = 10
+			# question = q_and_a(df, prompt, n, 2000)
+			while True: 
+				ask = input("USER:  ")
+				q = q_and_a(df , prompt, n )
+				chatbot(df, q , n)
+		except:
+			print("error")

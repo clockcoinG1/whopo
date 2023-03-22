@@ -13,7 +13,7 @@ openai.api_key = oai_api_key_embedder
 EMBEDDING_ENCODING = 'cl100k_base'
 tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
 
-def indexCodebase(df: pd.DataFrame, col_name: str, pickle: str = "split_codr", embed=False) -> pd.DataFrame:
+def indexCodebase(df: pd.DataFrame, col_name: str, pickle: str = "split_codr") -> pd.DataFrame:
 		"""
 		Indexes the codebase and saves it to a pickle file
 		
@@ -27,23 +27,22 @@ def indexCodebase(df: pd.DataFrame, col_name: str, pickle: str = "split_codr", e
 		"""
 		code_root = root_dir + proj_dir
 		try:
-				if not os.path.exists(f"{code_root}/{pickle}.pkl"):
-						df[f"{col_name}_tokens"] = [list(tokenizer.encode(code)) for code in df[col_name]]
-						df[f"{col_name}_token_count"] = [len(code) for code in df[f"{col_name}_tokens"]]
-						df.to_pickle(f"{code_root}/{pickle}.pkl")
-						if embed  == True:
-							df[f"{col_name}_embedding"] = df[f"{col_name}"].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002')) 
-						print("Indexed codebase: " + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-						return df
-				else:
-						df = pd.read_pickle(f"{code_root}/{pickle}.pkl")
-						return df
+				df[f"{col_name}_tokens"] = [list(tokenizer.encode(code)) for code in df[col_name]]
+				df[f"{col_name}_token_count"] = [len(code) for code in df[f"{col_name}_tokens"]]
+				df.to_pickle(f"{code_root}/{pickle}.pkl")
+				df[f"{col_name}_embedding"] = df[f"{col_name}"].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002')) 
+				print("Indexed codebase: " + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+				return df
+				# else:
+				# 		df = pd.read_pickle(f"{code_root}/{pickle}.pkl")
+				# 		return df
 		except EmptyDataError as e:
 				print(f"Empty data error: {e}")
 		except Exception as e:
 				print(f"Failed to index codebase: {e}")
 		else:
 				print("Codebase indexed successfully")
+				return df
 
 def split_code_by_token_count(df: pd.DataFrame, max_tokens: int = 8100, col_name: str = "code") -> pd.DataFrame:
 		"""
@@ -81,7 +80,7 @@ def split_code_by_token_count(df: pd.DataFrame, max_tokens: int = 8100, col_name
 		print("Columns:", new_df.shape[1], end="\n=============================\n")
 		return new_df
 
-def write_md_files(df: pd.DataFrame, proj_dir: str = "llama") -> None:
+def write_md_files(df: pd.DataFrame, proj_dir: str = proj_dir) -> None:
 		"""
 		Writes the markdown files
 		
