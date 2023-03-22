@@ -293,10 +293,9 @@ def main():
 				ask = input("\n\033[33mAsk about the files, code, summaries:\033[0m\n\n\033[44mUSER:  \033[0m")
 				# q_and_a(df, "What is the code do?", n, 500)# max_tokens * context_n = 15)
 				summary_items  = df_search_sum(df, ask, pprint=True, n=n , n_lines=context) 
-				chatbot(df, f"## context from embeddings\n```{summary_items}```\n\nUSER: {ask}" , context)
+				chatbot(df, f"## context from embedding\nSummaries:\n{summary_items}\n\n USER: {ask}" , context)
 
 
-""" if __name__ == '__main__':
+if __name__ == '__main__':
 	main()
 
- """
