@@ -6,9 +6,9 @@ import pandas as pd
 from typing import List, Tuple
 from embedder import CodeExtractor
 from chatbot import generate_summary, write_md_files, get_embedding, df_search_sum, chatbot
-from utils import split_code_by_token_count, indexCodebase
+from utils import split_code_by_TOKEN_MAX_SUMMARY, indexCodebase
 
-MAX_TOKEN_COUNT = 1000
+MAX_TOKEN_MAX_SUMMARY = 1000
 
 def main():
 	parser = argparse.ArgumentParser(description='Code summarization chatbot')

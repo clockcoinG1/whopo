@@ -49,8 +49,8 @@ The chatbot uses the following environment variables:
 - `CODE_EXTRACTOR_DIR`: The root directory of the codebase you want to summarize.
 - `OAI_CD3_KEY`: The OpenAI API key for the Code-Davinci-003 model.
 - `OPENAI_API_KEY`: The OpenAI API key for the GPT-3 API.
-- `MAX_TOKEN_COUNT`: The maximum number of tokens to use when summarizing code.
-- `TOKEN_COUNT`: The number of tokens to use when summarizing code.
+- `MAX_TOKEN_MAX_SUMMARY`: The maximum number of tokens to use when summarizing code.
+- `TOKEN_MAX_SUMMARY`: The number of tokens to use when summarizing code.
 
 You can set these environment variables in a `.env` file in the root directory of the project.
 
@@ -115,7 +115,7 @@ optional arguments:
   --max_tokens MAX_TOKENS
                         maximum number of tokens in summary
 (diart) `
-and reflect the .env CODE_EXTRACTOR_DIR OAI_CD3_KEY OPENAI_API_KEY MAX_TOKEN_COUNT GPT_MODEL TOKEN_COUNT, and  the command line arguments from the code :
+and reflect the .env CODE_EXTRACTOR_DIR OAI_CD3_KEY OPENAI_API_KEY MAX_TOKEN_MAX_SUMMARY GPT_MODEL TOKEN_MAX_SUMMARY, and  the command line arguments from the code :
 ```def main():
 		parser = argparse.ArgumentParser(description='Code summarization chatbot')
 		parser.add_argument('directory', type=str, default="/ezcoder", help='directory to summarize')
@@ -162,14 +162,14 @@ and reflect the .env CODE_EXTRACTOR_DIR OAI_CD3_KEY OPENAI_API_KEY MAX_TOKEN_COU
 		prompt = args.prompt.strip()  if args.prompt is not None else "Explain the code"
 		n = args.n if args.n is not None else 20
 		context =  args.context if args.context is not None else 15
-		max_tokens = args.max_tokens if args.max_tokens is not None else MAX_TOKEN_COUNT
+		max_tokens = args.max_tokens if args.max_tokens is not None else MAX_TOKEN_MAX_SUMMARY
 		if not os.path.exists(root_dir + "/" + proj_dir):
 				print(f"Directory {root_dir + args.directory} does not exist")
 				sys.exit()
 		
 		ce = CodeExtractor(f"{root_dir}/{proj_dir}")
 		df = ce.get_files_df()
-		df = split_code_by_token_count(df,  col_name="code",  max_tokens=max_tokens) # OR  df = ce.split_code_by_lines(df, max_lines=6)
+		df = split_code_by_TOKEN_MAX_SUMMARY(df,  col_name="code",  max_tokens=max_tokens) # OR  df = ce.split_code_by_lines(df, max_lines=6)
 		df = indexCodebase(df,"code" , pickle=f"{root_dir}/{proj_dir}.pkl", code_root=f"{root_dir}/{proj_dir}")
 		print(f"\033[1;32;40m*" * 20 + "\tGenerating summary...\t" + f"\033[1;32;40m*" * 25)
 		df = df[df['code'] != '' ].dropna()

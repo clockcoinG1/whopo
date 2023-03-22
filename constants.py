@@ -2,8 +2,8 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-MAX_TOKEN_COUNT = os.getenv("MAX_TOKEN_COUNT") or 1000
-TOKEN_COUNT = os.getenv("MAX_TOKEN_COUNT") or 500
+MAX_TOKEN_MAX_SUMMARY = os.getenv("MAX_TOKEN_MAX_SUMMARY") or 3000
+TOKEN_MAX_SUMMARY = os.getenv("TOKEN_MAX_SUMMARY") or 3000
 root_dir = os.getenv("CODE_EXTRACTOR_DIR") or os.getcwd()
 proj_dir = "ez11"
 oai_api_key_embedder= os.getenv("OPENAI_API_KEY")

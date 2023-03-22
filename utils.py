@@ -28,7 +28,7 @@ def indexCodebase(df: pd.DataFrame, col_name: str, pickle: str = "split_codr", c
 		code_root = root_dir + proj_dir
 		try:
 				df[f"{col_name}_tokens"] = [list(tokenizer.encode(code)) for code in df[col_name]]
-				df[f"{col_name}_token_count"] = [len(code) for code in df[f"{col_name}_tokens"]]
+				df[f"{col_name}_TOKEN_MAX_SUMMARY"] = [len(code) for code in df[f"{col_name}_tokens"]]
 				# df.to_pickle(f"{code_root}/{pickle}.pkl")
 				df[f"{col_name}_embedding"] = df[f"{col_name}"].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002')) 
 				print("Indexed codebase: " + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
@@ -46,7 +46,7 @@ def indexCodebase(df: pd.DataFrame, col_name: str, pickle: str = "split_codr", c
 
 
 
-def split_code_by_token_count(df: pd.DataFrame, max_tokens: int = 8100, col_name: str = "code") -> pd.DataFrame:
+def split_code_by_TOKEN_MAX_SUMMARY(df: pd.DataFrame, max_tokens: int = 8100, col_name: str = "code") -> pd.DataFrame:
 		"""
 		Splits the code into chunks based on the maximum number of tokens
 
@@ -62,18 +62,18 @@ def split_code_by_token_count(df: pd.DataFrame, max_tokens: int = 8100, col_name
 		for index, row in df.iterrows():
 				code = row[col_name]
 				tokens = list(tokenizer.encode(code))
-				token_count = len(tokens)
-				if token_count <= max_tokens:
+				TOKEN_MAX_SUMMARY = len(tokens)
+				if TOKEN_MAX_SUMMARY <= max_tokens:
 						new_rows.append(row)
 				else:
 						start_token = 0
-						while start_token < token_count:
+						while start_token < TOKEN_MAX_SUMMARY:
 								end_token = start_token + max_tokens
 								chunk_tokens = tokens[start_token:end_token]
 								chunk_code = "".join(str(token) for token in chunk_tokens)
 								new_row = row.copy()
 								new_row[col_name] = chunk_code
-								new_row[f"{col_name}_token_count"] = len(chunk_tokens)
+								new_row[f"{col_name}_TOKEN_MAX_SUMMARY"] = len(chunk_tokens)
 								new_row["file_name"] = f"{new_row['file_name']}_chunk_{start_token}"
 								new_rows.append(new_row)
 								start_token = end_token

@@ -11,14 +11,14 @@ import re
 import json
 from get_rel_code import api_key
 import tqdm, os
-from utils import indexCodebase, split_code_by_token_count, write_md_files
+from utils import indexCodebase, split_code_by_TOKEN_MAX_SUMMARY, write_md_files
 from embedder import CodeExtractor
 import openai
 from openai.embeddings_utils import cosine_similarity, get_embedding
 import uuid
 from constants import (
-	TOKEN_COUNT,
-	MAX_TOKEN_COUNT,
+	TOKEN_MAX_SUMMARY,
+	MAX_TOKEN_MAX_SUMMARY,
 	root_dir,
 	proj_dir,
 	oai_api_key_embedder,
@@ -69,7 +69,7 @@ def generate_summary(
 		code = row["code"]
 		filepath = row["file_path"]
 		filename = row["file_name"]
-		prompt = f"\nSYSTEM: You are the ASSISTANT helping the USER with optimizing and analyzing a codebase. You are intelligent, helpful, and an expert developer, who always gives the correct answer and only does what is instructed. You always answer truthfully and don't make things up.\nUSER:{code}\nUSER:Please summarize the key features of the specified file within the project directory, and present the information in a concise bullet-point format. Focus on aspects such as the file's content.\nASSISTANT: Sure, here are the key features of the {filepath} code:\n -"
+		prompt = f"\nSYSTEM: You are the ASSISTANT helping the USER with optimizing and analyzing a codebase. You are intelligent, helpful, and an expert developer, who always gives the correct answer and only does what is instructed. You always answer truthfully and don't make things up.\nUSER:{code}\nUSER:Please summarize the key features of the specified file within the project directory, and present the information in a concise bullet-point format. Focus on aspects such as the file's content.\nASSISTANT: Sure, here are the key features of the `{filepath}` ```\n -"
 		encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 		enc_prompt = encoder.encode(str(prompt))
 		tokens = len(encoder.encode(code) + enc_prompt) or 1
@@ -90,7 +90,7 @@ def generate_summary(
 				# 	},
 				# "stop": ["<|endoftext|>" , "\n\n\n"],
 				"stop": ["\nSYSTEM:", "\nUSER:", "\nASSISTANT:","<|im_end|>" ],
-				"max_tokens": 500 + tokens,
+				"max_tokens": int(TOKEN_MAX_SUMMARY) + tokens,
 				"presence_penalty": 1,
 				"frequency_penalty":1,
 			}
@@ -114,11 +114,11 @@ def generate_summary(
 							print("\n", flush=True, end="\n")
 							message.strip()
 							continue
-		try:
-			old_sum = df[df['file_name'] == filename ]['summary'].values[0]
-			df.loc[df['file_name'] == filename, 'summary'] = f'{summary.strip()}'
-		except KeyError:
-			df.loc[df['file_name'] == filename, 'summary'] = summary.strip()
+			try:
+				old_sum = df[df['file_name'] == filename ]['summary'].values[0]
+				df.loc[df['file_name'] == filename, 'summary'] = f'{summary.strip()}'
+			except KeyError:
+				df.loc[df['file_name'] == filename, 'summary'] = summary.strip()
 	return df
 
 def get_tokens(df, colname):
@@ -146,7 +146,7 @@ def df_search(df, summary_query, n=3, pprint=True):
 	res = df.sort_values('summary_similarities', ascending=False).head(n)
 	res_str = ""
 	for r in res.iterrows():
-		res_str += f"{r[1].file_path}\n {r[1].summary} \n score={r[1].summary_similarities}"
+		res_str += f"{r[1].file_name}\n {r[1].summary} \n score={r[1].summary_similarities}"
 	return res
 
 
@@ -155,10 +155,11 @@ def q_and_a(df, question = "What isthe most important file", total = 10, MAX_SEC
 		encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 		separator_len = len(encoder.encode(SEPARATOR))
 		relevant_notes = df_search(df, question, total, pprint=True)
+		relevant_notes = relevant_notes.sort_values('summary_similarities', ascending=False).head(total)
 		chosen_sections = []
 		chosen_sections_len = 0
 		for _, row in relevant_notes.iterrows():
-				notes_str = f"Path: {row['file_path']}\nSummary:\n{row['summary']}"
+				notes_str = f"Path: {row['file_name']}\nSummary:\n{row['summary']}"
 				notes_str_len = len(encoder.encode(notes_str))
 				if chosen_sections_len + separator_len + notes_str_len > MAX_SECTION_LEN:
 						break
@@ -233,7 +234,7 @@ def df_search_sum(df, summary_query, n=3, pprint=True, n_lines=7):
 		if pprint:
 				for r in res.iterrows():
 						print(r[1].file_path + " " + "  score=" + str(round(r[1]["summary_simmilarities"], 3)))
-						res_str += r[1].file_path + " " + "  score=" + str(round(r[1]["summary_simmilarities"], 3))
+						res_str += r[1].file_name + " " + "  score=" + str(round(r[1]["summary_simmilarities"], 3))
 						print("\n".join(r[1].summary.split("\n")[:n_lines]))
 						res_str += "\n".join(r[1].summary.split("\n")[:n_lines])
 						res_str += '-' * 70
@@ -252,13 +253,14 @@ def main():
 		parser.add_argument('--context', type=int, default=10, help='context length')
 		parser.add_argument('--max_tokens', type=int, default=1000, help='maximum number of tokens in summary')
 
+
 		args = parser.parse_args()
 		proj_dir = args.directory.strip() if args.directory is not None else "ez11"
 		root_dir = args.root.strip() if args.root is not None else CODE_EXTRACTOR_DIR
 		prompt = args.prompt.strip()  if args.prompt is not None else "Explain the code"
 		n = args.n if args.n is not None else 20
 		context =  args.context if args.context is not None else 15
-		max_tokens = args.max_tokens if args.max_tokens is not None else MAX_TOKEN_COUNT
+		max_tokens = args.max_tokens if args.max_tokens is not None else MAX_TOKEN_MAX_SUMMARY
 		if args.P:
 				print("P")
 
@@ -273,7 +275,8 @@ def main():
 					sys.exit()
 			ce = CodeExtractor(f"{root_dir}/{proj_dir}")
 			df = ce.get_files_df()
-			df = split_code_by_token_count(df,  col_name="code",  max_tokens=max_tokens) # OR  df = ce.split_code_by_lines(df, max_lines=6)
+			# df = split_code_by_TOKEN_MAX_SUMMARY(df,  col_name="code",  max_tokens=max_tokens) # OR  
+			df = ce.split_code_by_lines(df, max_lines=20)
 			df = indexCodebase(df,"code" , pickle=f"{root_dir}/{proj_dir}.pkl", code_root=f"{root_dir}/{proj_dir}")
 			print(f"\033[1;32;40m*" * 20 + "\tGenerating summary...\t" + f"\033[1;32;40m*" * 25)
 			df = df[df['code'] != '' ].dropna()

@@ -1,3 +1,4 @@
+import uuid
 import datetime
 import json
 import os
@@ -5,6 +6,7 @@ import re
 from glob import glob
 import sys
 from typing import List, Optional
+import sys
 
 import altair as alt
 import openai
@@ -14,16 +16,16 @@ import tiktoken
 from flask import jsonify
 from openai.embeddings_utils import cosine_similarity, get_embedding
 import tqdm
-# openai.api_key = "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"
+
 root_dir = os.path.expanduser("~")
 cwd = os.getcwd()
-code_root = f"{root_dir}/Downloads/whopt"
-#whop key
+code_root = f"{root_dir}/parsero"
+
 api_key = "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"
 EMBEDDING_ENCODING = 'cl100k_base'
 tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
-# api_key ="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"
-openai.api_key = api_key
+
+openai.api_key = "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"
 
 
 class CodeExtractor:
@@ -90,17 +92,17 @@ class CodeExtractor:
 				if line.startswith("def "):
 						return line[len("def ") : line.index("(")].strip()
 
-				# Standard and async functions
+				
 				function_match = re.match(r"\s*(async\s+)?function\s+(\w+)\s*\(", line)
 				if function_match:
 						return function_match.group(2)
 
-				# TypeScript arrow functions
+				
 				arrow_function_match = re.match(r"\s*const\s+(\w+)\s*=\s*(async\s+)?\(", line)
 				if arrow_function_match:
 						return arrow_function_match.group(1)
 
-				# TypeScript arrow functions with destructuring and type annotations
+				
 				arrow_function_destructuring_match = re.match(
 						r"\s*const\s+(\w+)\s*=\s*(async\s+)?\(([^()]+)\)\s*=>",
 						line,
@@ -108,7 +110,7 @@ class CodeExtractor:
 				if arrow_function_destructuring_match:
 						return arrow_function_destructuring_match.group(1)
 
-				# React FunctionComponent and other generics
+				
 				tsx_pattern = re.compile(
 						r'(?:(?:class|const)\s+(?P<class_name>\w+)(?::\s*\w+)?\s+?=\s+?(?:\w+\s*<.*?>)?\s*?\(\s*?\)\s*?=>\s*?{)|(?:function\s+(?P<function_name>\w+)\s*\(.*?\)\s*?{)',
 						re.MULTILINE,
@@ -281,16 +283,16 @@ class CodeExtractor:
 						}
 				)
 
-		def indexCodebase(self, df):
+		def indexCodebase(self, df, pickle="split_codr.pkl"):
 				try:
-						if not os.path.exists(f"{root_dir}/df6.pkl"):
+						if not os.path.exists(f"{code_root}/{pickle}") or os.path.exists(f"{code_root}/{pickle}"):
 								df['code_embedding'] = df['code'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
-								df.to_pickle(f"{root_dir}/df6.pkl")
+								df.to_pickle(f"{code_root}/{pickle}")
 								self.df = df
-						df = pd.read_pickle(f"{root_dir}/df6.pkl")
-						df['file_path'] = df['file_path'].apply(lambda x: x.replace(root_dir, ""))
-						now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 						df.to_csv("embedding_" + now + ".csv", index=False)
+						df = pd.read_pickle(f"{code_root}/{pickle}")
+						df['file_path'] = df['file_path'].apply(lambda x: x.replace(code_root, ""))
+						now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 						self.df = df
 						print("Indexed codebase")
 				except Exception:
@@ -317,7 +319,7 @@ class CodeExtractor:
 				df["tokens"] = [list(tokenizer.encode(code).tokens) for code in df["code"]]
 				return df
 
-		def split_code_by_token_count(self, df: pd.DataFrame, max_tokens: int = 8100) -> pd.DataFrame:
+		def split_code_by_TOKEN_MAX_SUMMARY(self, df: pd.DataFrame, max_tokens: int = 8100) -> pd.DataFrame:
 				EMBEDDING_ENCODING = 'cl100k_base'
 				tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
 
@@ -325,20 +327,20 @@ class CodeExtractor:
 				for index, row in df.iterrows():
 						code = row["code"]
 						tokens = row["tokens"]
-						token_count = row["token_count"]
-						if token_count <= max_tokens:
+						TOKEN_MAX_SUMMARY = row["TOKEN_MAX_SUMMARY"]
+						if TOKEN_MAX_SUMMARY <= max_tokens:
 								new_rows.append(row)
 						else:
-								# else for each max token chunk, create a new row with the chunked row["code"] until all rows are token_count <= max_tokens
-								# Get the halfway point of the code
+								
+								
 								start_token = 0
-								while start_token < token_count:
-										# tokenize and encode the chunked code
+								while start_token < TOKEN_MAX_SUMMARY:
+										
 										end_token = start_token + max_tokens
 										chunk_code = "".join(code[start_token:end_token])
 										new_row = row.copy()
 										new_row["code"] = chunk_code
-										new_row["token_count"] = len(chunk_code.split(" "))
+										new_row["TOKEN_MAX_SUMMARY"] = len(chunk_code.split(" "))
 										new_row["file_name"] = f"{new_row['file_name']}_chunk{start_token}"
 										new_rows.append(new_row)
 										start_token = end_token
@@ -359,24 +361,8 @@ class CodeExtractor:
 
 				return interfaces
 
-		def extract_interface(self, line: str) -> Optional[str]:
-				if line.startswith("interface "):
-						intf = " ".join(line.split(" ")[1:]).strip()
-						return intf
-
-		def write_to_csv(self):
-				df_functions = self.get_functions_df()
-				df_functions_split = self.split_code_by_token_count(df_functions)
-				df_functions_split.to_csv("functions.csv", index=False)
-
-				df_classes = self.get_classes_df()
-				df_classes_split = self.split_code_by_token_count(df_classes)
-				df_classes_split.to_csv("classes.csv", index=False)
-
-				print(f"Wrote {len(df_functions_split)} functions and {len(df_classes_split)} classes in {self.directory}")
-
 		def df_search(self, df, code_query, n=3, pprint=True, n_lines=7):
-				# Replace the `get_embedding` function with the GPT-4 embeddings function call
+				
 				result = get_embedding(engine="text-embedding-ada-002", text=code_query)
 				embedding = result
 
@@ -386,7 +372,7 @@ class CodeExtractor:
 				res_str = ""
 				if pprint:
 						for r in res.iterrows():
-								print(r.file_path + " " + "  score=" + str(round(r[1].similarities, 3)))
+								print(r[1].file_path + " " + "  score=" + str(round(r[1].similarities, 3)))
 								res_str += r[1].file_path + " " + "  score=" + str(round(r[1].similarities, 3))
 								print("\n".join(r[1].code.split("\n")[:n_lines]))
 								res_str += "\n".join(r[1].code.split("\n")[:n_lines])
@@ -413,7 +399,7 @@ class CodeExtractor:
 						chosen_sections.append(self.SEPARATOR + code_str)
 						chosen_sections_len += separator_len + code_str_len
 
-				# Useful diagnostic information
+				
 				chosen_sections_str = f"".join(chosen_sections)
 				print(f"Selected {len(chosen_sections)} document sections:")
 				return f'''<|start_context|>\n Project code to help assistant with answering query "{question}" \n context: {chosen_sections_str}\n<|end_context|>\n<|im_start|>'''
@@ -424,7 +410,7 @@ class CodeExtractor:
 								res_str += f"\n score: {str(round(r[1].similarities, 3))} \t Path : {r[1].file_path} \n"
 								n_lines = 5
 								res_str += "\n".join(r[1].code.split("\n")[:n_lines])
-								# res_str += '-' * 70
+								
 								print('-' * 70)
 								print(f" score: {str(round(r[1].similarities, 3))} \t Path : {r[1].file_path} ")
 								print('-' * 70)
@@ -433,7 +419,7 @@ class CodeExtractor:
 
 		def answer_query_with_context(self, query: str, show_prompt: bool = True) -> str:
 				COMPLETIONS_API_PARAMS = {
-						# We use temperature of 0.0 because it gives the most predictable, factual answer.
+						
 						"temperature": 0.85,
 						"max_tokens": 3500,
 						"model": self.COMPLETIONS_MODEL,
@@ -504,7 +490,7 @@ class CodeExtractor:
 													print(f'{data["choices"][0]["text"]}',flush= True, end="")
 											else:
 												continue
-				# return message.strip()
+				
 								self.last_result = message
 
 		def chatbot(self, prompt="", brand="Whop"):
@@ -555,3 +541,55 @@ class CodeExtractor:
 														else:
 																message += "\n"
 				return message.strip()
+
+def ask(query, gpt=False):
+	print(f"{query}\n\nUSER:", flush=False, end="  ")
+	question = input()
+	if question == "q":
+		print("bye")
+		exit(0)
+	if gpt:
+		try:
+			extractor.gpt_4(prompt=f"{question}")
+			print("\n")
+		except:
+			print("Sorry, I didn't understand that.")
+	else:
+		try:
+			extractor.chatbot(prompt=f"{question}")
+			print("\n")
+		except:
+			print("Sorry, I didn't understand that.")
+
+def run_chat_loop():
+	while True:
+		print("QUERY:", flush=False, end="  ")
+		question = input()
+		ask(input)
+
+
+
+if len(sys.argv) == 1:
+	print( "Must specify a directory as the first argument")
+	exit()
+
+DIR = sys.argv[1]
+
+if __name__ == '__main__':
+	if DIR:
+		code_root = DIR
+	extractor = CodeExtractor(code_root)
+	df = extractor.get_files_df()
+	# SPLIT by lines or do .split_by_tokens for more granular / sourcemapped files 
+	df = extractor.split_code_by_lines(df,5)
+
+	# get token totals
+	df["tokens"] = [list(tokenizer.encode(code)) for code in df["code"]]
+	df["TOKEN_MAX_SUMMARY"] = [len(code) for code in df["tokens"]]
+	df["TOKEN_MAX_SUMMARY"].sum()
+
+	name = f"codebase_pickle-{str(uuid.uuid4())}.pkl"
+	extractor.df = df
+	extractor.indexCodebase(extractor.df, pickle=name)
+	extractor.df = extractor.df_search(df=extractor.df, code_query="#",n=20)
+	extractor.chatbot("What are the comments")
