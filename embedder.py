@@ -1,25 +1,16 @@
-import datetime
-import os
 import pandas as pd
 from pandas.errors import EmptyDataError
-
-
-import uuid
 import datetime
 import json
 import os
 import re
-from glob import glob
+import uuid
 import sys
-from typing import List, Optional
-import sys
-
-import altair as alt
 import openai
-import pandas as pd
 import requests
 import tiktoken
-from flask import jsonify
+from glob import glob
+from typing import List, Optional
 from openai.embeddings_utils import cosine_similarity, get_embedding
 import tqdm
 from constants import (
@@ -33,14 +24,6 @@ from constants import (
 openai.api_key = oai_api_key_embedder
 tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
 code_root = proj_dir
-
-""" root_dir = os.path.expanduser("~")
-cwd = os.getcwd()
-
-api_key = "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"
-EMBEDDING_ENCODING = 'cl100k_base'
-
- """
 
 class CodeExtractor:
 		def __init__(self, directory):
@@ -330,24 +313,25 @@ class CodeExtractor:
 				return new_df
 
 
-		def extract_tokens(self, df: pd.DataFrame):
+		def extract_tokens(self, col_name, df: pd.DataFrame):
 				"""
 				Extract tokens from code snippets
 				"""
 				EMBEDDING_ENCODING = 'cl100k_base'
 				tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
-				df["tokens"] = [list(tokenizer.encode(code).tokens) for code in df["code"]]
+				if f"{col_name}_tokens" not in df.columns:
+					df[f"{col_name}_tokens"] = [list(tokenizer.encode(code).tokens) for code in df[col_name]]
 				return df
 
-		def split_code_by_token_count(self, df: pd.DataFrame, max_tokens: int = 8100) -> pd.DataFrame:
+		def split_code_by_token_count(self,  df: pd.DataFrame, col_name  : str = "code",  max_tokens: int = 8100) -> pd.DataFrame:
 				EMBEDDING_ENCODING = 'cl100k_base'
 				tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
 
 				new_rows = []
 				for index, row in df.iterrows():
-						code = row["code"]
-						tokens = row["tokens"]
-						token_count = row["token_count"]
+						code = row[col_name]
+						tokens = row[f"{col_name}_tokens"] if f"{col_name}_tokens" in row else []
+						token_count = row[f"{col_name}_token_count"] if f"{col_name}_token_count" in row else 0
 						if token_count <= max_tokens:
 								new_rows.append(row)
 						else:
@@ -359,9 +343,9 @@ class CodeExtractor:
 										end_token = start_token + max_tokens
 										chunk_code = "".join(code[start_token:end_token])
 										new_row = row.copy()
-										new_row["code"] = chunk_code
-										new_row["token_count"] = len(chunk_code.split(" "))
-										new_row["file_name"] = f"{new_row['file_name']}_chunk{start_token}"
+										new_row[col_name] = chunk_code
+										new_row[f"{col_name}_token_count"] = len(chunk_code.split(" "))
+										new_row["file_name"] = f"{new_row['file_name']}_chunk_{start_token}"
 										new_rows.append(new_row)
 										start_token = end_token
 				new_df = pd.DataFrame(new_rows)
@@ -586,35 +570,3 @@ def run_chat_loop():
 		print("QUERY:", flush=False, end="  ")
 		question = input()
 		ask(input)
-
-
-""" if len(sys.argv) == 1:
-	print( "Must specify a directory as the first argument")
-	exit()
-
-
- if __name__ == '__main__':
-
-	DIR = sys.argv[1]
-	code_root = sys.argv[1] if len(sys.argv) > 2 else "llama"
-	gpt_prompt = sys.argv[3] if len(sys.argv) > 3 else "What does this code do?"
-	total_context_int = sys.argv[4] if len(sys.argv) > 4 else 20
-	token_count = sys.argv[5] if len(sys.argv) > 5 else 200
-	context_prompt = sys.argv[6] if len(sys.argv) > 6 else "Important code"
-	# code_root = 'llama'
-	extractor = CodeExtractor(code_root)
-	df = extractor.get_files_df()
-	df["tokens"] = [list(tokenizer.encode(code)) for code in df["code"]]
-	df["token_count"] = [len(code) for code in df["tokens"]]
-	df["token_count"].sum()
-	# SPLIT by lines or do .split_by_tokens for more granular / sourcemapped files 
-	# df = extractor.split_code_by_lines(df,5)
-	df = extractor.split_code_by_token_count(df,200)
-
-	# get token totals total_context_int = 10
-
-	name = f"codebase_pickle-{str(uuid.uuid4())}.pkl"
-	extractor.df = df
-	extractor.indexCodebase(extractor.df, pickle=name)
-	extractor.df = extractor.df_search(df=extractor.df, code_query="ggml",n=10)
-	extractor.chatbot("What is Llama LLM ?") """
