@@ -8,3 +8,7 @@ __pycache__/
 *.tmp
 *.pkl
 llama
+ez11
+.env
+.gitignore
+def argparser():.py
