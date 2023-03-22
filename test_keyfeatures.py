@@ -123,11 +123,11 @@ def generate_summary(
 	df  = df[pd.notna(df['summary'])]
 	proj_dir_pikl = re.sub(r'[^a-zA-Z]', '', proj_dir)
 	try: 
-		# df["summary_tokens"] = [list(tokenizer.encode(summary)) for summary in df["summary"]]
-		# df["summary_token_count"] = [len(summary) for summary in df["summary_tokens"]]
-		# print("Embedding summaries...")
-		# df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
-		# df.to_pickle(f"{proj_dir_pikl}.pkl")
+		df["summary_tokens"] = [list(tokenizer.encode(summary)) for summary in df["summary"]]
+		df["summary_token_count"] = [len(summary) for summary in df["summary_tokens"]]
+		print("Embedding summaries...")
+		df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
+		df.to_pickle(f"{proj_dir_pikl}.pkl")
 		print(f'Saved vectors to "{proj_dir_pikl}.pkl"')
 		write_md_files(df)
 	except:
@@ -181,7 +181,7 @@ def q_and_a(df, question = "What isthe most important file", total = 10, MAX_SEC
 		return f'''<|start_context|>\n Project notes to help assistant with answering query "{question}" \n context: {chosen_sections_str}\n<|end_context|>\n<|im_start|>'''
 
 
-def chatbot(df, prompt="", n = 4):
+def chatbot(df, prompt="What does this code do?", n = 4):
 			encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 			enc_prompt  = encoder.encode(prompt)
 			codebaseContext = q_and_a(df, question=prompt, total = n)
@@ -246,21 +246,25 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Code summarization chatbot')
     parser.add_argument('directory', type=str, help='directory to summarize')
     parser.add_argument('--root', type=str, default='root directory', help='Where root of project is')
-    parser.add_argument('--context', type=str, default='Important code', help='context prompt')
-    parser.add_argument('--gpt', type=str, default='What does this code do?', help='gpt prompt')
-    parser.add_argument('--context_len', type=int, default=20, help='context length')
+    parser.add_argument('-n', type=str, default='Important code', help='context prompt')
+    parser.add_argument('-p', type=str, default='What does this code do?', help='gpt prompt')
+    parser.add_argument('--context', type=int, default=20, help='context length')
     parser.add_argument('--max_tokens', type=int, default=500, help='maximum number of tokens in summary')
     args = parser.parse_args()
     proj_dir = args.directory
     root_dir = args.root
+    prompt = args.p
+    n = args.n
     if not os.path.exists(root_dir + "/" + proj_dir):
         print(f"Directory {root_dir + args.directory} does not exist")
         sys.exit()
     context_prompt = args.context
-    gpt_prompt = args.gpt
+
     ce = CodeExtractor(f"{root_dir}{proj_dir}")
     df = ce.get_files_df()
-    df = indexCodebase(df, "code", pickle="test_emb")
+    df = indexCodebase(df, "code", pickle="test_emb",embed=True)
     df = split_code_by_token_count(df, args.max_tokens, "code" )
+    df = indexCodebase(df, "summary", pickle="test_emb", embed=False)
     df = generate_summary(df)
-    chatbot(df , args.context_len)
+
+    chatbot(df, prompt, n)

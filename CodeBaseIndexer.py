@@ -93,7 +93,6 @@ def write_md_files(df: pd.DataFrame, proj_dir: str = "llama") -> None:
 				filepath = row["file_path"]
 				filename = row["file_name"]
 				summ = row["summary"]
-				print(proj_dir)
 				if not os.path.exists(os.path.join(proj_dir, "docs")):
 						os.makedirs(os.path.join(proj_dir , "docs"))
 				with open(
