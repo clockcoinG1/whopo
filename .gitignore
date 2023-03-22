@@ -1,10 +1,8 @@
-llama.pkl
 *pkl
 *csv
 llama
 __pycache__
 .mypy_cache
 Untitled-2.py
-pycop/
-ezcoder/
-sadfdsfd
+temp/
+.env

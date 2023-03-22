@@ -13,7 +13,7 @@ openai.api_key = oai_api_key_embedder
 EMBEDDING_ENCODING = 'cl100k_base'
 tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
 
-def indexCodebase(df: pd.DataFrame, col_name: str, pickle: str = "split_codr") -> pd.DataFrame:
+def indexCodebase(df: pd.DataFrame, col_name: str, pickle: str = "split_codr", code_root: str = "ez11") -> pd.DataFrame:
 		"""
 		Indexes the codebase and saves it to a pickle file
 		
@@ -29,7 +29,7 @@ def indexCodebase(df: pd.DataFrame, col_name: str, pickle: str = "split_codr") -
 		try:
 				df[f"{col_name}_tokens"] = [list(tokenizer.encode(code)) for code in df[col_name]]
 				df[f"{col_name}_token_count"] = [len(code) for code in df[f"{col_name}_tokens"]]
-				df.to_pickle(f"{code_root}/{pickle}.pkl")
+				# df.to_pickle(f"{code_root}/{pickle}.pkl")
 				df[f"{col_name}_embedding"] = df[f"{col_name}"].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002')) 
 				print("Indexed codebase: " + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
 				return df
@@ -68,7 +68,6 @@ def split_code_by_token_count(df: pd.DataFrame, max_tokens: int = 8100, col_name
 				else:
 						start_token = 0
 						while start_token < token_count:
-								print(max_tokens)
 								end_token = start_token + max_tokens
 								chunk_tokens = tokens[start_token:end_token]
 								chunk_code = "".join(str(token) for token in chunk_tokens)

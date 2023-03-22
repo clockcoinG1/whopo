@@ -34,8 +34,8 @@ encoder = tokenizer
 
 def generate_summary(
 		df: pd.DataFrame,
-		model: str = "code-davinci-002",
-		proj_dir: str = "llama",
+		model: str = "chat-davinci-003-alpha",
+		proj_dir: str = proj_dir,
 ) -> pd.DataFrame:
 	"""
 	Generate a summary of each file in the dataframe using the OpenAI API.
@@ -54,24 +54,25 @@ def generate_summary(
 	message = ""
 	try:
 		if not model:
-			# model="chat-davinci-003-alpha"
-			model="code-davinci-002"
+			model="chat-davinci-003-alpha"
 	except NameError:
-		# model="chat-davinci-003-alpha"
-			model="code-davinci-002"
-	comp_type = "finish_reason" if model != "chat-davinci-003-alpha" else "finish_details"
+		model="chat-davinci-003-alph"
+			# model="code-davinci-002"
+	try:
+		if not model:
+			model="chat-davinci-003-alpha"
+	except NameError:
+		model="chat-davinci-003-alpha"	
+	comp_type = "finish_reason" if not model or model != "chat-davinci-003-alpha" else "finish_details"
 	for _, row in tqdm.tqdm(df.iterrows()):
-		time.sleep(3)
-		print("sleeping")
 		code = row["code"]
 		filepath = row["file_path"]
 		filename = row["file_name"]
-		prompt = f"\nSYSTEM: You are the ASSISTANT helping the USER with optimizing and analyzing a codebase. You are intelligent, helpful, and an expert developer, who always gives the correct answer and only does what is instructed. You always answer truthfully and don't make things up.\nUSER:{code}\nUSER:Please summarize the key features of the specified file within the project directory, and present the information in a concise bullet-point format. Focus on aspects such as the file's content.\nASSISTANT: Sure, here are the key features of the {filepath} file:\n - "
+		prompt = f"\nSYSTEM: You are the ASSISTANT helping the USER with optimizing and analyzing a codebase. You are intelligent, helpful, and an expert developer, who always gives the correct answer and only does what is instructed. You always answer truthfully and don't make things up.\nUSER:{code}\nUSER:Please summarize the key features of the specified file within the project directory, and present the information in a concise bullet-point format. Focus on aspects such as the file's content.\nASSISTANT: Sure, here are the key features of the {filepath} code:\n -"
 		encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 		enc_prompt = encoder.encode(str(prompt))
 		tokens = len(encoder.encode(code) + enc_prompt) or 1
-		# max_token =  abs((4000 +(MAX_TOKEN_COUNT)  - tokens) - 4000)
-
+		max_token = abs(7800 - tokens)
 		r = requests.post(
 			base,
 			headers=headers,
@@ -86,10 +87,11 @@ def generate_summary(
 				# "logit_bias": {
 				# 	"[27, 91, 320, 62, 437, 91, 29, 198]" : -100
 				# 	},
+				# "stop": ["<|endoftext|>" , "\n\n\n"],
 				"stop": ["\nSYSTEM:", "\nUSER:", "\nASSISTANT:","<|im_end|>" ],
-				"max_tokens": tokens + 750,
+				"max_tokens": 500 + tokens,
 				"presence_penalty": 1,
-				"frequency_penalty": 1,
+				"frequency_penalty":1,
 			}
 		)
 		summary = ""
@@ -111,18 +113,9 @@ def generate_summary(
 							print("\n", flush=True, end="\n")
 							message.strip()
 							continue
-							# df.loc[df['file_path'] == filepath, 'summary'] = "NA"
-							# print("embedding summaries...\n\n")
-							# df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
-							
-						# else:
-						# 	df.loc[df['file_path'] == filepath, 'summary'] = df.loc[df['file_path'] == filepath, 'summary'] + summary.strip()
-				# except:
-						# print("embedding error")
-			
 		try:
 			old_sum = df[df['file_name'] == filename ]['summary'].values[0]
-			df.loc[df['file_name'] == filename, 'summary'] = f'{old_sum}\n{summary.strip()}'
+			df.loc[df['file_name'] == filename, 'summary'] = f'{summary.strip()}'
 		except KeyError:
 			df.loc[df['file_name'] == filename, 'summary'] = summary.strip()
 	return df
@@ -246,45 +239,84 @@ def df_search_sum(df, summary_query, n=3, pprint=True, n_lines=7):
 						print('-' * 70)
 		return res_str
 
-if __name__ == '__main__':
-		parser = argparse.ArgumentParser(description='Code summarization chatbot')
-		parser.add_argument('directory', type=str, help='directory to summarize')
-		parser.add_argument('--root', type=str, default='root directory', help='Where root of project is')
-		parser.add_argument('-n', type=str, default='Important code', help='context prompt')
-		parser.add_argument('-p', type=str, default='What does this code do?', help='gpt prompt')
-		parser.add_argument('--context', type=int, default=20, help='context length')
-		parser.add_argument('--max_tokens', type=int, default=500, help='maximum number of tokens in summary')
 
+def main():
+		parser = argparse.ArgumentParser(description='Code summarization chatbot')
+		parser.add_argument('directory', type=str, default="/ezcoder", help='directory to summarize')
+		parser.add_argument('--root', type=str, default=f"{os.environ['CODE_EXTRACTOR_DIR']}", help='Where root of project is or env $CODE_EXTRACTOR_DIR')
+		parser.add_argument('-n', type=int, default=10, help='number of context chunks to use')
+		parser.add_argument('--prompt', type=str, default='What does this code do?', help='gpt prompt')
+		parser.add_argument('--context', type=int, default=10, help='context length')
+		parser.add_argument('--max_tokens', type=int, default=1000, help='maximum number of tokens in summary')
+
+		"""     # ======================= # Help-formatting methods # ======================= def format_usage(self): formatter = self._get_formatter() formatter.add_usage(self.usage, self._actions, self._mutually_exclusive_groups) return formatter.format_help() def format_help(self): formatter = self._get_formatter() # usage formatter.add_usage(self.usage, self._actions, self._mutually_exclusive_groups) # description formatter.add_text(self.description) # positionals, optionals and user-defined groups for action_group in self._action_groups: formatter.start_section(action_group.title) formatter.add_text(action_group.description) formatter.add_arguments(action_group._group_actions) formatter.end_section() # epilog formatter.add_text(self.epilog) # determine help from format above return formatter.format_help() def _get_formatter(self): return self.formatter_class(prog=self.prog) # ===================== # Help-printing methods # ===================== def print_usage(self, file=None): if file is None: file = _sys.stdout self._print_message(self.format_usage(), file) def print_help(self, file=None): if file is None: file = _sys.stdout self._print_message(self.format_help(), file) def _print_message(self, message, file=None): if message: if file is None: file = _sys.stderr file.write(message) # =============== # Exiting methods # =============== def exit(self, status=0, message=None): if message: self._print_message(message, _sys.stderr) _sys.exit(status) def error(self, message): error(message: string) Prints a usage message incorporating the message to stderr and exits. If you override this in a subclass, it should not return -- it should either exit or raise an exception. """
 		args = parser.parse_args()
-		print(args)
-		proj_dir = args.directory
-		root_dir = args.root
-		prompt = args.p
+
+		if not os.path.isdir(f'{args.root}/{args.directory}'):
+			parser.error(f"The directory specified does not exist.{args.root}/{args.directory}")
+		# For argparser lets use its  error handling, exit, help and usage formatting and outputting methods from argparse documentation above. Only output code for the main def argparser code for brevity:		if 
+		if not os.path.isdir(args.root):
+			parser.error("The root directory specified does not exist.")
+		if not os.path.isdir(args.directory):
+			parser.error("The directory specified does not exist.")
+		if not isinstance(args.n, int):
+			parser.error("The number of context chunks must be an integer.")
+		if  not isinstance(args.context, int):
+			parser.error("The context length must be an integer.")
+		if not isinstance(args.max_tokens, int):
+			parser.error("The maximum number of tokens must be an integer.")
+		if not isinstance(args.prompt, str):
+			parser.error("The prompt must be a string.")
+		if args.n < 1:
+			parser.error("The number of context chunks must be greater than 0.")
+		if args.context < 1:
+			parser.error("The context length must be greater than 0.")
+		if args.max_tokens < 1:
+			parser.error("The maximum number of tokens must be greater than 0.")
+		if len(args.prompt) < 1:
+			parser.error("The prompt must be non-empty.")
+
+		print(f"\033[1;32;40m\nSummarizing {args.directory}")
+		print(f"\033[1;32;40m\nUsing {args.n} context chunks")
+		print(f"\033[1;32;40m\nPrompt: {args.prompt}")
+
+		proj_dir = args.directory.strip() if args.directory is not None else "ez11"
+		root_dir = args.root.strip() if args.root is not None else os.getcwd()
+		prompt = args.prompt.strip()  if args.prompt is not None else "Explain the code"
 		n = args.n
 		if not os.path.exists(root_dir + "/" + proj_dir):
 				print(f"Directory {root_dir + args.directory} does not exist")
 				sys.exit()
-		context_prompt = args.context
-
-		ce = CodeExtractor(f"{root_dir}{proj_dir}")
+		context_n = args.context
+		max_tokens = args.max_tokens
+		
+		ce = CodeExtractor(f"{root_dir}/{proj_dir}")
 		df = ce.get_files_df()
-		df = split_code_by_token_count(df, args.max_tokens , "code" )
-		df = split_code_by_token_count(df,  col_name="code",  max_tokens=1000)
-		df = indexCodebase(df, "code", pickle="safsf.pkl")
-		# df = ce.split_code_by_lines(df, max_lines=6)
-		df = generate_summary(df)
-		rows_with_summary = df[df['summary'] != '' ].dropna()
-		# Print file name and summary using the apply function
-		# Apply a function to each row of the dataframe
-		rows_with_summary.apply(lambda row: print(f"File Name: {row['file_name']}\nSummary: {len(row['summary'])}\n"), axis=1)
-
-
-		write_md_files(df, os.getcwd() + proj_dir)
-		proj_dir_pikl = re.sub(r'[^a-zA-Z]', '', proj_dir)
+		df = split_code_by_token_count(df,  col_name="code",  max_tokens=max_tokens) # OR  df = ce.split_code_by_lines(df, max_lines=6)
+		df = indexCodebase(df,"code" , pickle=f"{root_dir}/{proj_dir}.pkl", code_root=f"{root_dir}/{proj_dir}")
+		print(f"\033[1;32;40m*" * 20 + "\tGenerating summary...\t" + f"\033[1;32;40m*" * 25)
+		df = df[df['code'] != '' ].dropna()
+		# df.apply(lambda x: print(x["summary"]), axis=1)
+		df = generate_summary(df,  proj_dir=proj_dir)
+		df = df[df['summary'] != '' ].dropna()
+		print(f"\033[1;32;40m*" * 10 + "\tWriting summary...\t" + f"\033[1;32;40m*" * 10)
+		write_md_files(df, f"{proj_dir}".strip('/'))
+		proj_dir_pikl = re.sub(r'[^a-zA-Z]', '', f"{root_dir}/{proj_dir}")
+		
+		print(f"\033[1;34;40m*" * 20 + "\t Embedding summary column ...\t" + f"{root_dir}/{proj_dir}"  + f"\033[1;34;40m*" * 20)
 		df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002') if x else None)
-		while True: 
-			ask = input("\033[33mAsk about the files, code, summaries:\033[0m\n\033[44mUSER:  \033[0m")
-			rez  = df_search_sum(df, ask, pprint=True)
-			chatbot(df, rez , 5)
-# <|system|> Lets remove redundancies and make this more efficient, SOLID, and pythonic
-# ASSISTANT: OK. Here is the improved state of the art code:
+
+		print(f"\033[1;32;40m*" * 40 + "\t Saving embedding summary...\t" + f"{root_dir}/{proj_dir}"  + f"\033[1;32;40m*" * 40)
+		df.to_pickle(proj_dir_pikl + '.pkl')
+
+		if not args.prompt: 
+			print(f"\033[1;32;40m*" * 10 + "\t Chat mode \t" + f"{root_dir}/{proj_dir}"  + f"\033[1;32;40m*" * 10)
+			while True:
+				ask = input("\n\033[33mAsk about the files, code, summaries:\033[0m\n\n\033[44mUSER:  \033[0m")
+				# q_and_a(df, "What is the code do?", n, 500)# max_tokens * context_n n = 5)
+				summary_items  = df_search_sum(df, ask, pprint=True, n=n , n_lines=context_n) 
+				chatbot(df, summary_items , context_n)
+
+if __name__ == '__main__':
+	main()
+	
