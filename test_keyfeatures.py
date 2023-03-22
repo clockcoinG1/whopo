@@ -272,19 +272,3 @@ if __name__ == '__main__':
 			ask = input("\033[33mAsk about the files, code, summaries:\033[0m\n\033[44mUSER:  \033[0m")
 			rez  = df_search_sum(df, ask, pprint=True)
 			chatbot(df, rez , n)
-
-""" ```
-
-		# a = q_and_a(e, question=p)
-		# chatbot(e,a)
-		# q = q_and_a(df , ask  , prompt, n )
-		# try:
-		# 	# prompt = "What does this code do?" n = 10
-		# 	# question = q_and_a(df, prompt, n, 2000)
-		# except:
-		# 	print("error")
-ERROR: TypeError: unsupported operand type(s) for *: 'NoneType' and 'float'
-USER: The above causes the avove error. It is because some of the summaries are empty. Lets ignore getting the similarity score for those and set it to 0.8
-ASSISTANT: Fixed Code: ```python
-
- """
