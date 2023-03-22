@@ -123,11 +123,11 @@ def generate_summary(
 	df  = df[pd.notna(df['summary'])]
 	proj_dir_pikl = re.sub(r'[^a-zA-Z]', '', proj_dir)
 	try: 
-		df["summary_tokens"] = [list(tokenizer.encode(summary)) for summary in df["summary"]]
-		df["summary_token_count"] = [len(summary) for summary in df["summary_tokens"]]
-		print("Embedding summaries...")
-		df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
-		df.to_pickle(f"{proj_dir_pikl}.pkl")
+		# df["summary_tokens"] = [list(tokenizer.encode(summary)) for summary in df["summary"]]
+		# df["summary_token_count"] = [len(summary) for summary in df["summary_tokens"]]
+		# print("Embedding summaries...")
+		# df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
+		# df.to_pickle(f"{proj_dir_pikl}.pkl")
 		print(f'Saved vectors to "{proj_dir_pikl}.pkl"')
 		write_md_files(df)
 	except:
@@ -249,7 +249,7 @@ if __name__ == '__main__':
     parser.add_argument('--context', type=str, default='Important code', help='context prompt')
     parser.add_argument('--gpt', type=str, default='What does this code do?', help='gpt prompt')
     parser.add_argument('--context_len', type=int, default=20, help='context length')
-    parser.add_argument('--max_tokens', type=int, default=50, help='maximum number of tokens in summary')
+    parser.add_argument('--max_tokens', type=int, default=500, help='maximum number of tokens in summary')
     args = parser.parse_args()
     proj_dir = args.directory
     root_dir = args.root

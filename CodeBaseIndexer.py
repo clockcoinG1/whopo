@@ -13,7 +13,7 @@ openai.api_key = oai_api_key_embedder
 EMBEDDING_ENCODING = 'cl100k_base'
 tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
 
-def indexCodebase(df: pd.DataFrame, col_name: str, pickle: str = "split_codr") -> pd.DataFrame:
+def indexCodebase(df: pd.DataFrame, col_name: str, pickle: str = "split_codr", embed=False) -> pd.DataFrame:
 		"""
 		Indexes the codebase and saves it to a pickle file
 		
@@ -31,6 +31,8 @@ def indexCodebase(df: pd.DataFrame, col_name: str, pickle: str = "split_codr") -
 						df[f"{col_name}_tokens"] = [list(tokenizer.encode(code)) for code in df[col_name]]
 						df[f"{col_name}_token_count"] = [len(code) for code in df[f"{col_name}_tokens"]]
 						df.to_pickle(f"{code_root}/{pickle}.pkl")
+						if embed  == True:
+							df[f"{col_name}_embedding"] = df[f"{col_name}"].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002')) 
 						print("Indexed codebase: " + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
 						return df
 				else:
