@@ -285,7 +285,7 @@ def main():
 		root_dir = args.root.strip() if args.root is not None else os.getcwd()
 		prompt = args.prompt.strip()  if args.prompt is not None else "Explain the code"
 		n = args.n if args.n is not None else 20
-		context_n =  args.context if args.context is not None else 15
+		context =  args.context if args.context is not None else 15
 		max_tokens = args.max_tokens if args.max_tokens is not None else MAX_TOKEN_COUNT
 		if not os.path.exists(root_dir + "/" + proj_dir):
 				print(f"Directory {root_dir + args.directory} does not exist")
@@ -309,7 +309,6 @@ def main():
 
 		print(f"\033[1;32;40m*" * 40 + "\t Saving embedding summary...\t" + f"{root_dir}/{proj_dir}"  + f"\033[1;32;40m*" * 40)
 		df.to_pickle(proj_dir_pikl + '.pkl')
-		df = pd.read_pickle("/Users/clockcoin/parsero/temp/codebase_pickle-e8824597.pkl")
 		if args.chat: 
 			print(f"\033[1;32;40m*" * 10 + "\t Chat mode \t" + f"{root_dir}/{proj_dir}"  + f"\033[1;32;40m*" * 10)
 			while True:
