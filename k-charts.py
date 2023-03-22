@@ -41,7 +41,7 @@ def calculate_cosine_similarity(self, code: str, snippets: List[str]) -> pd.Data
 				"""
 				Extract code snippets from DataFrame
 				"""
-				return list(df["code"])
+					return list(df["code"])
 
 		def generate_docstrings(self, df: pd.DataFrame) -> pd.DataFrame:
 				"""

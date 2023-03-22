@@ -1,6 +1,7 @@
 import numpy as np
 from pathlib import Path
 import sys
+import time
 import requests
 import argparse
 import tiktoken
@@ -8,7 +9,7 @@ import pandas as pd
 import os
 import re
 import json
-from get_rel_code import api_key, get_context_code, get_rel_context_summary
+from get_rel_code import api_key
 import tqdm
 from CodeBaseIndexer import indexCodebase, split_code_by_token_count, write_md_files
 from embedder import CodeExtractor
@@ -17,8 +18,8 @@ from openai.embeddings_utils import cosine_similarity, get_embedding
 import uuid
 from constants import (
 	TOKEN_COUNT,
-	root_dir,
 	MAX_TOKEN_COUNT,
+	root_dir,
 	proj_dir,
 	oai_api_key_embedder,
 	chat_base,
@@ -33,7 +34,7 @@ encoder = tokenizer
 
 def generate_summary(
 		df: pd.DataFrame,
-		model: str = "chat-davinci-003-alpha",
+		model: str = "code-davinci-002",
 		proj_dir: str = "llama",
 ) -> pd.DataFrame:
 	"""
@@ -53,11 +54,15 @@ def generate_summary(
 	message = ""
 	try:
 		if not model:
-			model="chat-davinci-003-alpha"
+			# model="chat-davinci-003-alpha"
+			model="code-davinci-002"
 	except NameError:
-		model="chat-davinci-003-alpha"	
-	comp_type = "finish_reason" if not model or model != "chat-davinci-003-alpha" else "finish_details"
+		# model="chat-davinci-003-alpha"
+			model="code-davinci-002"
+	comp_type = "finish_reason" if model != "chat-davinci-003-alpha" else "finish_details"
 	for _, row in tqdm.tqdm(df.iterrows()):
+		time.sleep(3)
+		print("sleeping")
 		code = row["code"]
 		filepath = row["file_path"]
 		filename = row["file_name"]
@@ -65,7 +70,8 @@ def generate_summary(
 		encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 		enc_prompt = encoder.encode(str(prompt))
 		tokens = len(encoder.encode(code) + enc_prompt) or 1
-		max_token = 500 + MAX_TOKEN_COUNT
+		# max_token =  abs((4000 +(MAX_TOKEN_COUNT)  - tokens) - 4000)
+
 		r = requests.post(
 			base,
 			headers=headers,
@@ -81,7 +87,7 @@ def generate_summary(
 				# 	"[27, 91, 320, 62, 437, 91, 29, 198]" : -100
 				# 	},
 				"stop": ["\nSYSTEM:", "\nUSER:", "\nASSISTANT:","<|im_end|>" ],
-				"max_tokens": 500 + tokens,
+				"max_tokens": tokens + 750,
 				"presence_penalty": 1,
 				"frequency_penalty": 1,
 			}
@@ -113,11 +119,12 @@ def generate_summary(
 						# 	df.loc[df['file_path'] == filepath, 'summary'] = df.loc[df['file_path'] == filepath, 'summary'] + summary.strip()
 				# except:
 						# print("embedding error")
-			try:
-				old_sum = df[df['file_name'] == filename ]['summary'].values[0]
-				df.loc[df['file_name'] == filename, 'summary'] = summary.strip()
-			except KeyError:
-				df.loc[df['file_name'] == filename, 'summary'] = summary.strip()
+			
+		try:
+			old_sum = df[df['file_name'] == filename ]['summary'].values[0]
+			df.loc[df['file_name'] == filename, 'summary'] = f'{old_sum}\n{summary.strip()}'
+		except KeyError:
+			df.loc[df['file_name'] == filename, 'summary'] = summary.strip()
 	return df
 
 def get_tokens(df, colname):
@@ -262,13 +269,22 @@ if __name__ == '__main__':
 		ce = CodeExtractor(f"{root_dir}{proj_dir}")
 		df = ce.get_files_df()
 		df = split_code_by_token_count(df, args.max_tokens , "code" )
+		df = split_code_by_token_count(df,  col_name="code",  max_tokens=1000)
 		df = indexCodebase(df, "code", pickle="safsf.pkl")
-		# df = split_code_by_token_count(df, 500, "code" )
+		# df = ce.split_code_by_lines(df, max_lines=6)
 		df = generate_summary(df)
+		rows_with_summary = df[df['summary'] != '' ].dropna()
+		# Print file name and summary using the apply function
+		# Apply a function to each row of the dataframe
+		rows_with_summary.apply(lambda row: print(f"File Name: {row['file_name']}\nSummary: {len(row['summary'])}\n"), axis=1)
+
+
 		write_md_files(df, os.getcwd() + proj_dir)
 		proj_dir_pikl = re.sub(r'[^a-zA-Z]', '', proj_dir)
 		df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002') if x else None)
 		while True: 
 			ask = input("\033[33mAsk about the files, code, summaries:\033[0m\n\033[44mUSER:  \033[0m")
 			rez  = df_search_sum(df, ask, pprint=True)
-			chatbot(df, rez , n)
+			chatbot(df, rez , 5)
+# <|system|> Lets remove redundancies and make this more efficient, SOLID, and pythonic
+# ASSISTANT: OK. Here is the improved state of the art code:
