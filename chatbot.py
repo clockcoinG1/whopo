@@ -173,7 +173,7 @@ def chatbot(df, prompt="What does this code do?", n = 4):
 			r = requests.post(
 					chat_base, headers=headers, stream=True,
 					json={
-							"model": "gpt-3.5-turbo",
+							"model": "gpt-4-0314",
 							"messages": [
 									{"role": "system", "content": f"You are the ASSISTANT helping the USER with optimizing and analyzing a codebase. You are intelligent, helpful, and an expert developer, who always gives the correct answer and only does what is instructed. You always answer truthfully and don't make things up."},
 									{"role": "user", "content": f"{prompt}"}
@@ -183,7 +183,7 @@ def chatbot(df, prompt="What does this code do?", n = 4):
 							"n": 1,
 							"stop": ["<|/im_end|>"],
 							"stream": True,
-							"max_tokens": int(avail_tokens),
+							"max_tokens": 8000 - int(avail_tokens),
 							"presence_penalty": 0,
 							"frequency_penalty": 0,
 					}
@@ -246,6 +246,7 @@ def main():
 		parser.add_argument('--root', type=str, default=f"{os.environ['CODE_EXTRACTOR_DIR']}", help='Where root of project is or env $CODE_EXTRACTOR_DIR')
 		parser.add_argument('-n', type=int, default=10, help='number of context chunks to use')
 		parser.add_argument('--prompt', type=str, default='What does this code do?', help='gpt prompt')
+		parser.add_argument('--chat', type=bool, default=True, help='gpt chat')
 		parser.add_argument('--context', type=int, default=10, help='context length')
 		parser.add_argument('--max_tokens', type=int, default=1000, help='maximum number of tokens in summary')
 
@@ -283,12 +284,12 @@ def main():
 		proj_dir = args.directory.strip() if args.directory is not None else "ez11"
 		root_dir = args.root.strip() if args.root is not None else os.getcwd()
 		prompt = args.prompt.strip()  if args.prompt is not None else "Explain the code"
-		n = args.n
+		n = args.n if args.n is not None else 20
+		context_n =  args.context if args.context is not None else 15
+		max_tokens = args.max_tokens if args.max_tokens is not None else MAX_TOKEN_COUNT
 		if not os.path.exists(root_dir + "/" + proj_dir):
 				print(f"Directory {root_dir + args.directory} does not exist")
 				sys.exit()
-		context_n = args.context
-		max_tokens = args.max_tokens
 		
 		ce = CodeExtractor(f"{root_dir}/{proj_dir}")
 		df = ce.get_files_df()
@@ -308,15 +309,14 @@ def main():
 
 		print(f"\033[1;32;40m*" * 40 + "\t Saving embedding summary...\t" + f"{root_dir}/{proj_dir}"  + f"\033[1;32;40m*" * 40)
 		df.to_pickle(proj_dir_pikl + '.pkl')
-
-		if not args.prompt: 
+		df = pd.read_pickle("/Users/clockcoin/parsero/temp/codebase_pickle-e8824597.pkl")
+		if args.chat: 
 			print(f"\033[1;32;40m*" * 10 + "\t Chat mode \t" + f"{root_dir}/{proj_dir}"  + f"\033[1;32;40m*" * 10)
 			while True:
 				ask = input("\n\033[33mAsk about the files, code, summaries:\033[0m\n\n\033[44mUSER:  \033[0m")
-				# q_and_a(df, "What is the code do?", n, 500)# max_tokens * context_n n = 5)
-				summary_items  = df_search_sum(df, ask, pprint=True, n=n , n_lines=context_n) 
-				chatbot(df, summary_items , context_n)
+				# q_and_a(df, "What is the code do?", n, 500)# max_tokens * context_n = 15)
+				summary_items  = df_search_sum(df, ask, pprint=True, n=n , n_lines=context) 
+				chatbot(df, summary_items , context)
 
 if __name__ == '__main__':
 	main()
-	
