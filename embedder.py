@@ -319,7 +319,7 @@ class CodeExtractor:
 				df["tokens"] = [list(tokenizer.encode(code).tokens) for code in df["code"]]
 				return df
 
-		def split_code_by_token_count(self, df: pd.DataFrame, max_tokens: int = 8100) -> pd.DataFrame:
+		def split_code_by_TOKEN_MAX_SUMMARY(self, df: pd.DataFrame, max_tokens: int = 8100) -> pd.DataFrame:
 				EMBEDDING_ENCODING = 'cl100k_base'
 				tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
 
@@ -327,20 +327,20 @@ class CodeExtractor:
 				for index, row in df.iterrows():
 						code = row["code"]
 						tokens = row["tokens"]
-						token_count = row["token_count"]
-						if token_count <= max_tokens:
+						TOKEN_MAX_SUMMARY = row["TOKEN_MAX_SUMMARY"]
+						if TOKEN_MAX_SUMMARY <= max_tokens:
 								new_rows.append(row)
 						else:
 								
 								
 								start_token = 0
-								while start_token < token_count:
+								while start_token < TOKEN_MAX_SUMMARY:
 										
 										end_token = start_token + max_tokens
 										chunk_code = "".join(code[start_token:end_token])
 										new_row = row.copy()
 										new_row["code"] = chunk_code
-										new_row["token_count"] = len(chunk_code.split(" "))
+										new_row["TOKEN_MAX_SUMMARY"] = len(chunk_code.split(" "))
 										new_row["file_name"] = f"{new_row['file_name']}_chunk{start_token}"
 										new_rows.append(new_row)
 										start_token = end_token
@@ -585,8 +585,8 @@ if __name__ == '__main__':
 
 	# get token totals
 	df["tokens"] = [list(tokenizer.encode(code)) for code in df["code"]]
-	df["token_count"] = [len(code) for code in df["tokens"]]
-	df["token_count"].sum()
+	df["TOKEN_MAX_SUMMARY"] = [len(code) for code in df["tokens"]]
+	df["TOKEN_MAX_SUMMARY"].sum()
 
 	name = f"codebase_pickle-{str(uuid.uuid4())}.pkl"
 	extractor.df = df

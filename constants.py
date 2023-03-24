@@ -1,15 +1,19 @@
-import openai
-TOKEN_COUNT = 500
-root_dir = ""
-proj_dir = "llama"
-oai_api_key_embedder= "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"
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+MAX_TOKEN_MAX_SUMMARY = os.getenv("MAX_TOKEN_MAX_SUMMARY") or 3000
+TOKEN_MAX_SUMMARY = os.getenv("TOKEN_MAX_SUMMARY") or 3000
+root_dir = os.getenv("CODE_EXTRACTOR_DIR") or os.getcwd()
+proj_dir = "ez11"
+oai_api_key_embedder= os.getenv("OPENAI_API_KEY")
 base = "https://api.openai.com/v1/completions"
 chat_base = 'https://api.openai.com/v1/chat/completions'
-GPT_MODEL = os.getenv("GPT_MODEL") or'gpt-4'
-# GPT_MODEL = 'gpt-4-0314'
 EMBEDDING_ENCODING = 'cl100k_base'
-api_key = "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"
+api_key = os.getenv("OPENAI_API_KEY")
+comp_api_key = os.getenv("OAI_CD3_KEY") or "sk-"
+GPT_MODEL = os.getenv("GPT_MODEL") or "gpt-4"
 headers = {
 	'Content-Type': 'application/json',
-	'Authorization': 'Bearer ' + api_key,
+	'Authorization': 'Bearer ' + comp_api_key,
 }

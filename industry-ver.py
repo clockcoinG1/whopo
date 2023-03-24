@@ -304,7 +304,7 @@ class CodeExtractor:
 				)
 				return new_df
 
-		def split_code_by_token_count(self, df: pd.DataFrame, max_tokens: int = 250) -> pd.DataFrame:
+		def split_code_by_TOKEN_MAX_SUMMARY(self, df: pd.DataFrame, max_tokens: int = 250) -> pd.DataFrame:
 				"""Use the same tokenizer as the pre-trained model"""
 				EMBEDDING_ENCODING = 'cl100k_base'
 				tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
@@ -316,13 +316,13 @@ class CodeExtractor:
 						# Tokenize the code
 						tokens = list(tokenizer.encode(code))
 						# Get the number of tokens in the code
-						token_count = len(tokens)
+						TOKEN_MAX_SUMMARY = len(tokens)
 
-						if token_count <= max_tokens:
+						if TOKEN_MAX_SUMMARY <= max_tokens:
 								new_rows.append(row)
 						else:
 								# Get the halfway point of the code
-								halfway_point = token_count // 2
+								halfway_point = TOKEN_MAX_SUMMARY // 2
 								# Find the first occurrence of two newline characters in the code
 								split_point = None
 
@@ -330,7 +330,7 @@ class CodeExtractor:
 								# In each iteration, we print the token count, i.e., how many tokens we have in the code.
 								# If the token count is greater than max_tokens, we will try to split the code into two parts.
 								# The goal is to create two sets of codes with as few a number of tokens as possible but not exceeding the max_tokens limit.
-								print(f"Token count: {token_count}")
+								print(f"Token count: {TOKEN_MAX_SUMMARY}")
 								for i in range(halfway_point, len(tokens) - 1):
 										if tokens[i].value == "\n" and tokens[i + 1].value == "\n":
 												split_point = i
@@ -374,11 +374,11 @@ class CodeExtractor:
 
 		def write_to_csv(self):
 				df_functions = self.get_functions_df()
-				df_functions_split = self.split_code_by_token_count(df_functions)
+				df_functions_split = self.split_code_by_TOKEN_MAX_SUMMARY(df_functions)
 				df_functions_split.to_csv("functions.csv", index=False)
 
 				df_classes = self.get_classes_df()
-				df_classes_split = self.split_code_by_token_count(df_classes)
+				df_classes_split = self.split_code_by_TOKEN_MAX_SUMMARY(df_classes)
 				df_classes_split.to_csv("classes.csv", index=False)
 
 				print(f"Wrote {len(df_functions_split)} functions and {len(df_classes_split)} classes in {self.directory}")

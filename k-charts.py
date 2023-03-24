@@ -193,7 +193,7 @@ if __name__ == "__main__":
 				# df = extractor.get_all_functions()
 				# df.to_pickle("df.pkl")
 				# df = pd.read_pickle("df.pkl")
-				# df = extractor.split_code_by_token_count(df, max_tokens=4000)
+				# df = extractor.split_code_by_TOKEN_MAX_SUMMARY(df, max_tokens=4000)
 				# df['code_embedding'] = df['code'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002'))
 				# df.to_pickle("df2.pkl")
 				df = pd.read_pickle(f"{root_dir}/df3.pkl")
