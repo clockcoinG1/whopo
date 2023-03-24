@@ -319,37 +319,39 @@ class CodeExtractor:
 				df["tokens"] = [list(tokenizer.encode(code).tokens) for code in df["code"]]
 				return df
 
-		def split_code_by_TOKEN_MAX_SUMMARY(self, df: pd.DataFrame, max_tokens: int = 8100) -> pd.DataFrame:
-				EMBEDDING_ENCODING = 'cl100k_base'
-				tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
+		def split_code_by_token_count(self, df: pd.DataFrame, max_tokens: int = 8100) -> pd.DataFrame:
+			"""
+			Splits the code in the dataframe into chunks based on the maximum token count.
 
-				new_rows = []
-				for index, row in df.iterrows():
-						code = row["code"]
-						tokens = row["tokens"]
-						TOKEN_MAX_SUMMARY = row["TOKEN_MAX_SUMMARY"]
-						if TOKEN_MAX_SUMMARY <= max_tokens:
-								new_rows.append(row)
-						else:
-								
-								
-								start_token = 0
-								while start_token < TOKEN_MAX_SUMMARY:
-										
-										end_token = start_token + max_tokens
-										chunk_code = "".join(code[start_token:end_token])
-										new_row = row.copy()
-										new_row["code"] = chunk_code
-										new_row["TOKEN_MAX_SUMMARY"] = len(chunk_code.split(" "))
-										new_row["file_name"] = f"{new_row['file_name']}_chunk{start_token}"
-										new_rows.append(new_row)
-										start_token = end_token
-				new_df = pd.DataFrame(new_rows)
-				print("Created new dataframe")
-				print("Rows:", new_df.shape[0])
-				print("Columns:", new_df.shape[1], end="\n=============================\n")
-				return new_df
+			:param df: A pandas DataFrame containing the code and its tokens.
+			:param max_tokens: The maximum number of tokens allowed in a single chunk.
+			:return: A new DataFrame with the code split into chunks based on the maximum token count.
+			"""
+			new_rows = []
+			for index, row in df.iterrows():
+					code = row["code"]
+					tokens = row["tokens"]
+					token_max_summary = row["TOKEN_MAX_SUMMARY"]
 
+					if token_max_summary <= max_tokens:
+							new_rows.append(row)
+					else:
+							start_token = 0
+							while start_token < token_max_summary:
+									end_token = start_token + max_tokens
+									chunk_code = "".join(code[start_token:end_token])
+									new_row = row.copy()
+									new_row["code"] = chunk_code
+									new_row["TOKEN_MAX_SUMMARY"] = len(chunk_code.split(" "))
+									new_row["file_name"] = f"{new_row['file_name']}_chunk{start_token}"
+									new_rows.append(new_row)
+									start_token = end_token
+
+			new_df = pd.DataFrame(new_rows)
+			print("Created new dataframe")
+			print("Rows:", new_df.shape[0])
+			print("Columns:", new_df.shape[1], end="\n=============================\n")
+			return new_df
 		def extract_interfaces(self, filepath: str) -> List[str]:
 				interfaces = []
 
@@ -568,7 +570,7 @@ def run_chat_loop():
 		ask(input)
 
 
-
+""" 
 if len(sys.argv) == 1:
 	print( "Must specify a directory as the first argument")
 	exit()
@@ -592,4 +594,4 @@ if __name__ == '__main__':
 	extractor.df = df
 	extractor.indexCodebase(extractor.df, pickle=name)
 	extractor.df = extractor.df_search(df=extractor.df, code_query="#",n=20)
-	extractor.chatbot("What are the comments")
+	extractor.chatbot("What are the comments") """

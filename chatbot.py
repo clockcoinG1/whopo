@@ -1,33 +1,28 @@
-import numpy as np
-from pathlib import Path
-import sys
-import time
-import requests
 import argparse
-import tiktoken
-import pandas as pd
+import json
 import os
 import re
-import json
-from get_rel_code import api_key
-import tqdm, os
-from utils import indexCodebase, split_code_by_TOKEN_MAX_SUMMARY, write_md_files
-from embedder import CodeExtractor
-import openai
-from openai.embeddings_utils import cosine_similarity, get_embedding
+import sys
+import time
+import tkinter as tk
 import uuid
-from constants import (
-	TOKEN_MAX_SUMMARY,
-	MAX_TOKEN_MAX_SUMMARY,
-	root_dir,
-	proj_dir,
-	oai_api_key_embedder,
-	GPT_MODEL,
-	chat_base,
-	base,
-	EMBEDDING_ENCODING,
-	headers
-)
+from pathlib import Path
+from tkinter import scrolledtext, ttk
+
+import numpy as np
+import openai
+import pandas as pd
+import requests
+import tiktoken
+import tqdm
+from openai.embeddings_utils import cosine_similarity, get_embedding
+
+from constants import (EMBEDDING_ENCODING, GPT_MODEL, MAX_TOKEN_MAX_SUMMARY,
+											 TOKEN_MAX_SUMMARY, base, chat_base, headers,
+											 oai_api_key_embedder, proj_dir, root_dir)
+from embedder import CodeExtractor
+from get_rel_code import api_key
+from utils import indexCodebase, split_code_by_tokens, write_md_files
 
 openai.api_key = oai_api_key_embedder
 tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
@@ -228,15 +223,127 @@ def generate_summary_for_directory(directory, df):
 
 def df_search_sum(df, summary_query, n=3, pprint=True, n_lines=7):
 		embedding  = get_embedding(engine="text-embedding-ada-002", text=summary_query)
-		df['summary_simmilarities'] = df.summary_embedding.apply(lambda x: cosine_similarity(x, embedding) if x is not None else 0.8)
+		df['summary_simmilarities'] = df.summary_embedding.apply(lambda x: cosine_similarity(x, embedding) if x is not None else 0.0)
 		res = df.sort_values('summary_embedding', ascending=False).head(n)
 		res_str = ""
 		if pprint:
 				for r in res.iterrows():
-						print(r[1].file_path + " " + "  score=" + str(round(r[1]["summary_simmilarities"], 3)))
+						# print(r[1].file_path + " " + "  score=" + str(round(r[1]["summary_simmilarities"], 3)))
 						res_str += r[1].file_name + " " + "  score=" + str(round(r[1]["summary_simmilarities"], 3))
-						print("\n".join(r[1].summary.split("\n")[:n_lines]))
 						res_str += "\n".join(r[1].summary.split("\n")[:n_lines])
-						res_str += '-' * 70
-						print('-' * 70)
+						# res_+("\n".join(r[1].summary.split("\n")[:n_lines]))
 		return res_str
+
+def chat_interface(df, n=5, context=3):
+		class TextRedirector:
+				def __init__(self, widget):
+						self.widget = widget
+
+				def write(self, string):
+						self.widget.insert(tk.END, string)
+						self.widget.see(tk.END)
+
+				def flush(self):
+						pass
+
+		def on_send():
+				ask = user_input.get()
+				user_input.delete(0, tk.END)
+				conversation.insert(tk.END, f"USER: {ask}\n", "user")
+				summary_items = df_search_sum(df, ask, pprint=False, n=n, n_lines=context)
+				chatbot_response = chatbot(df, summary_items + ask)
+				conversation.insert(tk.END, f"ASSISTANT: {chatbot_response}\n", "assistant")
+
+		# Create the main window
+		root = tk.Tk()
+		root.title("Chat Interface")
+		root.geometry("800x600")
+		root.resizable(True, True)
+
+		# Set a modern-looking theme
+		style = ttk.Style()
+		style.theme_use("clam")
+
+		# Create the conversation widget
+		conversation = tk.Text(root, wrap=tk.WORD, bg="#1c1c1c", fg="#ffffff")
+		conversation.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
+		conversation.tag_configure("user", foreground="#00ff00")
+		conversation.tag_configure("assistant", foreground="#00aaff")
+
+		# Redirect stdout to the conversation widget
+		sys.stdout = TextRedirector(conversation)
+
+		# Create the user input widget
+		user_input = ttk.Entry(root)
+		user_input.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+
+		# Create the send button
+		send_button = ttk.Button(root, text="Send", command=on_send)
+		send_button.grid(row=1, column=1, padx=10, pady=10)
+
+		# Configure the grid layout to expand with the window size
+		root.grid_columnconfigure(0, weight=1)
+		root.grid_rowconfigure(0, weight=1)
+
+		# Start the main loop
+		root.mainloop()
+
+
+import sys
+import tkinter as tk
+from tkinter import ttk
+
+def chat_interface(df, n=5, context=3):
+		class TextRedirector:
+				def __init__(self, widget):
+						self.widget = widget
+
+				def write(self, string):
+						self.widget.insert(tk.END, string)
+						self.widget.see(tk.END)
+
+				def flush(self):
+						pass
+
+		def on_send():
+				ask = user_input.get()
+				user_input.delete(0, tk.END)
+				conversation.insert(tk.END, f"\nUSER: {ask}\n", "user")
+				summary_items = df_search_sum(df, ask, pprint=False, n=n, n_lines=context)
+				chatbot_response = chatbot(df, summary_items + ask)
+				conversation.insert(tk.END, f"\nASSISTANT: {chatbot_response}\n", "assistant")
+
+		# Create the main window
+		root = tk.Tk()
+		root.title("Chat Interface")
+		root.geometry("800x600")
+		root.resizable(True, True)
+
+		# Set a modern-looking theme
+		style = ttk.Style()
+		style.theme_use("clam")
+
+		# Create the conversation widget
+		conversation = tk.Text(root, wrap=tk.WORD, bg="#1c1c1c", fg="#ffffff")
+		conversation.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
+		conversation.tag_configure("user", foreground="#00ff00")
+		conversation.tag_configure("assistant", foreground="#00aaff")
+
+		# Redirect stdout and stderr to the conversation widget
+		sys.stdout = TextRedirector(conversation)
+		sys.stderr = TextRedirector(conversation)
+
+		# Create the user input widget
+		user_input = ttk.Entry(root)
+		user_input.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+
+		# Create the send button
+		send_button = ttk.Button(root, text="Send", command=on_send)
+		send_button.grid(row=1, column=1, padx=10, pady=10)
+
+		# Configure the grid layout to expand with the window size
+		root.grid_columnconfigure(0, weight=1)
+		root.grid_rowconfigure(0, weight=1)
+
+		# Start the main loop
+		root.mainloop()
