@@ -24,6 +24,7 @@ def process_arguments():
 		parser.add_argument('--max_tokens', type=int, default=1000, help='maximum number of tokens in summary')
 		parser.add_argument('--ext', type=str, default="py,ts,js,md,txt", help='file ext to target')
 		parser.add_argument('--split_by', type=str, choices="tokens,lines", default='lines', help='split code by tokens or lines')
+
 		return parser.parse_args()
 
 
@@ -53,29 +54,30 @@ def main():
 				split_by = args.split_by
 				if args.P:
 						df = pd.read_pickle(args.P)
+						# df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002') if x else None)'' 
+						# proj_dir = "codex" 
+						# n = 10 ext = "ts"
 						chat_interface(df, n, context)
 
 				else:
 						logger.info(f"Summarizing {args.directory}\nUsing {args.n} context chunks\nPrompt: {args.prompt}")
 						df = glob_files(str(proj_dir), ext)
 						if split_by == 'lines':
-								df = split_code_by_lines(df, max_lines=25)
+								df = split_code_by_lines(df, max_lines=1)
 						else:
-								df = split_code_by_tokens(df, max_tokens=max_tokens)
+								df = split_code_by_tokens(df, max_tokens=1000)
 						df = indexCodebase(df, "code")
 						logger.info("Generating summary...")
-						df = df[df['code'] != ''].dropna()
-						df = generate_summary(df, proj_dir=str(proj_dir))
-						df = df[df['summary'] != ''].dropna()
 						logger.info("Writing summary...")
-						write_md_files(df, str(proj_dir).strip('/'))
-
-						proj_dir_pikl = re.sub(r'[^a-zA-Z]', '', f"{root_dir}/{proj_dir}")
-						print(f"\033[1;34;40m*" * 20 + "\t Embedding summary column ...\t" + f"{root_dir}/{proj_dir}"  + f"\033[1;34;40m*" * 20)
-						df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002') if x else None)
+						df = generate_summary(df)
 						print(f"\033[1;32;40m*" * 40 + "\t Saving embedding summary...\t" + f"{root_dir}/{proj_dir}")
+						proj_dir_pikl = re.sub(r'[^a-zA-Z]', '', f"{root_dir}/{proj_dir}")
+						df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002') if x else None)
+						write_md_files(df, str(proj_dir).strip('/'))
+						# df = df[df['code'] != ''].dropna()
+						# df = df[df['summary'] != ''].dropna()
+
 						chat_interface(df,n,context)
-						chat_interface(df,5,5)
 
 	except ValueError as e:
 			print(f"Error: {e}")
