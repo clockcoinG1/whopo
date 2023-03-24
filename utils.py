@@ -56,7 +56,7 @@ def setup_logger(name, log_level=logging.INFO):
 
 
 
-def split_code_by_lines(df: pd.DataFrame, tokenizer, max_lines: int =  1000, col_name: str = "code") -> pd.DataFrame:
+def split_code_by_lines(df: pd.DataFrame, max_lines: int =  1000, col_name: str = "code") -> pd.DataFrame:
     new_rows = []
     df[f"{col_name}_tokens"] = [list(tokenizer.encode(code)) for code in df[col_name]]
     df[f"{col_name}_total_tokens"] = [len(code) for code in df[f"{col_name}_tokens"]]
