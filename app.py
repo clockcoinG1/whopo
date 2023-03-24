@@ -96,7 +96,7 @@ def main():
 						# df = df[df['summary'] != ''].dropna()
 						while True:
 							ask = input(f"\n{TerminalColors.OKCYAN}USER:{TerminalColors.ENDC} ")
-							result = df_search_sum(df, ask)
+							result = df_search_sum(df, ask, n=n , pprint=False, n_lines=context)
 							chatbot(df, f"{TerminalColors.OKGREEN}{result}{TerminalColors.ENDC}\n\n{TerminalColors.OKCYAN}USER: {ask}{TerminalColors.ENDC}")
 						# chat_interface(df,n,context)
 
