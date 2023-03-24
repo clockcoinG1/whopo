@@ -87,11 +87,11 @@ def main():
 						logger.info("Writing summary...")
 						df = generate_summary(df)
 						print(f"\033[1;32;40m*" * 40 + "\t Saving embedding summary...\t" + f"{root_dir}/{proj_dir}")
-						proj_dir_pikl = re.sub(r'[^a-zA-Z]', '', f"{root_dir}/{proj_dir}")
+						proj_dir_pikl = re.sub(r'[^a-zA-Z]', '', f"{proj_dir}.pkl")
 						df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002') if x else None)
 						write_md_files(df, str(proj_dir).strip('/'))
 						df.to_pickle(proj_dir_pikl)
-						print(f"\n{TerminalColors().OKCYAN} Embeddings saved to {proj_dir}{proj_dir_pikl}")
+						print(f"\n{TerminalColors().OKCYAN} Embeddings saved to {proj_dir_pikl}")
 						# df = df[df['code'] != ''].dropna()
 						# df = df[df['summary'] != ''].dropna()
 						while True:
