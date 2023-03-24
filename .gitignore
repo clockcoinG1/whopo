@@ -12,3 +12,4 @@ ez11
 .env
 .gitignore
 def argparser():.py
+gcopl/
