@@ -1,3 +1,7 @@
+
+import sys
+import tkinter as tk
+from tkinter import ttk
 import argparse
 import json
 import os
@@ -289,61 +293,57 @@ def chat_interface(df, n=5, context=3):
 		root.mainloop()
 
 
-import sys
-import tkinter as tk
-from tkinter import ttk
+# def chat_interface(df, n=5, context=3):
+# 		class TextRedirector:
+# 				def __init__(self, widget):
+# 						self.widget = widget
 
-def chat_interface(df, n=5, context=3):
-		class TextRedirector:
-				def __init__(self, widget):
-						self.widget = widget
+# 				def write(self, string):
+# 						self.widget.insert(tk.END, string)
+# 						self.widget.see(tk.END)
 
-				def write(self, string):
-						self.widget.insert(tk.END, string)
-						self.widget.see(tk.END)
+# 				def flush(self):
+# 						pass
 
-				def flush(self):
-						pass
+# 		def on_send():
+# 				ask = user_input.get()
+# 				user_input.delete(0, tk.END)
+# 				conversation.insert(tk.END, f"\nUSER: {ask}\n", "user")
+# 				summary_items = df_search_sum(df, ask, pprint=False, n=n, n_lines=context)
+# 				chatbot_response = chatbot(df, summary_items + ask)
+# 				conversation.insert(tk.END, f"\nASSISTANT: {chatbot_response}\n", "assistant")
 
-		def on_send():
-				ask = user_input.get()
-				user_input.delete(0, tk.END)
-				conversation.insert(tk.END, f"\nUSER: {ask}\n", "user")
-				summary_items = df_search_sum(df, ask, pprint=False, n=n, n_lines=context)
-				chatbot_response = chatbot(df, summary_items + ask)
-				conversation.insert(tk.END, f"\nASSISTANT: {chatbot_response}\n", "assistant")
+# 		# Create the main window
+# 		root = tk.Tk()
+# 		root.title("Chat Interface")
+# 		root.geometry("800x600")
+# 		root.resizable(True, True)
 
-		# Create the main window
-		root = tk.Tk()
-		root.title("Chat Interface")
-		root.geometry("800x600")
-		root.resizable(True, True)
+# 		# Set a modern-looking theme
+# 		style = ttk.Style()
+# 		style.theme_use("clam")
 
-		# Set a modern-looking theme
-		style = ttk.Style()
-		style.theme_use("clam")
+# 		# Create the conversation widget
+# 		conversation = tk.Text(root, wrap=tk.WORD, bg="#1c1c1c", fg="#ffffff")
+# 		conversation.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
+# 		conversation.tag_configure("user", foreground="#00ff00")
+# 		conversation.tag_configure("assistant", foreground="#00aaff")
 
-		# Create the conversation widget
-		conversation = tk.Text(root, wrap=tk.WORD, bg="#1c1c1c", fg="#ffffff")
-		conversation.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
-		conversation.tag_configure("user", foreground="#00ff00")
-		conversation.tag_configure("assistant", foreground="#00aaff")
+# 		# Redirect stdout and stderr to the conversation widget
+# 		sys.stdout = TextRedirector(conversation)
+# 		sys.stderr = TextRedirector(conversation)
 
-		# Redirect stdout and stderr to the conversation widget
-		sys.stdout = TextRedirector(conversation)
-		sys.stderr = TextRedirector(conversation)
+# 		# Create the user input widget
+# 		user_input = ttk.Entry(root)
+# 		user_input.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
 
-		# Create the user input widget
-		user_input = ttk.Entry(root)
-		user_input.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+# 		# Create the send button
+# 		send_button = ttk.Button(root, text="Send", command=on_send)
+# 		send_button.grid(row=1, column=1, padx=10, pady=10)
 
-		# Create the send button
-		send_button = ttk.Button(root, text="Send", command=on_send)
-		send_button.grid(row=1, column=1, padx=10, pady=10)
+# 		# Configure the grid layout to expand with the window size
+# 		root.grid_columnconfigure(0, weight=1)
+# 		root.grid_rowconfigure(0, weight=1)
 
-		# Configure the grid layout to expand with the window size
-		root.grid_columnconfigure(0, weight=1)
-		root.grid_rowconfigure(0, weight=1)
-
-		# Start the main loop
-		root.mainloop()
+# 		# Start the main loop
+# 		root.mainloop()
