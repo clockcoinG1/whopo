@@ -1,17 +1,27 @@
 # Code Summarization Chatbot
 
-This is a code summarization chatbot that uses OpenAI's GPT-3 API to summarize code. It is designed to help developers optimize and analyze codebases.
+This chatbot helps you understand and navigate through a codebase by generating summaries and answering questions about the code. It uses GPT-3 to generate summaries and answer questions based on the code context.
 
 ## Table of Contents
 
+- [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Arguments](#arguments)
+- [Command-line Arguments](#command-line-arguments)
 - [Environment Variables](#environment-variables)
 - [Requirements](#requirements)
 - [License](#license)
 - [Authors](#authors)
 - [TODO](#todo)
+
+## Prerequisites
+
+- Python 3.6 or higher
+- Install the required packages using the following command:
+
+```bash
+pip install -r requirements.txt
+```
 
 ## Installation
 
@@ -25,45 +35,28 @@ pip install -r requirements.txt
 
 ## Usage
 
-To use the chatbot, run the following command:
+1. Navigate to the project directory.
+
+2. Run the `app.py` script with the appropriate command-line arguments. Here's an example:
 
 ```bash
-python app.py [-h] [--root ROOT] [-n N] [--prompt PROMPT] [--chat CHAT] [--context CONTEXT] [--max_tokens MAX_TOKENS] directory
+python app.py --directory /path/to/codebase --ext py,ts,js,md,txt --n 10 --context 10 --max_tokens 1000
 ```
 
-where `directory` is the directory containing the codebase you want to summarize.
+After running the script, you can interact with the chatbot by typing your questions in the terminal.
 
-The chatbot will then prompt you for a question or query about the codebase. It will then generate a summary of the codebase based on your query.
+### Command-line Arguments
 
-You can also set the `CODE_EXTRACTOR_DIR` environment variable in the command line by using the `--root` flag:
-
-```bash
-python app.py my_project --prompt "What does this code do?" -n 5 --context 10 --max_tokens 500 --root /home/user
-```
-
-This will set the `CODE_EXTRACTOR_DIR` environment variable to `/home/user`.
-
-You can also set the `GPT_MODEL` environment variable to `gpt-4` or `gpt-4-0314` or `chat-davinci-003-alpha` in the `.env` file in the root directory of the project.
-
-You can use chat mode by adding the `--chat` flag to the command:
-
-```bash
-python app.py my_project --prompt "What does this code do?" -n 5 --context 10 --max_tokens 500 --chat
-```
-
-## Arguments
-
-The chatbot uses the following arguments:
-
-- `directory`: The directory containing the codebase you want to summarize.
-- `--root`: Where root of project is or env $CODE_EXTRACTOR_DIR.
-- `-n`: The number of context chunks to use.
-- `--prompt`: The GPT prompt.
-- `--chat`: Whether to use chat mode.
-- `--context`: The context length.
-- `--max_tokens`: The maximum number of tokens in the summary.
-
-You can set these arguments in the command line or in a `.env` file in the root directory of the project.
+- `--directory`: The directory containing the codebase you want to summarize (default: current working directory).
+- `-P`: The path to a saved database file (pickle) to use for the chatbot.
+- `--root`: The root directory of the project (default: environment variable `$CODE_EXTRACTOR_DIR`).
+- `-n`: The number of context chunks to use (default: 10).
+- `--prompt`: The GPT-3 prompt (default: "What does this code do?").
+- `--chat`: Enable GPT-3 chat mode (default: True).
+- `--context`: The context length (default: 10).
+- `--max_tokens`: The maximum number of tokens in the summary (default: 1000).
+- `--ext`: The file extensions to target (default: "py,ts,js,md,txt").
+- `--split_by`: Choose to split code by tokens or lines (default: "lines").
 
 ## Environment Variables
 
