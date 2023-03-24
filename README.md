@@ -9,8 +9,7 @@ This is a code summarization chatbot that uses OpenAI's GPT-3 API to summarize c
 
 To use the chatbot, run the following command:
 
-```python chatbot.py [-h] [--root ROOT] [-n N] [--prompt PROMPT] [--chat CHAT] [--context CONTEXT] [--max_tokens MAX_TOKENS]
-                  directory```
+```python chatbot.py [-h] [--root ROOT] [-n N] [--prompt PROMPT] [--chat CHAT] [--context CONTEXT] [--max_tokens MAX_TOKENS] directory```
 
 where `directory` is the directory containing the codebase you want to summarize.
 
