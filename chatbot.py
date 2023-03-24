@@ -7,11 +7,14 @@ import argparse
 import tiktoken
 import pandas as pd
 import os
+import tkinter as tk
+from tkinter import ttk
+from tkinter import scrolledtext
 import re
 import json
 from get_rel_code import api_key
 import tqdm, os
-from utils import indexCodebase, split_code_by_TOKEN_MAX_SUMMARY, write_md_files
+from utils import indexCodebase, split_code_by_tokens, write_md_files
 from embedder import CodeExtractor
 import openai
 from openai.embeddings_utils import cosine_similarity, get_embedding
@@ -228,15 +231,47 @@ def generate_summary_for_directory(directory, df):
 
 def df_search_sum(df, summary_query, n=3, pprint=True, n_lines=7):
 		embedding  = get_embedding(engine="text-embedding-ada-002", text=summary_query)
-		df['summary_simmilarities'] = df.summary_embedding.apply(lambda x: cosine_similarity(x, embedding) if x is not None else 0.8)
+		df['summary_simmilarities'] = df.summary_embedding.apply(lambda x: cosine_similarity(x, embedding) if x is not None else 0.0)
 		res = df.sort_values('summary_embedding', ascending=False).head(n)
 		res_str = ""
 		if pprint:
 				for r in res.iterrows():
-						print(r[1].file_path + " " + "  score=" + str(round(r[1]["summary_simmilarities"], 3)))
+						# print(r[1].file_path + " " + "  score=" + str(round(r[1]["summary_simmilarities"], 3)))
 						res_str += r[1].file_name + " " + "  score=" + str(round(r[1]["summary_simmilarities"], 3))
-						print("\n".join(r[1].summary.split("\n")[:n_lines]))
+						# print("\n".join(r[1].summary.split("\n")[:n_lines]))
 						res_str += "\n".join(r[1].summary.split("\n")[:n_lines])
-						res_str += '-' * 70
-						print('-' * 70)
 		return res_str
+
+def chat_interface(df, n=5, context=3):
+    def on_send():
+        ask = user_input.get()
+        user_input.delete(0, tk.END)
+        print(f"USER: {ask}")
+        summary_items = df_search_sum(df, ask, pprint=False, n=n, n_lines=context)
+        chatbot_response = chatbot(df, summary_items + ask)
+        print(f"ASSISTANT: {chatbot_response}")
+
+    # Create the main window
+    root = tk.Tk()
+    root.title("Chat Interface")
+    root.geometry("800x600")
+    root.resizable(True, True)
+
+    # Set a modern-looking theme
+    style = ttk.Style()
+    style.theme_use("clam")
+
+    # Create the user input widget
+    user_input = ttk.Entry(root)
+    user_input.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+
+    # Create the send button
+    send_button = ttk.Button(root, text="Send", command=on_send)
+    send_button.grid(row=1, column=1, padx=10, pady=10)
+
+    # Configure the grid layout to expand with the window size
+    root.grid_columnconfigure(0, weight=1)
+    root.grid_rowconfigure(0, weight=1)
+
+    # Start the main loop
+    root.mainloop()
