@@ -79,9 +79,9 @@ def main():
 						logger.info(f"Summarizing {args.directory}\nUsing {args.n} context chunks\nPrompt: {args.prompt}")
 						df = glob_files(str(proj_dir), ext)
 						if split_by == 'lines':
-								df = split_code_by_lines(df, max_lines=1)
+								df = split_code_by_lines(df, max_lines=context)
 						else:
-								df = split_code_by_tokens(df, max_tokens=1000)
+								df = split_code_by_tokens(df, max_tokens=max_tokens)
 						df = indexCodebase(df, "code")
 						logger.info("Generating summary...")
 						logger.info("Writing summary...")
