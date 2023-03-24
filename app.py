@@ -7,9 +7,21 @@ import tkinter as tk
 from tkinter import ttk, scrolledtext
 from pathlib import Path
 from utils import split_code_by_lines, split_code_by_tokens, setup_logger
-from chatbot import indexCodebase, df_search_sum, generate_summary, write_md_files, chat_interface
+from chatbot import indexCodebase, df_search_sum, generate_summary, write_md_files, chat_interface, chatbot
 from glob_files import glob_files
 from openai.embeddings_utils import get_embedding
+
+class TerminalColors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 
 
 def process_arguments():
@@ -57,7 +69,11 @@ def main():
 						# df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002') if x else None)'' 
 						# proj_dir = "codex" 
 						# n = 10 ext = "ts"
-						chat_interface(df, n, context)
+						while True:
+							ask = input(f"\n{TerminalColors.OKCYAN}USER:{TerminalColors.ENDC} ")
+							result = df_search_sum(df, ask)
+							chatbot(df, f"{TerminalColors.OKGREEN}{result}{TerminalColors.ENDC}\n\n{TerminalColors.OKCYAN}USER: {ask}{TerminalColors.ENDC}")
+						# chat_interface(df, n, context)
 
 				else:
 						logger.info(f"Summarizing {args.directory}\nUsing {args.n} context chunks\nPrompt: {args.prompt}")
@@ -74,10 +90,15 @@ def main():
 						proj_dir_pikl = re.sub(r'[^a-zA-Z]', '', f"{root_dir}/{proj_dir}")
 						df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002') if x else None)
 						write_md_files(df, str(proj_dir).strip('/'))
+						df.to_pickle(proj_dir_pikl)
+						print(f"\n{TerminalColors().OKCYAN} Embeddings saved to {proj_dir}{proj_dir_pikl}")
 						# df = df[df['code'] != ''].dropna()
 						# df = df[df['summary'] != ''].dropna()
-
-						chat_interface(df,n,context)
+						while True:
+							ask = input(f"\n{TerminalColors.OKCYAN}USER:{TerminalColors.ENDC} ")
+							result = df_search_sum(df, ask)
+							chatbot(df, f"{TerminalColors.OKGREEN}{result}{TerminalColors.ENDC}\n\n{TerminalColors.OKCYAN}USER: {ask}{TerminalColors.ENDC}")
+						# chat_interface(df,n,context)
 
 	except ValueError as e:
 			print(f"Error: {e}")
