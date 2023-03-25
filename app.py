@@ -70,15 +70,11 @@ def main():
 				split_by = args.split_by
 				if args.P:
 						df = pd.read_pickle(args.P)
-						# df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002') if x else None)'' 
-						# proj_dir = "codex" 
-						# n = 10 ext = "ts" max_tokens = 100 context = 5
 
 						while True:
 							ask = input(f"\n{TerminalColors.OKCYAN}USER:{TerminalColors.ENDC} ")
 							result = df_search_sum(df, ask)
 							chatbot(df, f"{TerminalColors.OKGREEN}{result}{TerminalColors.ENDC}\n\n{TerminalColors.OKCYAN}USER: {ask}{TerminalColors.ENDC}")
-						# chat_interface(df, n, context)
 
 				else:
 						logger.info(f"Summarizing {args.directory}\nUsing {args.n} context chunks\nPrompt: {args.prompt}")
@@ -92,24 +88,23 @@ def main():
 						logger.info("Generating summary...")
 						logger.info("Writing summary...")
 						df = generate_summary(df)
-						print(f"\033[1;32;40m*" * 40 + "\t Saving embedding summary...\t" + f"{proj_dir}")
+						logger.info(f"Saving embedding summary to {proj_dir}")
 						proj_dir_pikl = re.sub(r'[^a-zA-Z]', '', f"{proj_dir}.pkl")
 						df = df[df['summary'] != ''].dropna()
 						df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002') if x else None)
 						write_md_files(df, str(proj_dir).strip('/'))
 						df.to_pickle(proj_dir_pikl)
-						print(f"\n{TerminalColors().OKCYAN} Embeddings saved to {proj_dir_pikl}")
+						logger.info(f"Embeddings saved to {proj_dir_pikl}")
 						while True:
 							ask = input(f"\n{TerminalColors.OKCYAN}USER:{TerminalColors.ENDC} ")
 							result = df_search_sum(df, ask, n=n , n_lines=context)
 							chatbot(df, f"Context from embeddings: {result}\nUSER: {ask}")
-						# chat_interface(df,n,context)
 
 	except ValueError as e:
-			print(f"Error: {e}")
+			logger.error(f"Error: {e}")
 			sys.exit(1)
 	except Exception as e:
-			print(f"Unexpected error: {e}")
+			logger.error(f"Unexpected error: {e}")
 			sys.exit(1)
 
 if __name__ == "__main__":
