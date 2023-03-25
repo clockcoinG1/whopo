@@ -11,6 +11,7 @@ llama
 ez11
 .env
 .gitignore
-def argparser():.py
 gcopl/
 dc_co/
+codex
+old

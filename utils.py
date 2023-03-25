@@ -21,6 +21,42 @@ import tkinter as tk
 from tkinter import scrolledtext, ttk
 
 from colorlog import ColoredFormatter
+import os
+from glob import glob
+
+import pandas as pd
+
+
+def glob_files(directory, extensions):
+		all_files = []
+		for ext in extensions.split(','):
+				all_files.extend(glob(os.path.join(directory, "**", f"*.{ext}"), recursive=True))
+
+		result = []
+		for f in all_files:
+				file_name = os.path.basename(f)
+				file_path = f
+				if not os.path.isabs(file_path):
+						file_path = os.path.join(os.getcwd(), file_path)
+
+				try:
+						with open(f, "r", errors='ignore') as file:
+								code = file.read()
+				except IsADirectoryError:
+						print(f"Skipping directory: {file_path}")
+						continue
+				except Exception as e:
+						print(f"Error while reading file {file_path}: {e}")
+						continue
+
+				result.append({
+						"file_name": file_name,
+						"file_path": file_path,
+						"code": code
+				})
+
+		result = pd.DataFrame(result)
+		return result
 
 
 
@@ -53,67 +89,6 @@ def setup_logger(name, log_level=logging.INFO):
 		logger.addHandler(console_handler)
 
 		return logger
-
-
-
-def split_code_by_lines(df: pd.DataFrame, max_lines: int =  1000, col_name: str = "code") -> pd.DataFrame:
-    new_rows = []
-    df[f"{col_name}_tokens"] = [list(tokenizer.encode(code)) for code in df[col_name]]
-    df[f"{col_name}_total_tokens"] = [len(code) for code in df[f"{col_name}_tokens"]]
-    for _, row in df.iterrows():
-        code = row[col_name]
-        lines = [line for line in code.split("\n") if line.strip() and not (line.lstrip().startswith("//") or line.lstrip().startswith("#"))]
-        line_count = len(lines)
-        print(f"Processing file: {row['file_path']}")
-        print(f"Line count: {line_count}")
-
-        if line_count <= max_lines:
-            new_rows.append(row)
-        else:
-            chunks = [lines[i : i + max_lines] for i in range(0, len(lines), max_lines)]
-            for index, chunk in enumerate(chunks):
-                new_row = row.copy()
-                new_row[col_name] = "\n".join(chunk)
-                new_row["file_name"] = f"{new_row['file_name']}_chunk_{index * max_lines}-{(index + 1) * max_lines}"
-                new_rows.append(new_row)
-
-    new_df = pd.DataFrame(new_rows)
-    print("Created new dataframe")
-    print("Rows:", new_df.shape[0])
-    print("Columns:", new_df.shape[1], end="\n=============================\n")
-    return new_df
-
-#tqdm indexing codebase
-def indexCodebase(df: pd.DataFrame, col_name: str, pickle: str = "split_codr", code_root: str = "ez11") -> pd.DataFrame:
-		"""
-		Indexes the codebase and saves it to a pickle file
-		
-		Args:
-		df: pandas dataframe containing the codebase
-		col_name: name of the column containing the code
-		pickle: name of the pickle file to save the indexed codebase
-		
-		Returns:
-		df: pandas dataframe containing the indexed codebase
-		"""
-		code_root = root_dir + proj_dir
-		try:
-				df[f"{col_name}_tokens"] = [list(tokenizer.encode(code)) for code in df[col_name]]
-				df[f"{col_name}_total_tokens"] = [len(code) for code in df[f"{col_name}_tokens"]]
-				# df.to_pickle(f"{code_root}/{pickle}.pkl")
-				df[f"{col_name}_embedding"] = df[f"{col_name}"].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002')) 
-				print("Indexed codebase: " + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-				return df
-				# else:
-				# 		df = pd.read_pickle(f"{code_root}/{pickle}.pkl")
-				# 		return df
-		except EmptyDataError as e:
-				print(f"Empty data error: {e}")
-		except Exception as e:
-				print(f"Failed to index codebase: {e}")
-		else:
-				print("Codebase indexed successfully")
-				return df
 
 
 
@@ -154,6 +129,67 @@ def split_code_by_tokens(df: pd.DataFrame, max_tokens: int = 8100, col_name: str
 		print("Rows:", new_df.shape[0])
 		print("Columns:", new_df.shape[1], end="\n=============================\n")
 		return new_df
+
+def split_code_by_lines(df: pd.DataFrame, max_lines: int =  1000, col_name: str = "code") -> pd.DataFrame:
+		new_rows = []
+		df[f"{col_name}_tokens"] = [list(tokenizer.encode(code)) for code in df[col_name]]
+		df[f"{col_name}_total_tokens"] = [len(code) for code in df[f"{col_name}_tokens"]]
+		for _, row in df.iterrows():
+				code = row[col_name]
+				lines = [line for line in code.split("\n") if line.strip() and not (line.lstrip().startswith("//") or line.lstrip().startswith("#"))]
+				line_count = len(lines)
+				print(f"Processing file: {row['file_path']}")
+				print(f"Line count: {line_count}")
+
+				if line_count <= max_lines:
+						new_rows.append(row)
+				else:
+						chunks = [lines[i : i + max_lines] for i in range(0, len(lines), max_lines)]
+						for index, chunk in enumerate(chunks):
+								new_row = row.copy()
+								new_row[col_name] = "\n".join(chunk)
+								new_row["file_name"] = f"{new_row['file_name']}_chunk_{index * max_lines}-{(index + 1) * max_lines}"
+								new_rows.append(new_row)
+
+		new_df = pd.DataFrame(new_rows)
+		print("Created new dataframe")
+		print("Rows:", new_df.shape[0])
+		print("Columns:", new_df.shape[1], end="\n=============================\n")
+		return new_df
+
+#tqdm indexing codebase
+def indexCodebase(df: pd.DataFrame, col_name: str, pickle: str = "split_codr", code_root: str = "ez11") -> pd.DataFrame:
+		"""
+		Indexes the codebase and saves it to a pickle file
+		
+		Args:
+		df: pandas dataframe containing the codebase
+		col_name: name of the column containing the code
+		pickle: name of the pickle file to save the indexed codebase
+		
+		Returns:
+		df: pandas dataframe containing the indexed codebase
+		"""
+		code_root = root_dir + proj_dir
+		try:
+				df[f"{col_name}_tokens"] = [list(tokenizer.encode(code)) for code in df[col_name]]
+				df[f"{col_name}_total_tokens"] = [len(code) for code in df[f"{col_name}_tokens"]]
+				# df.to_pickle(f"{code_root}/{pickle}.pkl")
+				df[f"{col_name}_embedding"] = df[f"{col_name}"].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002')) 
+				print("Indexed codebase: " + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+				return df
+				# else:
+				# 		df = pd.read_pickle(f"{code_root}/{pickle}.pkl")
+				# 		return df
+		except EmptyDataError as e:
+				print(f"Empty data error: {e}")
+		except Exception as e:
+				print(f"Failed to index codebase: {e}")
+		else:
+				print("Codebase indexed successfully")
+				return df
+
+
 
 def write_md_files(df: pd.DataFrame, proj_dir: str = proj_dir) -> None:
 		"""
