@@ -24,7 +24,6 @@ from openai.embeddings_utils import cosine_similarity, get_embedding
 from constants import (EMBEDDING_ENCODING, GPT_MODEL, MAX_TOKEN_MAX_SUMMARY,
 											 TOKEN_MAX_SUMMARY, base, chat_base, headers,
 											 oai_api_key_embedder, proj_dir, root_dir)
-from embedder import CodeExtractor
 from get_rel_code import api_key
 from utils import indexCodebase, split_code_by_tokens, write_md_files
 
@@ -224,18 +223,34 @@ def generate_summary_for_directory(directory, df):
 										result[file_path] = df[df['file_path'] == file_path]['summary'].values[0]
 		return result
 
-
 def df_search_sum(df, summary_query, n=3, pprint=True, n_lines=7):
-		embedding  = get_embedding(engine="text-embedding-ada-002", text=summary_query)
-		df['summary_simmilarities'] = df.summary_embedding.apply(lambda x: cosine_similarity(x, embedding) if x is not None else 0.0)
-		res = df.sort_values('summary_embedding', ascending=False).head(n)
+		try:
+				embedding = get_embedding(engine="text-embedding-ada-002", text=summary_query)
+		except Exception as e:
+				print(f"Error in getting embedding: {e}")
+				return None
+
+		try:
+				df['summary_simmilarities'] = df.summary_embedding.apply(lambda x: cosine_similarity(x, embedding) if x is not None else 0.0)
+		except Exception as e:
+				print(f"Error in calculating similarities: {e}")
+				return None
+
+		try:
+				res = df.sort_values('summary_simmilarities', ascending=False).head(n)
+		except Exception as e:
+				print(f"Error in sorting dataframe: {e}")
+				return None
+
 		res_str = ""
-		if pprint:
-				for r in res.iterrows():
-						# print(r[1].file_path + " " + "  score=" + str(round(r[1]["summary_simmilarities"], 3)))
+		for r in res.iterrows():
+				try:
 						res_str += r[1].file_name + " " + "  score=" + str(round(r[1]["summary_simmilarities"], 3))
 						res_str += "\n".join(r[1].summary.split("\n")[:n_lines])
-						# res_+("\n".join(r[1].summary.split("\n")[:n_lines]))
+				except Exception as e:
+						print(f"Error in formatting result string: {e}")
+						continue
+
 		return res_str
 
 def chat_interface(df, n=5, context=3):

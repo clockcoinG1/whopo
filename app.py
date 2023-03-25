@@ -3,6 +3,8 @@ import os
 import sys
 import pandas as pd
 import re
+import tiktoken
+from constants import EMBEDDING_ENCODING
 import tkinter as tk
 from tkinter import ttk, scrolledtext
 from pathlib import Path
@@ -10,6 +12,8 @@ from utils import split_code_by_lines, split_code_by_tokens, setup_logger
 from chatbot import indexCodebase, df_search_sum, generate_summary, write_md_files, chat_interface, chatbot
 from glob_files import glob_files
 from openai.embeddings_utils import get_embedding
+
+tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
 
 class TerminalColors:
     HEADER = '\033[95m'
@@ -68,7 +72,8 @@ def main():
 						df = pd.read_pickle(args.P)
 						# df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002') if x else None)'' 
 						# proj_dir = "codex" 
-						# n = 10 ext = "ts"
+						# n = 10 ext = "ts" max_tokens = 100 context = 5
+
 						while True:
 							ask = input(f"\n{TerminalColors.OKCYAN}USER:{TerminalColors.ENDC} ")
 							result = df_search_sum(df, ask)
@@ -82,22 +87,22 @@ def main():
 								df = split_code_by_lines(df, max_lines=context)
 						else:
 								df = split_code_by_tokens(df, max_tokens=max_tokens)
+						df = df[df['code'] != ''].dropna()
 						df = indexCodebase(df, "code")
 						logger.info("Generating summary...")
 						logger.info("Writing summary...")
 						df = generate_summary(df)
-						print(f"\033[1;32;40m*" * 40 + "\t Saving embedding summary...\t" + f"{root_dir}/{proj_dir}")
+						print(f"\033[1;32;40m*" * 40 + "\t Saving embedding summary...\t" + f"{proj_dir}")
 						proj_dir_pikl = re.sub(r'[^a-zA-Z]', '', f"{proj_dir}.pkl")
+						df = df[df['summary'] != ''].dropna()
 						df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002') if x else None)
 						write_md_files(df, str(proj_dir).strip('/'))
 						df.to_pickle(proj_dir_pikl)
 						print(f"\n{TerminalColors().OKCYAN} Embeddings saved to {proj_dir_pikl}")
-						# df = df[df['code'] != ''].dropna()
-						# df = df[df['summary'] != ''].dropna()
 						while True:
 							ask = input(f"\n{TerminalColors.OKCYAN}USER:{TerminalColors.ENDC} ")
-							result = df_search_sum(df, ask, n=n , pprint=False, n_lines=context)
-							chatbot(df, f"{TerminalColors.OKGREEN}{result}{TerminalColors.ENDC}\n\n{TerminalColors.OKCYAN}USER: {ask}{TerminalColors.ENDC}")
+							result = df_search_sum(df, ask, n=n , n_lines=context)
+							chatbot(df, f"Context from embeddings: {result}\nUSER: {ask}")
 						# chat_interface(df,n,context)
 
 	except ValueError as e:

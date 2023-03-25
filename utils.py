@@ -91,7 +91,6 @@ def setup_logger(name, log_level=logging.INFO):
 		return logger
 
 
-
 def split_code_by_tokens(df: pd.DataFrame, max_tokens: int = 8100, col_name: str = "code") -> pd.DataFrame:
 		"""
 		Splits the code into chunks based on the maximum number of tokens
@@ -119,6 +118,7 @@ def split_code_by_tokens(df: pd.DataFrame, max_tokens: int = 8100, col_name: str
 								chunk_code = "".join(str(token) for token in chunk_tokens)
 								new_row = row.copy()
 								new_row[col_name] = chunk_code
+								new_row[f"{col_name}_tokens"] = chunk_tokens
 								new_row[f"{col_name}_token_count"] = len(chunk_tokens)
 								new_row["file_name"] = f"{new_row['file_name']}_chunk_{start_token}"
 								new_rows.append(new_row)
@@ -138,9 +138,6 @@ def split_code_by_lines(df: pd.DataFrame, max_lines: int =  1000, col_name: str 
 				code = row[col_name]
 				lines = [line for line in code.split("\n") if line.strip() and not (line.lstrip().startswith("//") or line.lstrip().startswith("#"))]
 				line_count = len(lines)
-				print(f"Processing file: {row['file_path']}")
-				print(f"Line count: {line_count}")
-
 				if line_count <= max_lines:
 						new_rows.append(row)
 				else:
@@ -170,21 +167,22 @@ def indexCodebase(df: pd.DataFrame, col_name: str, pickle: str = "split_codr", c
 		Returns:
 		df: pandas dataframe containing the indexed codebase
 		"""
-		code_root = root_dir + proj_dir
 		try:
 				df[f"{col_name}_tokens"] = [list(tokenizer.encode(code)) for code in df[col_name]]
 				df[f"{col_name}_total_tokens"] = [len(code) for code in df[f"{col_name}_tokens"]]
 				# df.to_pickle(f"{code_root}/{pickle}.pkl")
-				df[f"{col_name}_embedding"] = df[f"{col_name}"].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002')) 
-				print("Indexed codebase: " + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+				df[f"{col_name}_embedding"] = df[f"{col_name}"].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002') if x else None)
+				print("Indexed codebase: " + col_name + '\t\t' + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
 				return df
 				# else:
 				# 		df = pd.read_pickle(f"{code_root}/{pickle}.pkl")
 				# 		return df
 		except EmptyDataError as e:
 				print(f"Empty data error: {e}")
+				return df
 		except Exception as e:
 				print(f"Failed to index codebase: {e}")
+				return df
 		else:
 				print("Codebase indexed successfully")
 				return df
