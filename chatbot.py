@@ -1,16 +1,15 @@
 
 import sys
-import tkinter as tk
-from tkinter import ttk
 import argparse
 import json
 import os
 import re
 import sys
 import time
-import tkinter as tk
+
 import uuid
 from pathlib import Path
+import tkinter as tk
 from tkinter import scrolledtext, ttk
 
 import numpy as np
