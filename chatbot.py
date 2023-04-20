@@ -9,8 +9,6 @@ import time
 
 import uuid
 from pathlib import Path
-import tkinter as tk
-from tkinter import scrolledtext, ttk
 
 import numpy as np
 import openai
