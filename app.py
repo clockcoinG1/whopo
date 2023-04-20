@@ -1,17 +1,18 @@
 import argparse
 import os
-import sys
-import pandas as pd
 import re
-import tiktoken
-from constants import EMBEDDING_ENCODING
-import tkinter as tk
-from tkinter import ttk, scrolledtext
+import sys
 from pathlib import Path
-from utils import split_code_by_lines, split_code_by_tokens, setup_logger
-from chatbot import indexCodebase, df_search_sum, generate_summary, write_md_files, chat_interface, chatbot
-from glob_files import glob_files
+
+import pandas as pd
+import tiktoken
 from openai.embeddings_utils import get_embedding
+
+from chatbot import chatbot, df_search_sum, generate_summary
+from constants import EMBEDDING_ENCODING
+from glob_files import glob_files
+from utils import (indexCodebase, setup_logger, split_code_by_lines,
+                   split_code_by_tokens, write_md_files)
 
 tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
 
@@ -61,8 +62,8 @@ def main():
 				args = process_arguments()
 				validate_arguments(args)
 				proj_dir = Path(args.root.strip(), args.directory.strip())
-				root_dir = Path(args.root.strip())
-				prompt = args.prompt.strip()
+				Path(args.root.strip())
+				args.prompt.strip()
 				ext = args.ext
 				n = args.n
 				context = args.context

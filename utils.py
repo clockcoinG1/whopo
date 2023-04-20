@@ -1,30 +1,25 @@
 import datetime
 import os
 import re
-from typing import List
 
 import openai
 import pandas as pd
 import tiktoken
-from openai.embeddings_utils import cosine_similarity, get_embedding
+from openai.embeddings_utils import get_embedding
 from pandas.errors import EmptyDataError
-from tqdm import tqdm
 
-from constants import oai_api_key_embedder, proj_dir, root_dir
+from constants import oai_api_key_embedder, proj_dir
 
 openai.api_key = oai_api_key_embedder
 EMBEDDING_ENCODING = 'cl100k_base'
 tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
 import logging
-import sys
-import tkinter as tk
-from tkinter import scrolledtext, ttk
-
-from colorlog import ColoredFormatter
 import os
+import sys
 from glob import glob
 
 import pandas as pd
+from colorlog import ColoredFormatter
 
 
 def glob_files(directory, extensions):
@@ -158,12 +153,12 @@ def split_code_by_lines(df: pd.DataFrame, max_lines: int =  1000, col_name: str 
 def indexCodebase(df: pd.DataFrame, col_name: str, pickle: str = "split_codr", code_root: str = "ez11") -> pd.DataFrame:
 		"""
 		Indexes the codebase and saves it to a pickle file
-		
+
 		Args:
 		df: pandas dataframe containing the codebase
 		col_name: name of the column containing the code
 		pickle: name of the pickle file to save the indexed codebase
-		
+
 		Returns:
 		df: pandas dataframe containing the indexed codebase
 		"""
@@ -192,7 +187,7 @@ def indexCodebase(df: pd.DataFrame, col_name: str, pickle: str = "split_codr", c
 def write_md_files(df: pd.DataFrame, proj_dir: str = proj_dir) -> None:
 		"""
 		Writes the markdown files
-		
+
 		Args:
 		df: pandas dataframe containing the codebase
 		"""
