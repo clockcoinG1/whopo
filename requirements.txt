@@ -7,4 +7,5 @@ numpy
 pathlib
 argparse
 python-dotenv
-tkinter
+numpy
+sklearn

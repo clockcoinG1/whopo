@@ -88,18 +88,23 @@ def main():
 
         else:
             logger.info(f"Summarizing {args.directory}\nUsing {args.n} context chunks\nPrompt: {args.prompt}")
+            # Gather all files with the given extension
             df = glob_files(str(proj_dir), ext)
+            # Split the code into chunks by lines or tokens
             if split_by == 'lines':
                 df = split_code_by_lines(df, max_lines=context)
             else:
                 df = split_code_by_tokens(df, max_tokens=max_tokens)
+            # Remove any empty or null code chunks
             df = df[df['code'] != ''].dropna()
+            # Index the code chunks
             df = indexCodebase(df, "code")
             logger.info("Generating summary...")
-            logger.info("Writing summary...")
+
             df = generate_summary(df)
             print(f"\033[1;32;40m*" * 40 + "\t Saving embedding summary...\t" + f"{proj_dir}")
             proj_dir_pikl = re.sub(r'[^a-zA-Z]', '', f"{proj_dir}.pkl")
+            logger.info("Writing summary...")
             df = df[df['summary'] != ''].dropna()
             df['summary_embedding'] = df['summary'].apply(lambda x: get_embedding(x, engine='text-embedding-ada-002') if x else None)
             write_md_files(df, str(proj_dir).strip('/'))
