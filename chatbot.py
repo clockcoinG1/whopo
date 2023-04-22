@@ -235,7 +235,7 @@ def generate_summary_for_directory(directory, df):
 # print the top results
 
 
-def df_search_sum(df, summary_query, n=3, pprint=True, n_lines=7):
+def df_search_sum(df, summary_query, n=10, pprint=True, n_lines=20):
     embedding = get_embedding(engine="text-embedding-ada-002", text=summary_query)
     df['summary_simmilarities'] = df.summary_embedding.apply(
         lambda x: cosine_similarity(x, embedding) if x is not None else 0.8
