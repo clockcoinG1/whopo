@@ -1,4 +1,3 @@
-
 **.csv
 **.pkl
 info*.txt
@@ -20,3 +19,5 @@ Usersclockcoinparserocodexpkl
 langchchain
 commerce
 libtmux
+get_sdef_commands.py
+langchain

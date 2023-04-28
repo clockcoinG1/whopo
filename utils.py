@@ -86,19 +86,23 @@ def split_tokens(tokens: List[str], max_tokens: int) -> List[Tuple[int, int]]:
     token_ranges = []
     start_token = 0
     while start_token < len(tokens):
-        end_token = start_token + max_tokens
+        end_token = min(start_token + max_tokens, len(tokens))
         token_ranges.append((start_token, end_token))
         start_token = end_token
     return token_ranges
 
-def split_code_by_tokens(df: pd.DataFrame, max_tokens: int = 8100, col_name: str = "code") -> pd.DataFrame:
+
+""" def split_code_by_tokens(df: pd.DataFrame, max_tokens: int = 8100, col_name: str = "code") -> pd.DataFrame:
     def process_row(row: pd.Series) -> List[pd.Series]:
+        print(f"Processing row with file_name: {row['file_name']}")
         code = row[col_name]
         tokens = list(tokenizer.encode(code))
         token_ranges = split_tokens(tokens, max_tokens)
         new_rows = []
         for start_token, end_token in token_ranges:
+            print(f"Start token: {start_token}, end_token: {end_token}")
             chunk_tokens = tokens[start_token:end_token]
+            print(f"Chunk tokens: {chunk_tokens}")
             chunk_code = "".join(str(token) for token in chunk_tokens)
             new_row = row.copy()
             new_row["code"] = chunk_code
@@ -109,8 +113,51 @@ def split_code_by_tokens(df: pd.DataFrame, max_tokens: int = 8100, col_name: str
         return new_rows
 
     new_rows = df.apply(process_row, axis=1).explode().reset_index(drop=True)
-    print(f"Created new dataframe\nRows: {new_rows.shape[0]}\nColumns: {new_rows.shape[1]}\n=============================")
-    return new_rows
+    print(
+        f"Created new dataframe\nRows: {new_rows.shape[0]}\nColumns: {new_rows.shape[1]}\n============================="
+    )
+    return new_rows """
+
+
+def split_code_by_tokens(df: pd.DataFrame, max_tokens: int = 8100, col_name: str = "code") -> pd.DataFrame:
+    """
+    Splits the code into chunks based on the maximum number of tokens
+
+    Args:
+    df: pandas dataframe containing the codebase
+    max_tokens: maximum number of tokens allowed in a chunk
+    col_name: name of the column containing the code
+
+    Returns:
+    new_df: pandas dataframe containing the split code
+    """
+    new_rows = []
+    for index, row in df.iterrows():
+        code = row[col_name]
+        tokens = list(tokenizer.encode(code))
+        TOKEN_MAX_SUMMARY = len(tokens)
+        if TOKEN_MAX_SUMMARY <= max_tokens:
+            new_rows.append(row)
+        else:
+            start_token = 0
+            while start_token < TOKEN_MAX_SUMMARY:
+                end_token = start_token + max_tokens
+                chunk_tokens = tokens[start_token:end_token]
+                chunk_code = "".join(str(token) for token in chunk_tokens)
+                new_row = row.copy()
+                new_row[col_name] = chunk_code
+                new_row[f"{col_name}_tokens"] = chunk_tokens
+                new_row[f"{col_name}_token_count"] = len(chunk_tokens)
+                new_row["file_name"] = f"{new_row['file_name']}_chunk_{start_token}"
+                new_rows.append(new_row)
+                start_token = end_token
+
+    new_df = pd.DataFrame(new_rows)
+    print("Created new dataframe")
+    print("Rows:", new_df.shape[0])
+    print("Columns:", new_df.shape[1], end="\n=============================\n")
+    return new_df
+
 
 def split_code_by_lines(df: pd.DataFrame, max_lines: int = 1000, col_name: str = "code") -> pd.DataFrame:
     new_rows = []
@@ -156,7 +203,7 @@ def indexCodebase(df: pd.DataFrame, col_name: str, pickle: str = "split_codr", c
     except Exception as e:
         logger.error(f"Failed to index codebase: {e}")
         return df
-    else:
+    finally:
         logger.info("Codebase indexed successfully")
         return df
 

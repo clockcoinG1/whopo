@@ -9,8 +9,16 @@ import tiktoken
 import tqdm
 from openai.embeddings_utils import cosine_similarity, get_embedding
 
-from constants import (EMBEDDING_ENCODING, GPT_MODEL, TOKEN_MAX_SUMMARY, base,
-                       chat_base, headers, oai_api_key_embedder, proj_dir)
+from constants import (
+    EMBEDDING_ENCODING,
+    GPT_MODEL,
+    TOKEN_MAX_SUMMARY,
+    base,
+    chat_base,
+    headers,
+    oai_api_key_embedder,
+    proj_dir,
+)
 
 openai.api_key = oai_api_key_embedder
 tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
@@ -221,7 +229,7 @@ def generate_summary_for_directory(directory, df):
             if entry.name.endswith(('.py', '.cpp', '.ts', '.js', '.ant')):
                 file_path = os.path.join(directory, entry.name)
                 if df[df['file_path'] == file_path]['summary'].empty:
-                    summary = generate_summary_for_file(file_path)
+                    summary = generate_summary(file_path)
                     df.loc[df['file_path'] == file_path, 'summary'] = summary
                     result[file_path] = summary
                 else:
@@ -238,18 +246,14 @@ def generate_summary_for_directory(directory, df):
 def df_search_sum(df, summary_query, n=10, pprint=True, n_lines=20):
     embedding = get_embedding(engine="text-embedding-ada-002", text=summary_query)
     df['summary_simmilarities'] = df.summary_embedding.apply(
-        lambda x: cosine_similarity(x, embedding) if x is not None else 0.8
+        lambda x: cosine_similarity(x, embedding) if x is not None else 0.00
     )
     res = df.sort_values('summary_embedding', ascending=False).head(n)
     res_str = ""
     if pprint:
         for r in res.iterrows():
-            print(
-                f"File:{r[1].file_name}\nCode:\n{r[1]['code']}\n"
-            )
-            res_str += (
-                f"File:{r[1].file_name}\nCode:\n{r[1]['code']}\n"
-            )
+            print(f"File:{r[1].file_name}\nCode:\n{r[1]['code']}\n")
+            res_str += f"File:{r[1].file_name}\nCode:\n{r[1]['code']}\n"
             print("\n".join(r[1].summary.split("\n")[:n_lines]))
             res_str += "\n".join(r[1].summary.split("\n")[:n_lines])
             print('-' * 70)
