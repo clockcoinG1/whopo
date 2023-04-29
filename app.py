@@ -11,8 +11,8 @@ from openai.embeddings_utils import get_embedding
 from chatbot import chatbot, df_search_sum, generate_summary
 from constants import EMBEDDING_ENCODING
 from glob_files import glob_files
-from utils import (indexCodebase, setup_logger, split_code_by_lines,
-                   split_code_by_tokens)
+from utils import index_codebase, split_code_by_lines, split_code_by_tokens
+from df_logger import setup_logger
 
 tokenizer = tiktoken.get_encoding(EMBEDDING_ENCODING)
 
@@ -95,8 +95,9 @@ def main():
                 df = split_code_by_lines(df, max_lines=context)
             else:
                 df = split_code_by_tokens(df, max_tokens=max_tokens)
+                print(df.head())
             df = df[df['code'] != ''].dropna()
-            df = indexCodebase(df, "code")
+            df = index_codebase(df, "code")
             logger.info("Generating summary...")
             logger.info("Writing summary...")
             df = generate_summary(df)
