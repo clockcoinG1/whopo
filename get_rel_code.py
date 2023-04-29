@@ -1,5 +1,4 @@
 
-import openai
 import requests
 import tiktoken
 import pandas as pd
@@ -43,7 +42,7 @@ def get_rel_context_summary(root_dir, df, summary_query):
 	summary_pairs = []
 	for _, row in df.iterrows():
 			filep = row["file_path"]
-			filen = row["file_name"]
+			row["file_name"]
 			summary = row["summary"]
 			summary_pairs.append((filep, summary))
 	return summary_pairs
@@ -53,7 +52,7 @@ def get_context_code(root_dir, df, code_query):
 		code_pairs = []
 		for _, row in df2.iterrows():
 				filep = row["file_path"]
-				filen = row["file_name"]
+				row["file_name"]
 				with open(root_dir + filep) as file:
 						code = f"FILE: {filep}\n"
 						for line in file:
@@ -67,7 +66,7 @@ def get_tokens(df = pd.DataFrame):
 				encoder = tiktoken.get_encoding(EMBEDDING_ENCODING)
 				enc_prompt = encoder.encode(str(prompt))
 				tokens = len(encoder.encode(code) + enc_prompt) or 1
-				max_token = 500 + tokens
+				500 + tokens
 
 def generate_table(context_code_pairs, prompt, message="", model="chat-davinci-003-alpha"):
 		for filepath, code in context_code_pairs:
@@ -81,7 +80,7 @@ def generate_table(context_code_pairs, prompt, message="", model="chat-davinci-0
 								'Content-Type': 'application/json',
 								'Authorization': 'Bearer ' + api_key,
 						}
-					max_token = 500 + tokens
+					500 + tokens
 					r = requests.post(
 							base,
 							headers=headers,
