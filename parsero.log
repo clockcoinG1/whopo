@@ -1,0 +1,444 @@
+2023-04-29 16:44:08 - PARSERO - [36m[40mDEBUG[0m - This is a debug message[0m
+2023-04-29 16:44:08 - PARSERO - [32m[40mINFO[0m - This is an info message[0m
+2023-04-29 16:44:08 - PARSERO - [33m[40mWARNING[0m - This is a warning message[0m
+2023-04-29 16:44:08 - PARSERO - [31m[40mERROR[0m - This is an error message[0m
+2023-04-29 16:44:12 - PARSERO - [31m[40m[1mCRITICAL[0m - This is a critical message[0m
+2023-04-29 16:46:56 - PARSERO - [32m[40mINFO[0m - fasssdf[0m
+2023-04-29 16:47:24 - PARSERO - [32m[40mINFO[0m - eval print(logger)[0m
+2023-04-29 16:57:37 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/agents/conversational/
+Using 30 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 16:57:37 - SOTA_Logger - [31m[40mERROR[0m - Unexpected error: 'code'[0m
+2023-04-29 16:57:47 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/agents/conversational/
+Using 30 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 16:57:47 - SOTA_Logger - [31m[40mERROR[0m - Unexpected error: 'code'[0m
+2023-04-29 16:58:05 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/agents/conversational/
+Using 2 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 16:58:05 - SOTA_Logger - [31m[40mERROR[0m - Unexpected error: 'code'[0m
+2023-04-29 16:58:28 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/agents/conversational/
+Using 2 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 16:58:28 - SOTA_Logger - [31m[40mERROR[0m - Unexpected error: 'code'[0m
+2023-04-29 16:58:36 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/agents/conversational/
+Using 2 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 16:58:36 - SOTA_Logger - [31m[40mERROR[0m - Unexpected error: 'code'[0m
+2023-04-29 16:58:43 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/agents/conversational/
+Using 2 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 16:58:43 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 75[0m
+2023-04-29 16:58:43 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 978[0m
+2023-04-29 16:58:43 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 1859[0m
+2023-04-29 16:58:43 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 4488[0m
+2023-04-29 16:58:43 - index_codebase - [32m[40mINFO[0m - Splitting tokens: 4488 into chunks of 500 tokens and 488 remainder[0m
+2023-04-29 16:58:43 - index_codebase - [36m[40mDEBUG[0m - Splitting code into 9 chunks[0m
+2023-04-29 16:58:43 - index_codebase - [32m[40mINFO[0m - New DF has 12 rows with 7400 tokens[0m
+2023-04-29 16:58:46 - Indexing codebase - [32m[40mINFO[0m - Indexed 9 rows[0m
+2023-04-29 16:58:46 - SOTA_Logger - [32m[40mINFO[0m - Generating summary...[0m
+2023-04-29 16:58:46 - SOTA_Logger - [32m[40mINFO[0m - Writing summary...[0m
+2023-04-29 16:58:46 - Summary Logger - [32m[40mINFO[0m - Token length is 376 for /Users/clockcoin/parsero/langchain/langchain/agents/conversational/base.py_chunk_0 chunk[0m
+2023-04-29 16:58:51 - Summary Logger - [32m[40mINFO[0m - Token length is 389 for /Users/clockcoin/parsero/langchain/langchain/agents/conversational/base.py_chunk_1 chunk[0m
+2023-04-29 16:58:53 - Summary Logger - [32m[40mINFO[0m - Token length is 393 for /Users/clockcoin/parsero/langchain/langchain/agents/conversational/base.py_chunk_2 chunk[0m
+2023-04-29 16:58:56 - Summary Logger - [32m[40mINFO[0m - Token length is 390 for /Users/clockcoin/parsero/langchain/langchain/agents/conversational/base.py_chunk_3 chunk[0m
+2023-04-29 16:59:00 - Summary Logger - [32m[40mINFO[0m - Token length is 351 for /Users/clockcoin/parsero/langchain/langchain/agents/conversational/base.py_chunk_4 chunk[0m
+2023-04-29 16:59:05 - Summary Logger - [32m[40mINFO[0m - Token length is 390 for /Users/clockcoin/parsero/langchain/langchain/agents/conversational/base.py_chunk_5 chunk[0m
+2023-04-29 16:59:10 - Summary Logger - [32m[40mINFO[0m - Token length is 383 for /Users/clockcoin/parsero/langchain/langchain/agents/conversational/base.py_chunk_6 chunk[0m
+2023-04-29 16:59:13 - Summary Logger - [32m[40mINFO[0m - Token length is 364 for /Users/clockcoin/parsero/langchain/langchain/agents/conversational/base.py_chunk_7 chunk[0m
+2023-04-29 16:59:15 - Summary Logger - [32m[40mINFO[0m - Token length is 372 for /Users/clockcoin/parsero/langchain/langchain/agents/conversational/base.py_chunk_8 chunk[0m
+2023-04-29 16:59:19 - SOTA_Logger - [32m[40mINFO[0m - Saving embedding summary to /Users/clockcoin/parsero/langchain/langchain/agents/conversational[0m
+2023-04-29 16:59:19 - SOTA_Logger - [32m[40mINFO[0m - Processing summaries[0m
+2023-04-29 16:59:20 - SOTA_Logger - [32m[40mINFO[0m - Embeddings saved to Usersclockcoinparserolangchainlangchainagentsconversationalpkl[0m
+2023-04-29 17:00:00 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 17:00:00 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 17:00:00 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 17:00:00 - PARSERO - [32m[40mINFO[0m - File:base.py_chunk_5
+Code:
+ = "\n".join(
+            [f"> {tool.name}: {tool.description}" for tool in tools]
+        )
+        tool_names = ", ".join([tool.name for tool in tools])
+        format_instructions = format_instructions.format(
+Summary:
+Uses a moving window approach to chunk the codebase
+ - Contains functions for handling user input, chat history and agent scratchpad
+ - Includes formatting instructions for displaying tool names and descriptions in a list format 
+ - Utilizes string concatenation to join strings together into one template 
+ ```
+[0m
+2023-04-29 17:00:00 - PARSERO - [32m[40mINFO[0m - File:base.py_chunk_4
+Code:
+ccess to, used to format the
+                prompt.
+            prefix: String to put before the list of tools.
+            suffix: String to put after the list of tools.
+            ai_prefix: String to use before AI output.
+Summary:
+Uses a moving window approach to analyze codebase
+ - Defines the PromptTemplate class, which is used to format prompts
+ - Takes in parameters such as prefix, suffix, ai_prefix and human_prefix for formatting the prompt 
+ - Expects input variables from user for final prompt
+[0m
+2023-04-29 17:00:00 - PARSERO - [32m[40mINFO[0m - File:base.py_chunk_6
+Code:
+
+        return PromptTemplate(template=template, input_variables=input_variables)
+
+    @classmethod
+    def from_llm_and_tools(
+Summary:
+Uses a BaseLanguageModel, Sequence of BaseTools, and an optional BaseCallbackManager to create a PromptTemplate
+ - Allows for the specification of prefixes, suffixes, format instructions and AI/Human prefixes 
+ - Utilizes a moving window approach to chunk code into smaller pieces for easier analysis
+[0m
+2023-04-29 17:00:00 - PARSERO - [32m[40mINFO[0m - File:base.py_chunk_2
+Code:
+I", **kwargs: Any
+    ) -> AgentOutputParser:
+        return ConvoOutputParser(ai_prefix=ai_prefix)
+
+    @property
+Summary:
+Implements a base class for conversational agents
+ - Defines the _agent_type and observation_prefix properties
+ - Provides an AgentOutputParser class to parse agent output
+ - Includes methods to handle user input, such as process() and respond()  ```
+[0m
+2023-04-29 17:00:00 - PARSERO - [32m[40mINFO[0m - File:base.py_chunk_8
+Code:
+chain = LLMChain(
+            llm=llm,
+            prompt=prompt,
+            callback_manager=callback_manager,
+        )
+Summary:
+LLMChain is initialized with llm, prompt and callback_manager
+ - A list of tool names is created from the tools provided 
+ - An output parser is set or a default one is retrieved using the ai_prefix
+ - The class constructor returns an instance of itself with parameters such as llm_chain, allowed_tools, ai_prefix and output parser
+[0m
+2023-04-29 17:00:00 - PARSERO - [32m[40mINFO[0m - File:base.py_chunk_1
+Code:
+BaseCallbackManager
+from langchain.chains import LLMChain
+from langchain.prompts import PromptTemplate
+from langchain.schema import BaseLanguageModel
+from langchain.tools.base import BaseTool
+Summary:
+Implements the Agent class from langchain.agents
+ - Defines a ConversationalAgent class that inherits from Agent
+ - Sets an AI prefix for the agent's output parser 
+ - Uses Field to set a default factory for the output parser 
+ - Includes a _get_default_output_parser method
+[0m
+2023-04-29 17:07:19 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/agents/agent_toolkits/python/
+Using 2 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 17:07:19 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 0[0m
+2023-04-29 17:07:19 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 513[0m
+2023-04-29 17:07:19 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 1112[0m
+2023-04-29 17:07:19 - index_codebase - [32m[40mINFO[0m - New DF has 3 rows with 1625 tokens[0m
+2023-04-29 17:07:20 - Indexing codebase - [32m[40mINFO[0m - Indexed 2 rows with 389 tokens
+   file_name                                          file_path  ... code_total_tokens                                     code_embedding
+1  prompt.py  /Users/clockcoin/parsero/langchain/langchain/a...  ...               118  [0.0018517395947128534, 0.007428080774843693, ...
+2    base.py  /Users/clockcoin/parsero/langchain/langchain/a...  ...               271  [-0.005145575385540724, -0.004876012913882732,...
+
+[2 rows x 6 columns][0m
+2023-04-29 17:07:20 - Indexing codebase - [32m[40mINFO[0m - Indexed 2 rows[0m
+2023-04-29 17:07:20 - SOTA_Logger - [32m[40mINFO[0m - Generating summary...[0m
+2023-04-29 17:07:20 - SOTA_Logger - [32m[40mINFO[0m - Writing summary...[0m
+2023-04-29 17:07:20 - Summary Logger - [32m[40mINFO[0m - Token length is 401 for /Users/clockcoin/parsero/langchain/langchain/agents/agent_toolkits/python/prompt.py chunk[0m
+2023-04-29 17:07:22 - Summary Logger - [32m[40mINFO[0m - Token length is 707 for /Users/clockcoin/parsero/langchain/langchain/agents/agent_toolkits/python/base.py chunk[0m
+2023-04-29 17:07:28 - SOTA_Logger - [32m[40mINFO[0m - Saving embedding summary to /Users/clockcoin/parsero/langchain/langchain/agents/agent_toolkits/python[0m
+2023-04-29 17:07:28 - SOTA_Logger - [32m[40mINFO[0m - Processing summaries[0m
+2023-04-29 17:07:28 - SOTA_Logger - [32m[40mINFO[0m - Embeddings saved to Usersclockcoinparserolangchainlangchainagentsagenttoolkitspythonpkl[0m
+2023-04-29 17:07:48 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 17:07:49 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 17:07:49 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 17:07:49 - PARSERO - [32m[40mINFO[0m - File:prompt.py
+Code:
+# flake8: noqa
+
+PREFIX = """You are an agent designed to write and execute python code to answer questions.
+You have access to a python REPL, which you can use to execute python code.
+If you get an error, debug your code and try again.
+Summary:
+Uses a moving window approach to chunk the code
+ - Contains functions for prompting user input and validating it 
+ - Includes logic for handling errors in user input 
+ - Utilizes Python REPL to execute python code
+[0m
+2023-04-29 17:07:49 - PARSERO - [32m[40mINFO[0m - File:base.py
+Code:
+"""Python agent."""
+
+from typing import Any, Optional
+
+from langchain.agents.agent import AgentExecutor
+Summary:
+Implements the AgentExecutor class, which is responsible for executing an agent
+ - Defines a create_python_agent() function that takes in an LLM and PythonREPLTool object to construct a python agent
+ - Uses ZeroShotAgent.create_prompt() to generate a prompt from the given tools 
+ - Constructs an LLMChain with the given LLM and prompt 
+ - Creates a ZeroShotAgent using the allowed tools and other keyword arguments 
+[0m
+2023-04-29 17:07:49 - PARSERO - [32m[40mINFO[0m - File:prompt.py
+Code:
+# flake8: noqa
+
+PREFIX = """You are an agent designed to write and execute python code to answer questions.
+You have access to a python REPL, which you can use to execute python code.
+If you get an error, debug your code and try again.
+Summary:
+Uses a moving window approach to chunk the code
+ - Contains functions for prompting user input and validating it 
+ - Includes logic for handling errors in user input 
+ - Utilizes Python REPL to execute python code
+[0m
+2023-04-29 17:43:58 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/tools/python
+Using 30 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 17:43:58 - SOTA_Logger - [31m[40mERROR[0m - Unexpected error: 'code'[0m
+2023-04-29 17:44:09 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/tools/python
+Using 30 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 17:44:09 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 0[0m
+2023-04-29 17:44:09 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 3517[0m
+2023-04-29 17:44:09 - index_codebase - [32m[40mINFO[0m - New DF has 2 rows with 3517 tokens[0m
+2023-04-29 17:44:10 - Indexing codebase - [32m[40mINFO[0m - Indexed 1 rows with 765 tokens
+  file_name                                          file_path  ... code_total_tokens                                     code_embedding
+1   tool.py  /Users/clockcoin/parsero/langchain/langchain/t...  ...               765  [-0.015975171700119972, -0.004842389840632677,...
+
+[1 rows x 6 columns][0m
+2023-04-29 17:44:10 - Indexing codebase - [32m[40mINFO[0m - Indexed 1 rows[0m
+2023-04-29 17:44:10 - SOTA_Logger - [32m[40mINFO[0m - Generating summary...[0m
+2023-04-29 17:44:10 - SOTA_Logger - [32m[40mINFO[0m - Writing summary...[0m
+2023-04-29 17:44:10 - Summary Logger - [32m[40mINFO[0m - Token length is 1690 for /Users/clockcoin/parsero/langchain/langchain/tools/python/tool.py chunk[0m
+2023-04-29 17:44:10 - SOTA_Logger - [32m[40mINFO[0m - Saving embedding summary to /Users/clockcoin/parsero/langchain/langchain/tools/python[0m
+2023-04-29 17:44:10 - SOTA_Logger - [32m[40mINFO[0m - Processing summaries[0m
+2023-04-29 17:44:10 - SOTA_Logger - [32m[40mINFO[0m - Embeddings saved to Usersclockcoinparserolangchainlangchaintoolspythonpkl[0m
+2023-04-29 17:44:23 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 17:44:23 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 17:44:23 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 17:46:07 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/tools/python
+Using 30 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 17:46:07 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 0[0m
+2023-04-29 17:46:07 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 3517[0m
+2023-04-29 17:46:07 - index_codebase - [32m[40mINFO[0m - New DF has 2 rows with 3517 tokens[0m
+2023-04-29 17:46:08 - Indexing codebase - [32m[40mINFO[0m - Indexed 1 rows with 765 tokens
+  file_name                                          file_path  ... code_total_tokens                                     code_embedding
+1   tool.py  /Users/clockcoin/parsero/langchain/langchain/t...  ...               765  [-0.015975171700119972, -0.004842389840632677,...
+
+[1 rows x 6 columns][0m
+2023-04-29 17:46:08 - Indexing codebase - [32m[40mINFO[0m - Indexed 1 rows[0m
+2023-04-29 17:46:08 - SOTA_Logger - [32m[40mINFO[0m - Generating summary...[0m
+2023-04-29 17:46:08 - SOTA_Logger - [32m[40mINFO[0m - Writing summary...[0m
+2023-04-29 17:46:08 - Summary Logger - [32m[40mINFO[0m - Token length is 1690 for /Users/clockcoin/parsero/langchain/langchain/tools/python/tool.py chunk[0m
+2023-04-29 17:46:08 - SOTA_Logger - [32m[40mINFO[0m - Saving embedding summary to /Users/clockcoin/parsero/langchain/langchain/tools/python[0m
+2023-04-29 17:46:08 - SOTA_Logger - [32m[40mINFO[0m - Processing summaries[0m
+2023-04-29 17:46:08 - SOTA_Logger - [32m[40mINFO[0m - Embeddings saved to Usersclockcoinparserolangchainlangchaintoolspythonpkl[0m
+2023-04-29 17:46:11 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 17:46:12 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 17:46:12 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 17:47:47 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/tools/python
+Using 30 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 17:47:47 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 0[0m
+2023-04-29 17:47:47 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 3517[0m
+2023-04-29 17:47:47 - index_codebase - [32m[40mINFO[0m - New DF has 2 rows with 3517 tokens[0m
+2023-04-29 17:47:47 - Indexing codebase - [32m[40mINFO[0m - Indexed 1 rows with 765 tokens
+  file_name                                          file_path  ... code_total_tokens                                     code_embedding
+1   tool.py  /Users/clockcoin/parsero/langchain/langchain/t...  ...               765  [-0.016023335978388786, -0.004911354742944241,...
+
+[1 rows x 6 columns][0m
+2023-04-29 17:47:47 - Indexing codebase - [32m[40mINFO[0m - Indexed 1 rows[0m
+2023-04-29 17:47:47 - SOTA_Logger - [32m[40mINFO[0m - Generating summary...[0m
+2023-04-29 17:47:47 - SOTA_Logger - [32m[40mINFO[0m - Writing summary...[0m
+2023-04-29 17:47:47 - Summary Logger - [32m[40mINFO[0m - Token length is 1690 for /Users/clockcoin/parsero/langchain/langchain/tools/python/tool.py chunk[0m
+2023-04-29 17:47:47 - SOTA_Logger - [32m[40mINFO[0m - Saving embedding summary to /Users/clockcoin/parsero/langchain/langchain/tools/python[0m
+2023-04-29 17:47:47 - SOTA_Logger - [32m[40mINFO[0m - Processing summaries[0m
+2023-04-29 17:47:47 - SOTA_Logger - [32m[40mINFO[0m - Embeddings saved to Usersclockcoinparserolangchainlangchaintoolspythonpkl[0m
+2023-04-29 17:47:55 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 17:47:55 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 17:47:55 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 17:47:55 - PARSERO - [31m[40mERROR[0m - Error found: 'DataFrame' object has no attribute 'concat'[0m
+2023-04-29 17:49:17 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/tools/python
+Using 30 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 17:49:17 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 0[0m
+2023-04-29 17:49:17 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 3517[0m
+2023-04-29 17:49:17 - index_codebase - [32m[40mINFO[0m - New DF has 2 rows with 3517 tokens[0m
+2023-04-29 17:49:17 - Indexing codebase - [32m[40mINFO[0m - Indexed 1 rows with 765 tokens
+  file_name                                          file_path  ... code_total_tokens                                     code_embedding
+1   tool.py  /Users/clockcoin/parsero/langchain/langchain/t...  ...               765  [-0.015975171700119972, -0.004842389840632677,...
+
+[1 rows x 6 columns][0m
+2023-04-29 17:49:17 - Indexing codebase - [32m[40mINFO[0m - Indexed 1 rows[0m
+2023-04-29 17:49:17 - SOTA_Logger - [32m[40mINFO[0m - Generating summary...[0m
+2023-04-29 17:49:17 - SOTA_Logger - [32m[40mINFO[0m - Writing summary...[0m
+2023-04-29 17:49:17 - Summary Logger - [32m[40mINFO[0m - Token length is 1690 for /Users/clockcoin/parsero/langchain/langchain/tools/python/tool.py chunk[0m
+2023-04-29 17:49:18 - SOTA_Logger - [32m[40mINFO[0m - Saving embedding summary to /Users/clockcoin/parsero/langchain/langchain/tools/python[0m
+2023-04-29 17:49:18 - SOTA_Logger - [32m[40mINFO[0m - Processing summaries[0m
+2023-04-29 17:49:18 - SOTA_Logger - [32m[40mINFO[0m - Embeddings saved to Usersclockcoinparserolangchainlangchaintoolspythonpkl[0m
+2023-04-29 17:49:24 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 17:49:24 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 17:49:24 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 17:49:24 - PARSERO - [31m[40mERROR[0m - Error found: 'DataFrame' object has no attribute 'concat'[0m
+2023-04-29 17:50:02 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/tools/python
+Using 30 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 17:50:02 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 0[0m
+2023-04-29 17:50:02 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 3517[0m
+2023-04-29 17:50:02 - index_codebase - [32m[40mINFO[0m - New DF has 2 rows with 3517 tokens[0m
+2023-04-29 17:50:03 - Indexing codebase - [32m[40mINFO[0m - Indexed 1 rows with 765 tokens
+  file_name                                          file_path  ... code_total_tokens                                     code_embedding
+1   tool.py  /Users/clockcoin/parsero/langchain/langchain/t...  ...               765  [-0.015975171700119972, -0.004842389840632677,...
+
+[1 rows x 6 columns][0m
+2023-04-29 17:50:03 - Indexing codebase - [32m[40mINFO[0m - Indexed 1 rows[0m
+2023-04-29 17:50:03 - SOTA_Logger - [32m[40mINFO[0m - Generating summary...[0m
+2023-04-29 17:50:03 - SOTA_Logger - [32m[40mINFO[0m - Writing summary...[0m
+2023-04-29 17:50:03 - Summary Logger - [32m[40mINFO[0m - Token length is 1690 for /Users/clockcoin/parsero/langchain/langchain/tools/python/tool.py chunk[0m
+2023-04-29 17:50:03 - SOTA_Logger - [32m[40mINFO[0m - Saving embedding summary to /Users/clockcoin/parsero/langchain/langchain/tools/python[0m
+2023-04-29 17:50:03 - SOTA_Logger - [32m[40mINFO[0m - Processing summaries[0m
+2023-04-29 17:50:03 - SOTA_Logger - [32m[40mINFO[0m - Embeddings saved to Usersclockcoinparserolangchainlangchaintoolspythonpkl[0m
+2023-04-29 17:50:13 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 17:50:13 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 17:50:13 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 17:50:13 - PARSERO - [31m[40mERROR[0m - Error found: 'DataFrame' object has no attribute 'concat'[0m
+2023-04-29 17:50:42 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/tools/python
+Using 30 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 17:50:42 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 0[0m
+2023-04-29 17:50:42 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 3517[0m
+2023-04-29 17:50:42 - index_codebase - [32m[40mINFO[0m - New DF has 2 rows with 3517 tokens[0m
+2023-04-29 17:50:42 - Indexing codebase - [32m[40mINFO[0m - Indexed 1 rows with 765 tokens
+  file_name                                          file_path  ... code_total_tokens                                     code_embedding
+1   tool.py  /Users/clockcoin/parsero/langchain/langchain/t...  ...               765  [-0.015975171700119972, -0.004842389840632677,...
+
+[1 rows x 6 columns][0m
+2023-04-29 17:50:42 - Indexing codebase - [32m[40mINFO[0m - Indexed 1 rows[0m
+2023-04-29 17:50:42 - SOTA_Logger - [32m[40mINFO[0m - Generating summary...[0m
+2023-04-29 17:50:42 - SOTA_Logger - [32m[40mINFO[0m - Writing summary...[0m
+2023-04-29 17:50:42 - Summary Logger - [32m[40mINFO[0m - Token length is 1690 for /Users/clockcoin/parsero/langchain/langchain/tools/python/tool.py chunk[0m
+2023-04-29 17:50:42 - SOTA_Logger - [32m[40mINFO[0m - Saving embedding summary to /Users/clockcoin/parsero/langchain/langchain/tools/python[0m
+2023-04-29 17:50:42 - SOTA_Logger - [32m[40mINFO[0m - Processing summaries[0m
+2023-04-29 17:50:42 - SOTA_Logger - [32m[40mINFO[0m - Embeddings saved to Usersclockcoinparserolangchainlangchaintoolspythonpkl[0m
+2023-04-29 17:50:49 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 17:50:49 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 17:50:49 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 17:51:10 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 17:51:10 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 17:51:10 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 17:51:10 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 17:51:10 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 17:51:10 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 17:51:48 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/tools/python
+Using 30 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 17:51:48 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 0[0m
+2023-04-29 17:51:48 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 3517[0m
+2023-04-29 17:51:48 - index_codebase - [32m[40mINFO[0m - New DF has 2 rows with 3517 tokens[0m
+2023-04-29 17:51:48 - Indexing codebase - [32m[40mINFO[0m - Indexed 1 rows with 765 tokens
+  file_name                                          file_path  ... code_total_tokens                                     code_embedding
+1   tool.py  /Users/clockcoin/parsero/langchain/langchain/t...  ...               765  [-0.016023335978388786, -0.004911354742944241,...
+
+[1 rows x 6 columns][0m
+2023-04-29 17:51:48 - Indexing codebase - [32m[40mINFO[0m - Indexed 1 rows[0m
+2023-04-29 17:51:48 - SOTA_Logger - [32m[40mINFO[0m - Generating summary...[0m
+2023-04-29 17:51:48 - SOTA_Logger - [32m[40mINFO[0m - Writing summary...[0m
+2023-04-29 17:51:48 - Summary Logger - [32m[40mINFO[0m - Token length is 1690 for /Users/clockcoin/parsero/langchain/langchain/tools/python/tool.py chunk[0m
+2023-04-29 17:51:49 - SOTA_Logger - [32m[40mINFO[0m - Saving embedding summary to /Users/clockcoin/parsero/langchain/langchain/tools/python[0m
+2023-04-29 17:51:49 - SOTA_Logger - [32m[40mINFO[0m - Processing summaries[0m
+2023-04-29 17:51:49 - SOTA_Logger - [32m[40mINFO[0m - Embeddings saved to Usersclockcoinparserolangchainlangchaintoolspythonpkl[0m
+2023-04-29 17:51:55 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 17:51:55 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 17:51:55 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 17:53:14 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 17:53:14 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 17:53:17 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/tools/python
+Using 30 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 17:53:17 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 0[0m
+2023-04-29 17:53:17 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 3517[0m
+2023-04-29 17:53:17 - index_codebase - [32m[40mINFO[0m - New DF has 2 rows with 3517 tokens[0m
+2023-04-29 17:53:17 - Indexing codebase - [32m[40mINFO[0m - Indexed 1 rows with 765 tokens
+  file_name                                          file_path  ... code_total_tokens                                     code_embedding
+1   tool.py  /Users/clockcoin/parsero/langchain/langchain/t...  ...               765  [-0.015975171700119972, -0.004842389840632677,...
+
+[1 rows x 6 columns][0m
+2023-04-29 17:53:17 - Indexing codebase - [32m[40mINFO[0m - Indexed 1 rows[0m
+2023-04-29 17:53:17 - SOTA_Logger - [32m[40mINFO[0m - Generating summary...[0m
+2023-04-29 17:53:17 - SOTA_Logger - [32m[40mINFO[0m - Writing summary...[0m
+2023-04-29 17:53:17 - Summary Logger - [32m[40mINFO[0m - Token length is 1690 for /Users/clockcoin/parsero/langchain/langchain/tools/python/tool.py chunk[0m
+2023-04-29 17:53:17 - SOTA_Logger - [32m[40mINFO[0m - Saving embedding summary to /Users/clockcoin/parsero/langchain/langchain/tools/python[0m
+2023-04-29 17:53:17 - SOTA_Logger - [32m[40mINFO[0m - Processing summaries[0m
+2023-04-29 17:53:17 - SOTA_Logger - [32m[40mINFO[0m - Embeddings saved to Usersclockcoinparserolangchainlangchaintoolspythonpkl[0m
+2023-04-29 17:53:20 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 17:53:20 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 17:53:20 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 17:55:13 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 17:55:13 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 17:55:14 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 17:55:14 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 17:55:14 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 17:55:14 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 17:55:17 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/tools/python
+Using 30 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 17:55:17 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 0[0m
+2023-04-29 17:55:17 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 3517[0m
+2023-04-29 17:55:17 - index_codebase - [32m[40mINFO[0m - New DF has 2 rows with 3517 tokens[0m
+2023-04-29 17:55:17 - Indexing codebase - [32m[40mINFO[0m - Indexed 1 rows with 765 tokens
+  file_name                                          file_path  ... code_total_tokens                                     code_embedding
+1   tool.py  /Users/clockcoin/parsero/langchain/langchain/t...  ...               765  [-0.016023335978388786, -0.004911354742944241,...
+
+[1 rows x 6 columns][0m
+2023-04-29 17:55:17 - Indexing codebase - [32m[40mINFO[0m - Indexed 1 rows[0m
+2023-04-29 17:55:17 - SOTA_Logger - [32m[40mINFO[0m - Generating summary...[0m
+2023-04-29 17:55:17 - SOTA_Logger - [32m[40mINFO[0m - Writing summary...[0m
+2023-04-29 17:55:17 - Summary Logger - [32m[40mINFO[0m - Token length is 1690 for /Users/clockcoin/parsero/langchain/langchain/tools/python/tool.py chunk[0m
+2023-04-29 17:55:17 - SOTA_Logger - [32m[40mINFO[0m - Saving embedding summary to /Users/clockcoin/parsero/langchain/langchain/tools/python[0m
+2023-04-29 17:55:17 - SOTA_Logger - [32m[40mINFO[0m - Processing summaries[0m
+2023-04-29 17:55:17 - SOTA_Logger - [32m[40mINFO[0m - Embeddings saved to Usersclockcoinparserolangchainlangchaintoolspythonpkl[0m
+2023-04-29 17:55:21 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 17:55:21 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 17:55:21 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 17:57:44 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/tools/interaction
+Using 30 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 17:57:44 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 43[0m
+2023-04-29 17:57:44 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 681[0m
+2023-04-29 17:57:44 - index_codebase - [32m[40mINFO[0m - New DF has 2 rows with 724 tokens[0m
+2023-04-29 17:57:45 - Indexing codebase - [32m[40mINFO[0m - Indexed 2 rows with 170 tokens
+     file_name                                          file_path  ... code_total_tokens                                     code_embedding
+0  __init__.py  /Users/clockcoin/parsero/langchain/langchain/t...  ...                 8  [-0.021281873807311058, 0.017270183190703392, ...
+1      tool.py  /Users/clockcoin/parsero/langchain/langchain/t...  ...               162  [-0.007868331857025623, -0.008497798815369606,...
+
+[2 rows x 6 columns][0m
+2023-04-29 17:57:45 - Indexing codebase - [32m[40mINFO[0m - Indexed 2 rows[0m
+2023-04-29 17:57:45 - SOTA_Logger - [32m[40mINFO[0m - Generating summary...[0m
+2023-04-29 17:57:45 - SOTA_Logger - [32m[40mINFO[0m - Writing summary...[0m
+2023-04-29 17:57:45 - Summary Logger - [32m[40mINFO[0m - Token length is 179 for /Users/clockcoin/parsero/langchain/langchain/tools/interaction/__init__.py chunk[0m
+2023-04-29 17:57:48 - Summary Logger - [32m[40mINFO[0m - Token length is 485 for /Users/clockcoin/parsero/langchain/langchain/tools/interaction/tool.py chunk[0m
+2023-04-29 17:57:51 - SOTA_Logger - [32m[40mINFO[0m - Saving embedding summary to /Users/clockcoin/parsero/langchain/langchain/tools/interaction[0m
+2023-04-29 17:57:51 - SOTA_Logger - [32m[40mINFO[0m - Processing summaries[0m
+2023-04-29 17:57:51 - SOTA_Logger - [32m[40mINFO[0m - Embeddings saved to Usersclockcoinparserolangchainlangchaintoolsinteractionpkl[0m
+2023-04-29 17:58:01 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 17:58:02 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 17:58:02 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 17:58:02 - PARSERO - [32m[40mINFO[0m - File:__init__.py
+Code:
+"""Tools for interacting with the user."""
+Summary:
+Implements a moving window approach to parsing code
+[0m
+2023-04-29 17:58:02 - PARSERO - [32m[40mINFO[0m - File:tool.py
+Code:
+"""Tools for interacting with the user."""
+Summary:
+Implements a BaseTool class
+[0m
+2023-04-29 17:59:08 - SOTA_Logger - [31m[40mERROR[0m - Unexpected error: [0m

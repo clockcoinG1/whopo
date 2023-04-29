@@ -113,13 +113,18 @@ def main():
             while True:
                 ask = input(f"\n{TerminalColors.OKCYAN}USER:{TerminalColors.ENDC} ")
                 result = df_search_sum(df, ask, n=n, n_lines=context)
-                chatbot(df, f"Context from embeddings: {result}\nUSER: {ask}")
+                chatbot(
+                    df,
+                    f"Context from embeddings: {result}\nUSER: {ask}",
+                    n=n,
+                )
 
     except ValueError as e:
         logger.error(f"Error: {e}")
         sys.exit(1)
     except Exception as e:
         logger.error(f"Unexpected error: {e}")
+    finally:
         sys.exit(1)
 
 

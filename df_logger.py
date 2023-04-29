@@ -7,9 +7,9 @@ def setup_logger(name="PARSERO", log_level=logging.DEBUG, log_file="parsero.log"
     logger = logging.getLogger(name)
     logger.setLevel(log_level)
 
-    # Create a console handler with colored output
-    console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setLevel(log_level)
+    # Create a handler to log messages to the console
+    # console_handler = logging.StreamHandler()
+    # console_handler.setLevel(log_level)
 
     # Create a file handler to log messages to a file
     file_handler = logging.FileHandler(log_file)
@@ -44,10 +44,10 @@ def setup_logger(name="PARSERO", log_level=logging.DEBUG, log_file="parsero.log"
         style="%",
     )
 
-    console_handler.setFormatter(formatter)
+    # console_handler.setFormatter(formatter)
     file_handler.setFormatter(formatter)
 
-    logger.addHandler(console_handler)
+    # logger.addHandler(console_handler)
     logger.addHandler(file_handler)
 
     return logger

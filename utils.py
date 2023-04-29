@@ -100,6 +100,7 @@ def index_codebase(df: pd.DataFrame, col_name: str) -> pd.DataFrame:
         df[f"{col_name}_embedding"] = df[f"{col_name}"].apply(
             lambda x: get_embedding(x, engine="text-embedding-ada-002") if x else None
         )
+        logger.info(f"Indexed {len(df)} rows with {df[f'{col_name}_total_tokens'].sum()} tokens\n{df.head(n=5)}")
         return df
     except Exception as e:
         logger.error(f"Error indexing codebase: {e}")

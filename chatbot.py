@@ -260,7 +260,7 @@ def df_search_sum(df, summary_query, n=10, pprint=True, n_lines=20):
         logger.log(1, "Sorting results")
         indexes = abs(n // 2)
         res = df.sort_values('summary_similarities', ascending=False).head()
-        res = res.append(df.sort_values('code_similarities', ascending=False).head(indexes))
+        res2 = df.sort_values('code_similarities', ascending=False).head(indexes)
         res_str = ""
         if pprint:
             for r in res.iterrows():
@@ -272,7 +272,7 @@ def df_search_sum(df, summary_query, n=10, pprint=True, n_lines=20):
         return res_str
     except Exception as e:
         logger.error(f"Error found: {e}")
-        return f"Error found: {e}"
+        raise e
 
 
 """ The agents in the provided codebase are designed to interact with an environment, perform actions, and learn from their experiences. They are built using various techniques, including reinforcement learning and deep neural networks. Here's a high-level overview of how these agents work:
