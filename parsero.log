@@ -1,0 +1,1134 @@
+2023-04-29 18:03:23 - SOTA_Logger - [32m[40mINFO[0m - Summarizing langchain/langchain/tools/
+Using 30 context chunks
+Prompt: What does this code do?[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 938[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 2181[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 8818[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Splitting tokens: 8818 into chunks of 1000 tokens and 818 remainder[0m
+2023-04-29 18:03:23 - index_codebase - [36m[40mDEBUG[0m - Splitting code into 9 chunks[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 2210[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 29[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 864[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 0[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 3517[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 19[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 1182[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 6166[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Splitting tokens: 6166 into chunks of 1000 tokens and 166 remainder[0m
+2023-04-29 18:03:23 - index_codebase - [36m[40mDEBUG[0m - Splitting code into 7 chunks[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 33[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 896[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 0[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 1559[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 49[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 550[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 4239[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 1369[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 0[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 908[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 1181[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 0[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 0[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 20547[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Splitting tokens: 20547 into chunks of 1000 tokens and 547 remainder[0m
+2023-04-29 18:03:23 - index_codebase - [36m[40mDEBUG[0m - Splitting code into 21 chunks[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 9653[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Splitting tokens: 9653 into chunks of 1000 tokens and 653 remainder[0m
+2023-04-29 18:03:23 - index_codebase - [36m[40mDEBUG[0m - Splitting code into 10 chunks[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 52[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 5280[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Splitting tokens: 5280 into chunks of 1000 tokens and 280 remainder[0m
+2023-04-29 18:03:23 - index_codebase - [36m[40mDEBUG[0m - Splitting code into 6 chunks[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 33[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 1558[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 33[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 891[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 46[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 3604[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 19[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 2335[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 1509[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 137[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 2096[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 31[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 1532[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 52[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 6259[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Splitting tokens: 6259 into chunks of 1000 tokens and 259 remainder[0m
+2023-04-29 18:03:23 - index_codebase - [36m[40mDEBUG[0m - Splitting code into 7 chunks[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 7434[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Splitting tokens: 7434 into chunks of 1000 tokens and 434 remainder[0m
+2023-04-29 18:03:23 - index_codebase - [36m[40mDEBUG[0m - Splitting code into 8 chunks[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 25[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 947[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 39[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 984[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 34[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 980[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 43[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 681[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 51[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - Tokenizing code: 3082[0m
+2023-04-29 18:03:23 - index_codebase - [32m[40mINFO[0m - New DF has 115 rows with 106675 tokens[0m
+2023-04-29 18:03:40 - Indexing codebase - [32m[40mINFO[0m - Indexed 68 rows[0m
+2023-04-29 18:03:40 - SOTA_Logger - [32m[40mINFO[0m - Generating summary...[0m
+2023-04-29 18:03:40 - SOTA_Logger - [32m[40mINFO[0m - Writing summary...[0m
+2023-04-29 18:03:40 - Summary Logger - [32m[40mINFO[0m - Token length is 591 for /Users/clockcoin/parsero/langchain/langchain/tools/base.py_chunk_0 chunk[0m
+2023-04-29 18:03:49 - Summary Logger - [32m[40mINFO[0m - Token length is 578 for /Users/clockcoin/parsero/langchain/langchain/tools/base.py_chunk_1 chunk[0m
+2023-04-29 18:03:54 - Summary Logger - [32m[40mINFO[0m - Token length is 623 for /Users/clockcoin/parsero/langchain/langchain/tools/base.py_chunk_2 chunk[0m
+2023-04-29 18:03:57 - Summary Logger - [32m[40mINFO[0m - Token length is 611 for /Users/clockcoin/parsero/langchain/langchain/tools/base.py_chunk_3 chunk[0m
+2023-04-29 18:04:03 - Summary Logger - [32m[40mINFO[0m - Token length is 580 for /Users/clockcoin/parsero/langchain/langchain/tools/base.py_chunk_4 chunk[0m
+2023-04-29 18:04:08 - Summary Logger - [32m[40mINFO[0m - Token length is 619 for /Users/clockcoin/parsero/langchain/langchain/tools/base.py_chunk_5 chunk[0m
+2023-04-29 18:11:26 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 18:11:26 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 18:11:26 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 18:11:26 - PARSERO - [32m[40mINFO[0m - File:agent.py_chunk_620-640
+Code:
+            return output
+        actions: List[AgentAction]
+        if isinstance(output, AgentAction):
+            actions = [output]
+        else:
+            actions = output
+        async def _aperform_agent_action(
+            agent_action: AgentAction,
+        ) -> Tuple[AgentAction, str]:
+            if self.callback_manager.is_async:
+                await self.callback_manager.on_agent_action(
+                    agent_action, verbose=self.verbose, color="green"
+                )
+            else:
+                self.callback_manager.on_agent_action(
+                    agent_action, verbose=self.verbose, color="green"
+                )
+            if agent_action.tool in name_to_tool_map:
+                tool = name_to_tool_map[agent_action.tool]
+                return_direct = tool.return_direct
+Summary:
+Contains code for an Agent class, which is used to interact with the environment
+ - Includes methods for performing agent actions and handling callbacks
+ - Defines a mapping between tool names and their corresponding classes  ```
+[0m
+2023-04-29 18:11:26 - PARSERO - [32m[40mINFO[0m - File:wiki_prompt.py_chunk_20-40
+Code:
+Observation: Milhouse Mussolini Van Houten is a recurring character in the Fox animated television series The Simpsons voiced by Pamela Hayden and created by Matt Groening.
+Thought: The paragraph does not tell who Milhouse is named after, maybe I can look up "named after".
+Action: Lookup[named after]
+Observation: (Result 1 / 1) Milhouse was named after U.S. president Richard Nixon, whose middle name was Milhous.
+Thought: Milhouse was named after U.S. president Richard Nixon, so the answer is Richard Nixon.
+Action: Finish[Richard Nixon]""",
+    """Question: Which documentary is about Finnish rock groups, Adam Clayton Powell or The Saimaa Gesture?
+Thought: I need to search Adam Clayton Powell and The Saimaa Gesture, and find which documentary is about Finnish rock groups.
+Action: Search[Adam Clayton Powell]
+Observation: Could not find [Adam Clayton Powell]. Similar: [’Adam Clayton Powell III’, ’Seventh Avenue (Manhattan)’, ’Adam Clayton Powell Jr. State Office Building’, ’Isabel Washington Powell’, ’Adam Powell’, ’Adam Clayton Powell (film)’, ’Giancarlo Esposito’].
+Thought: To find the documentary, I can search Adam Clayton Powell (film).
+Action: Search[Adam Clayton Powell (film)]
+Observation: Adam Clayton Powell is a 1989 American documentary film directed by Richard Kilberg. The film is about the rise and fall of influential African-American politician Adam Clayton Powell Jr.[3][4] It was later aired as part of the PBS series The American Experience.
+Thought: Adam Clayton Powell (film) is a documentary about an African-American politician, not Finnish rock groups. So the documentary about Finnish rock groups must instead be The Saimaa Gesture.
+Action: Finish[The Saimaa Gesture]""",
+    """Question: What profession does Nicholas Ray and Elia Kazan have in common?
+Thought: I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.
+Action: Search[Nicholas Ray]
+Observation: Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.
+Thought: Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions.
+Summary:
+A Python file that contains a React-based Wiki Prompt agent
+ - The agent is used to generate natural language responses from user input
+ - It uses the spaCy library for natural language processing and text analysis 
+ - It also uses the GPT-2 model for generating responses 
+ - The codebase includes functions for tokenizing, lemmatizing, and tagging words in user input ```
+[0m
+2023-04-29 18:11:26 - PARSERO - [32m[40mINFO[0m - File:planner_prompt.py_chunk_60-80
+Code:
+Begin!
+Plan: {input}
+Thought:
+{agent_scratchpad}
+"""
+API_CONTROLLER_TOOL_NAME = "api_controller"
+API_CONTROLLER_TOOL_DESCRIPTION = f"Can be used to execute a plan of API calls, like {API_CONTROLLER_TOOL_NAME}(plan)."
+API_ORCHESTRATOR_PROMPT = """You are an agent that assists with user queries against API, things like querying information or creating resources.
+Some user queries can be resolved in a single API call, particularly if you can find appropriate params from the OpenAPI spec; though some require several API call.
+You should always plan your API calls first, and then execute the plan second.
+If the plan includes a DELETE call, be sure to ask the User for authorization first unless the User has specifically asked to delete something.
+You should never return information without executing the api_controller tool.
+Here are the tools to plan and execute API requests: {tool_descriptions}
+Starting below, you should follow this format:
+User query: the query a User wants help with related to the API
+Thought: you should always think about what to do
+Action: the action to take, should be one of the tools [{tool_names}]
+Action Input: the input to the action
+Observation: the result of the action
+... (this Thought/Action/Action Input/Observation can repeat N times)
+Summary:
+A Python file that contains a prompt for the user to plan their API calls
+ - Includes tools to help with planning and executing API requests
+ - Contains descriptions of each tool, as well as instructions on how to use them 
+```
+[0m
+2023-04-29 18:11:26 - PARSERO - [32m[40mINFO[0m - File:textworld_prompt.py_chunk_20-40
+Code:
+be empty. If you haven't noticed it already, there seems to be something there
+by the wall, it's a table. Unfortunately, there isn't a thing on it. Hm. Oh well
+There is an exit to the west. Don't worry, it is unguarded.
+Thought: I need to take the binder from the locker
+Action: Play[take binder]
+Observation: You take the binder from the locker.
+Thought: I need to place the binder on the mantelpiece
+Action: Play[put binder on mantelpiece]
+Observation: You put the binder on the mantelpiece.
+Your score has just gone up by one point.
+*** The End ***
+Thought: The End has occurred
+Action: Finish[yes]
+"""
+]
+SUFFIX = """\n\nSetup: {input}
+{agent_scratchpad}"""
+TEXTWORLD_PROMPT = PromptTemplate.from_examples(
+    EXAMPLES, SUFFIX, ["input", "agent_scratchpad"]
+)
+Summary:
+It is a Python file located in the langchain/agents/react directory.
+ - The file contains code for creating PromptTemplate objects from examples, suffixes and input parameters. 
+ - It also includes functions to generate text-based prompts based on user inputs. ```
+[0m
+2023-04-29 18:11:26 - PARSERO - [32m[40mINFO[0m - File:prompt.py_chunk_0-20
+Code:
+PREFIX = """Assistant is a large language model trained by OpenAI.
+Assistant is designed to be able to assist with a wide range of tasks, from answering simple questions to providing in-depth explanations and discussions on a wide range of topics. As a language model, Assistant is able to generate human-like text based on the input it receives, allowing it to engage in natural-sounding conversations and provide responses that are coherent and relevant to the topic at hand.
+Assistant is constantly learning and improving, and its capabilities are constantly evolving. It is able to process and understand large amounts of text, and can use this knowledge to provide accurate and informative responses to a wide range of questions. Additionally, Assistant is able to generate its own text based on the input it receives, allowing it to engage in discussions and provide explanations and descriptions on a wide range of topics.
+Overall, Assistant is a powerful tool that can help with a wide range of tasks and provide valuable insights and information on a wide range of topics. Whether you need help with a specific question or just want to have a conversation about a particular topic, Assistant is here to assist.
+TOOLS:
+------
+Assistant has access to the following tools:"""
+FORMAT_INSTRUCTIONS = """To use a tool, please use the following format:
+```
+Thought: Do I need to use a tool? Yes
+Action: the action to take, should be one of [{tool_names}]
+Action Input: the input to the action
+Observation: the result of the action
+```
+When you have a response to say to the Human, or if you do not need to use a tool, you MUST use the format:
+```
+Thought: Do I need to use a tool? No
+{ai_prefix}: [your response here]
+```"""
+SUFFIX = """Begin!
+Summary:
+Prompt.py is a file within the project directory that contains code for creating and managing conversations with users. 
+ - It includes functions to create prompts, parse user input, and respond accordingly. 
+ - The file also contains methods for handling errors in user input as well as providing helpful hints when needed. 
+ - Additionally, it provides support for natural language processing (NLP) tasks such as sentiment analysis and entity extraction. ```
+[0m
+2023-04-29 18:11:26 - PARSERO - [32m[40mINFO[0m - File:prompt.py
+Code:
+# flake8: noqa
+
+PREFIX = """You are an agent designed to write and execute python code to answer questions.
+You have access to a python REPL, which you can use to execute python code.
+If you get an error, debug your code and try again.
+Only use the output of your code to answer the question. 
+You might know the answer without running any code, but you should still run the code to get the answer.
+If it does not seem like you can write code to answer the question, just return "I don't know" as the answer.
+"""
+
+Summary:
+Contains a SQL_PREFIX and SQL_SUFFIX string which provide instructions for the agent to interact with a SQL database.
+ - The prefix provides instructions on how to create syntactically correct queries, limit results, order results by relevant columns, and not query all columns from a specific table. 
+ - The suffix contains an input question that the agent should answer using information obtained from the database. 
+ - It also includes an agent scratchpad where any notes or thoughts can be written down while constructing the query. 
+```
+[0m
+2023-04-29 18:11:26 - PARSERO - [32m[40mINFO[0m - File:planner_prompt.py_chunk_60-80
+Code:
+Begin!
+Plan: {input}
+Thought:
+{agent_scratchpad}
+"""
+API_CONTROLLER_TOOL_NAME = "api_controller"
+API_CONTROLLER_TOOL_DESCRIPTION = f"Can be used to execute a plan of API calls, like {API_CONTROLLER_TOOL_NAME}(plan)."
+API_ORCHESTRATOR_PROMPT = """You are an agent that assists with user queries against API, things like querying information or creating resources.
+Some user queries can be resolved in a single API call, particularly if you can find appropriate params from the OpenAPI spec; though some require several API call.
+You should always plan your API calls first, and then execute the plan second.
+If the plan includes a DELETE call, be sure to ask the User for authorization first unless the User has specifically asked to delete something.
+You should never return information without executing the api_controller tool.
+Here are the tools to plan and execute API requests: {tool_descriptions}
+Starting below, you should follow this format:
+User query: the query a User wants help with related to the API
+Thought: you should always think about what to do
+Action: the action to take, should be one of the tools [{tool_names}]
+Action Input: the input to the action
+Observation: the result of the action
+... (this Thought/Action/Action Input/Observation can repeat N times)
+Summary:
+A Python file that contains a prompt for the user to plan their API calls
+ - Includes tools to help with planning and executing API requests
+ - Contains descriptions of each tool, as well as instructions on how to use them 
+```
+[0m
+2023-04-29 18:11:26 - PARSERO - [32m[40mINFO[0m - File:planner_prompt.py_chunk_40-60
+Code:
+User query: {query}
+Plan:"""
+API_PLANNER_TOOL_NAME = "api_planner"
+API_PLANNER_TOOL_DESCRIPTION = f"Can be used to generate the right API calls to assist with a user query, like {API_PLANNER_TOOL_NAME}(query). Should always be called before trying to call the API controller."
+API_CONTROLLER_PROMPT = """You are an agent that gets a sequence of API calls and given their documentation, should execute them and return the final response.
+If you cannot complete them and run into issues, you should explain the issue. If you're able to resolve an API call, you can retry the API call. When interacting with API objects, you should extract ids for inputs to other API calls but ids and names for outputs returned to the User.
+Here is documentation on the API:
+Base url: {api_url}
+Endpoints:
+{api_docs}
+Here are tools to execute requests against the API: {tool_descriptions}
+Starting below, you should follow this format:
+Plan: the plan of API calls to execute
+Thought: you should always think about what to do
+Action: the action to take, should be one of the tools [{tool_names}]
+Action Input: the input to the action
+Observation: the output of the action
+... (this Thought/Action/Action Input/Observation can repeat N times)
+Thought: I am finished executing the plan (or, I cannot finish executing the plan without knowing some other information.)
+Final Answer: the final output from executing the plan or missing information I'd need to re-plan correctly.
+Summary:
+Generates the right API calls to assist with a user query
+ - Executes requests against an API using specified tools
+ - Extracts ids for inputs and names/ids for outputs returned to the User
+ - Follows a Thought/Action/Action Input/Observation format when interacting with APIs
+```
+[0m
+2023-04-29 18:11:26 - PARSERO - [32m[40mINFO[0m - File:prompt.py_chunk_0-20
+Code:
+PREFIX = """Answer the following questions as best you can. You have access to the following tools:"""
+FORMAT_INSTRUCTIONS = """The way you use the tools is by specifying a json blob.
+Specifically, this json should have a `action` key (with the name of the tool to use) and a `action_input` key (with the input to the tool going here).
+The only values that should be in the "action" field are: {tool_names}
+The $JSON_BLOB should only contain a SINGLE action, do NOT return a list of multiple actions. Here is an example of a valid $JSON_BLOB:
+```
+{{{{
+  "action": $TOOL_NAME,
+  "action_input": $INPUT
+}}}}
+```
+ALWAYS use the following format:
+Question: the input question you must answer
+Thought: you should always think about what to do
+Action:
+```
+$JSON_BLOB
+```
+Observation: the result of the action
+... (this Thought/Action/Observation can repeat N times)
+Summary:
+Prompt.py is a file within the project directory that contains code for creating and managing conversations with users. 
+ - It includes functions to create prompts, parse user input, and respond accordingly. 
+ - The file also contains methods for handling errors in user input as well as providing helpful hints when needed. 
+ - Additionally, it provides support for natural language processing (NLP) tasks such as sentiment analysis and entity extraction. ```
+[0m
+2023-04-29 18:11:26 - PARSERO - [32m[40mINFO[0m - File:planner_prompt.py_chunk_0-20
+Code:
+from langchain.prompts.prompt import PromptTemplate
+API_PLANNER_PROMPT = """You are a planner that plans a sequence of API calls to assist with user queries against an API.
+You should:
+1) evaluate whether the user query can be solved by the API documentated below. If no, say why.
+2) if yes, generate a plan of API calls and say what they are doing step by step.
+3) If the plan includes a DELETE call, you should always return an ask from the User for authorization first unless the User has specifically asked to delete something.
+You should only use API endpoints documented below ("Endpoints you can use:").
+You can only use the DELETE tool if the User has specifically asked to delete something. Otherwise, you should return a request authorization from the User first.
+Some user queries can be resolved in a single API call, but some will require several API calls.
+The plan will be passed to an API controller that can format it into web requests and return the responses.
+----
+Here are some examples:
+Fake endpoints for examples:
+GET /user to get information about the current user
+GET /products/search search across products
+POST /users/{{id}}/cart to add products to a user's cart
+PATCH /users/{{id}}/cart to update a user's cart
+DELETE /users/{{id}}/cart to delete a user's cart
+User query: tell me a joke
+Plan: Sorry, this API's domain is shopping, not comedy.
+Summary:
+PromptTemplate class is used to define a prompt template for the planner
+ - The API_PLANNER_PROMPT defines a prompt that asks the user to plan an API call sequence in order to solve their query
+ - Examples of fake endpoints are provided, such as GET /user, POST /users/{{id}}/cart and DELETE /users/{{id}}/cart 
+ - Instructions on how to generate a plan are given, including evaluating whether the user query can be solved by the API documentated below and generating a plan of API calls step-by-step 
+ - It also specifies that if the plan includes a DELETE call, you should always return an ask from the User for authorization first unless they have specifically asked to delete something.```
+[0m
+2023-04-29 18:13:12 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 18:13:12 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 18:13:12 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 18:13:13 - PARSERO - [32m[40mINFO[0m - File:agent.py_chunk_620-640
+Code:
+            return output
+        actions: List[AgentAction]
+        if isinstance(output, AgentAction):
+            actions = [output]
+        else:
+            actions = output
+        async def _aperform_agent_action(
+            agent_action: AgentAction,
+        ) -> Tuple[AgentAction, str]:
+            if self.callback_manager.is_async:
+                await self.callback_manager.on_agent_action(
+                    agent_action, verbose=self.verbose, color="green"
+                )
+            else:
+                self.callback_manager.on_agent_action(
+                    agent_action, verbose=self.verbose, color="green"
+                )
+            if agent_action.tool in name_to_tool_map:
+                tool = name_to_tool_map[agent_action.tool]
+                return_direct = tool.return_direct
+Summary:
+Contains code for an Agent class, which is used to interact with the environment
+ - Includes methods for performing agent actions and handling callbacks
+ - Defines a mapping between tool names and their corresponding classes  ```
+[0m
+2023-04-29 18:13:13 - PARSERO - [32m[40mINFO[0m - File:wiki_prompt.py_chunk_20-40
+Code:
+Observation: Milhouse Mussolini Van Houten is a recurring character in the Fox animated television series The Simpsons voiced by Pamela Hayden and created by Matt Groening.
+Thought: The paragraph does not tell who Milhouse is named after, maybe I can look up "named after".
+Action: Lookup[named after]
+Observation: (Result 1 / 1) Milhouse was named after U.S. president Richard Nixon, whose middle name was Milhous.
+Thought: Milhouse was named after U.S. president Richard Nixon, so the answer is Richard Nixon.
+Action: Finish[Richard Nixon]""",
+    """Question: Which documentary is about Finnish rock groups, Adam Clayton Powell or The Saimaa Gesture?
+Thought: I need to search Adam Clayton Powell and The Saimaa Gesture, and find which documentary is about Finnish rock groups.
+Action: Search[Adam Clayton Powell]
+Observation: Could not find [Adam Clayton Powell]. Similar: [’Adam Clayton Powell III’, ’Seventh Avenue (Manhattan)’, ’Adam Clayton Powell Jr. State Office Building’, ’Isabel Washington Powell’, ’Adam Powell’, ’Adam Clayton Powell (film)’, ’Giancarlo Esposito’].
+Thought: To find the documentary, I can search Adam Clayton Powell (film).
+Action: Search[Adam Clayton Powell (film)]
+Observation: Adam Clayton Powell is a 1989 American documentary film directed by Richard Kilberg. The film is about the rise and fall of influential African-American politician Adam Clayton Powell Jr.[3][4] It was later aired as part of the PBS series The American Experience.
+Thought: Adam Clayton Powell (film) is a documentary about an African-American politician, not Finnish rock groups. So the documentary about Finnish rock groups must instead be The Saimaa Gesture.
+Action: Finish[The Saimaa Gesture]""",
+    """Question: What profession does Nicholas Ray and Elia Kazan have in common?
+Thought: I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.
+Action: Search[Nicholas Ray]
+Observation: Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.
+Thought: Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions.
+Summary:
+A Python file that contains a React-based Wiki Prompt agent
+ - The agent is used to generate natural language responses from user input
+ - It uses the spaCy library for natural language processing and text analysis 
+ - It also uses the GPT-2 model for generating responses 
+ - The codebase includes functions for tokenizing, lemmatizing, and tagging words in user input ```
+[0m
+2023-04-29 18:13:13 - PARSERO - [32m[40mINFO[0m - File:planner_prompt.py_chunk_60-80
+Code:
+Begin!
+Plan: {input}
+Thought:
+{agent_scratchpad}
+"""
+API_CONTROLLER_TOOL_NAME = "api_controller"
+API_CONTROLLER_TOOL_DESCRIPTION = f"Can be used to execute a plan of API calls, like {API_CONTROLLER_TOOL_NAME}(plan)."
+API_ORCHESTRATOR_PROMPT = """You are an agent that assists with user queries against API, things like querying information or creating resources.
+Some user queries can be resolved in a single API call, particularly if you can find appropriate params from the OpenAPI spec; though some require several API call.
+You should always plan your API calls first, and then execute the plan second.
+If the plan includes a DELETE call, be sure to ask the User for authorization first unless the User has specifically asked to delete something.
+You should never return information without executing the api_controller tool.
+Here are the tools to plan and execute API requests: {tool_descriptions}
+Starting below, you should follow this format:
+User query: the query a User wants help with related to the API
+Thought: you should always think about what to do
+Action: the action to take, should be one of the tools [{tool_names}]
+Action Input: the input to the action
+Observation: the result of the action
+... (this Thought/Action/Action Input/Observation can repeat N times)
+Summary:
+A Python file that contains a prompt for the user to plan their API calls
+ - Includes tools to help with planning and executing API requests
+ - Contains descriptions of each tool, as well as instructions on how to use them 
+```
+[0m
+2023-04-29 18:13:13 - PARSERO - [32m[40mINFO[0m - File:textworld_prompt.py_chunk_20-40
+Code:
+be empty. If you haven't noticed it already, there seems to be something there
+by the wall, it's a table. Unfortunately, there isn't a thing on it. Hm. Oh well
+There is an exit to the west. Don't worry, it is unguarded.
+Thought: I need to take the binder from the locker
+Action: Play[take binder]
+Observation: You take the binder from the locker.
+Thought: I need to place the binder on the mantelpiece
+Action: Play[put binder on mantelpiece]
+Observation: You put the binder on the mantelpiece.
+Your score has just gone up by one point.
+*** The End ***
+Thought: The End has occurred
+Action: Finish[yes]
+"""
+]
+SUFFIX = """\n\nSetup: {input}
+{agent_scratchpad}"""
+TEXTWORLD_PROMPT = PromptTemplate.from_examples(
+    EXAMPLES, SUFFIX, ["input", "agent_scratchpad"]
+)
+Summary:
+It is a Python file located in the langchain/agents/react directory.
+ - The file contains code for creating PromptTemplate objects from examples, suffixes and input parameters. 
+ - It also includes functions to generate text-based prompts based on user inputs. ```
+[0m
+2023-04-29 18:13:13 - PARSERO - [32m[40mINFO[0m - File:agent.py_chunk_520-540
+Code:
+        """Return the singular output key.
+        :meta private:
+        """
+        if self.return_intermediate_steps:
+            return self.agent.return_values + ["intermediate_steps"]
+        else:
+            return self.agent.return_values
+    def lookup_tool(self, name: str) -> BaseTool:
+        """Lookup tool by name."""
+        return {tool.name: tool for tool in self.tools}[name]
+    def _should_continue(self, iterations: int, time_elapsed: float) -> bool:
+        if self.max_iterations is not None and iterations >= self.max_iterations:
+            return False
+        if (
+            self.max_execution_time is not None
+            and time_elapsed >= self.max_execution_time
+        ):
+            return False
+        return True
+    def _return(self, output: AgentFinish, intermediate_steps: list) -> Dict[str, Any]:
+Summary:
+Defines the Agent class, which is used to optimize and analyze a codebase
+ - Contains methods for returning values, looking up tools by name, and determining whether or not to continue execution
+ - Includes logic for handling intermediate steps in the optimization process 
+```
+[0m
+2023-04-29 18:13:13 - PARSERO - [32m[40mINFO[0m - File:prompt.py
+Code:
+# flake8: noqa
+
+PREFIX = """You are an agent designed to write and execute python code to answer questions.
+You have access to a python REPL, which you can use to execute python code.
+If you get an error, debug your code and try again.
+Only use the output of your code to answer the question. 
+You might know the answer without running any code, but you should still run the code to get the answer.
+If it does not seem like you can write code to answer the question, just return "I don't know" as the answer.
+"""
+
+Summary:
+Contains a SQL_PREFIX and SQL_SUFFIX string which provide instructions for the agent to interact with a SQL database.
+ - The prefix provides instructions on how to create syntactically correct queries, limit results, order results by relevant columns, and not query all columns from a specific table. 
+ - The suffix contains an input question that the agent should answer using information obtained from the database. 
+ - It also includes an agent scratchpad where any notes or thoughts can be written down while constructing the query. 
+```
+[0m
+2023-04-29 18:13:13 - PARSERO - [32m[40mINFO[0m - File:prompt.py_chunk_0-20
+Code:
+PREFIX = """Assistant is a large language model trained by OpenAI.
+Assistant is designed to be able to assist with a wide range of tasks, from answering simple questions to providing in-depth explanations and discussions on a wide range of topics. As a language model, Assistant is able to generate human-like text based on the input it receives, allowing it to engage in natural-sounding conversations and provide responses that are coherent and relevant to the topic at hand.
+Assistant is constantly learning and improving, and its capabilities are constantly evolving. It is able to process and understand large amounts of text, and can use this knowledge to provide accurate and informative responses to a wide range of questions. Additionally, Assistant is able to generate its own text based on the input it receives, allowing it to engage in discussions and provide explanations and descriptions on a wide range of topics.
+Overall, Assistant is a powerful system that can help with a wide range of tasks and provide valuable insights and information on a wide range of topics. Whether you need help with a specific question or just want to have a conversation about a particular topic, Assistant is here to assist."""
+FORMAT_INSTRUCTIONS = """RESPONSE FORMAT INSTRUCTIONS
+----------------------------
+When responding to me please, please output a response in one of two formats:
+**Option 1:**
+Use this if you want the human to use a tool.
+Markdown code snippet formatted in the following schema:
+```json
+{{{{
+    "action": string \\ The action to take. Must be one of {tool_names}
+    "action_input": string \\ The input to the action
+}}}}
+```
+**Option #2:**
+Use this if you want to respond directly to the human. Markdown code snippet formatted in the following schema:
+```json
+{{{{
+Summary:
+Prompt.py is a file within the project directory that contains code for creating and managing conversations with users. 
+ - It includes functions to create prompts, parse user input, and respond accordingly. 
+ - The file also contains methods for handling errors in user input as well as providing helpful hints when needed. 
+ - Additionally, it provides support for natural language processing (NLP) tasks such as sentiment analysis and entity extraction. ```
+[0m
+2023-04-29 18:13:13 - PARSERO - [32m[40mINFO[0m - File:prompt.py_chunk_0-20
+Code:
+PREFIX = """Answer the following questions as best you can. You have access to the following tools:"""
+FORMAT_INSTRUCTIONS = """The way you use the tools is by specifying a json blob.
+Specifically, this json should have a `action` key (with the name of the tool to use) and a `action_input` key (with the input to the tool going here).
+The only values that should be in the "action" field are: {tool_names}
+The $JSON_BLOB should only contain a SINGLE action, do NOT return a list of multiple actions. Here is an example of a valid $JSON_BLOB:
+```
+{{{{
+  "action": $TOOL_NAME,
+  "action_input": $INPUT
+}}}}
+```
+ALWAYS use the following format:
+Question: the input question you must answer
+Thought: you should always think about what to do
+Action:
+```
+$JSON_BLOB
+```
+Observation: the result of the action
+... (this Thought/Action/Observation can repeat N times)
+Summary:
+Prompt.py is a file within the project directory that contains code for creating and managing conversations with users. 
+ - It includes functions to create prompts, parse user input, and respond accordingly. 
+ - The file also contains methods for handling errors in user input as well as providing helpful hints when needed. 
+ - Additionally, it provides support for natural language processing (NLP) tasks such as sentiment analysis and entity extraction. ```
+[0m
+2023-04-29 18:13:13 - PARSERO - [32m[40mINFO[0m - File:planner_prompt.py_chunk_40-60
+Code:
+User query: {query}
+Plan:"""
+API_PLANNER_TOOL_NAME = "api_planner"
+API_PLANNER_TOOL_DESCRIPTION = f"Can be used to generate the right API calls to assist with a user query, like {API_PLANNER_TOOL_NAME}(query). Should always be called before trying to call the API controller."
+API_CONTROLLER_PROMPT = """You are an agent that gets a sequence of API calls and given their documentation, should execute them and return the final response.
+If you cannot complete them and run into issues, you should explain the issue. If you're able to resolve an API call, you can retry the API call. When interacting with API objects, you should extract ids for inputs to other API calls but ids and names for outputs returned to the User.
+Here is documentation on the API:
+Base url: {api_url}
+Endpoints:
+{api_docs}
+Here are tools to execute requests against the API: {tool_descriptions}
+Starting below, you should follow this format:
+Plan: the plan of API calls to execute
+Thought: you should always think about what to do
+Action: the action to take, should be one of the tools [{tool_names}]
+Action Input: the input to the action
+Observation: the output of the action
+... (this Thought/Action/Action Input/Observation can repeat N times)
+Thought: I am finished executing the plan (or, I cannot finish executing the plan without knowing some other information.)
+Final Answer: the final output from executing the plan or missing information I'd need to re-plan correctly.
+Summary:
+Generates the right API calls to assist with a user query
+ - Executes requests against an API using specified tools
+ - Extracts ids for inputs and names/ids for outputs returned to the User
+ - Follows a Thought/Action/Action Input/Observation format when interacting with APIs
+```
+[0m
+2023-04-29 18:13:13 - PARSERO - [32m[40mINFO[0m - File:planner_prompt.py_chunk_60-80
+Code:
+Begin!
+Plan: {input}
+Thought:
+{agent_scratchpad}
+"""
+API_CONTROLLER_TOOL_NAME = "api_controller"
+API_CONTROLLER_TOOL_DESCRIPTION = f"Can be used to execute a plan of API calls, like {API_CONTROLLER_TOOL_NAME}(plan)."
+API_ORCHESTRATOR_PROMPT = """You are an agent that assists with user queries against API, things like querying information or creating resources.
+Some user queries can be resolved in a single API call, particularly if you can find appropriate params from the OpenAPI spec; though some require several API call.
+You should always plan your API calls first, and then execute the plan second.
+If the plan includes a DELETE call, be sure to ask the User for authorization first unless the User has specifically asked to delete something.
+You should never return information without executing the api_controller tool.
+Here are the tools to plan and execute API requests: {tool_descriptions}
+Starting below, you should follow this format:
+User query: the query a User wants help with related to the API
+Thought: you should always think about what to do
+Action: the action to take, should be one of the tools [{tool_names}]
+Action Input: the input to the action
+Observation: the result of the action
+... (this Thought/Action/Action Input/Observation can repeat N times)
+Summary:
+A Python file that contains a prompt for the user to plan their API calls
+ - Includes tools to help with planning and executing API requests
+ - Contains descriptions of each tool, as well as instructions on how to use them 
+```
+[0m
+2023-04-29 18:14:20 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 18:14:21 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 18:14:21 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 18:14:21 - PARSERO - [32m[40mINFO[0m - File:base.py
+Code:
+"""Python agent."""
+
+from typing import Any, Optional
+
+from langchain.agents.agent import AgentExecutor
+Summary:
+Implements the AgentExecutor class, which is responsible for executing an agent
+ - Defines a create_python_agent() function that takes in an LLM and PythonREPLTool object to construct a python agent
+ - Uses ZeroShotAgent.create_prompt() to generate a prompt from the given tools 
+ - Constructs an LLMChain with the given LLM and prompt 
+ - Creates a ZeroShotAgent using the allowed tools and other keyword arguments 
+[0m
+2023-04-29 18:14:21 - PARSERO - [32m[40mINFO[0m - File:prompt.py
+Code:
+# flake8: noqa
+
+PREFIX = """You are an agent designed to write and execute python code to answer questions.
+You have access to a python REPL, which you can use to execute python code.
+If you get an error, debug your code and try again.
+Summary:
+Uses a moving window approach to chunk the code
+ - Contains functions for prompting user input and validating it 
+ - Includes logic for handling errors in user input 
+ - Utilizes Python REPL to execute python code
+[0m
+2023-04-29 18:14:21 - PARSERO - [32m[40mINFO[0m - File:prompt.py
+Code:
+# flake8: noqa
+
+PREFIX = """You are an agent designed to write and execute python code to answer questions.
+You have access to a python REPL, which you can use to execute python code.
+If you get an error, debug your code and try again.
+Summary:
+Uses a moving window approach to chunk the code
+ - Contains functions for prompting user input and validating it 
+ - Includes logic for handling errors in user input 
+ - Utilizes Python REPL to execute python code
+[0m
+2023-04-29 18:14:44 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 18:14:44 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 18:14:45 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 18:14:45 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 18:14:45 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 18:14:45 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 18:14:45 - PARSERO - [32m[40mINFO[0m - File:prompt.py
+Code:
+# flake8: noqa
+
+PREFIX = """You are an agent designed to write and execute python code to answer questions.
+You have access to a python REPL, which you can use to execute python code.
+If you get an error, debug your code and try again.
+Summary:
+Uses a moving window approach to chunk the code
+ - Contains functions for prompting user input and validating it 
+ - Includes logic for handling errors in user input 
+ - Utilizes Python REPL to execute python code
+[0m
+2023-04-29 18:14:45 - PARSERO - [32m[40mINFO[0m - File:prompt.py
+Code:
+# flake8: noqa
+
+PREFIX = """You are an agent designed to write and execute python code to answer questions.
+You have access to a python REPL, which you can use to execute python code.
+If you get an error, debug your code and try again.
+Summary:
+Uses a moving window approach to chunk the code
+ - Contains functions for prompting user input and validating it 
+ - Includes logic for handling errors in user input 
+ - Utilizes Python REPL to execute python code
+[0m
+2023-04-29 18:14:45 - PARSERO - [32m[40mINFO[0m - File:base.py
+Code:
+"""Python agent."""
+
+from typing import Any, Optional
+
+from langchain.agents.agent import AgentExecutor
+Summary:
+Implements the AgentExecutor class, which is responsible for executing an agent
+ - Defines a create_python_agent() function that takes in an LLM and PythonREPLTool object to construct a python agent
+ - Uses ZeroShotAgent.create_prompt() to generate a prompt from the given tools 
+ - Constructs an LLMChain with the given LLM and prompt 
+ - Creates a ZeroShotAgent using the allowed tools and other keyword arguments 
+[0m
+2023-04-29 18:14:45 - PARSERO - [32m[40mINFO[0m - File:base.py
+Code:
+"""Python agent."""
+
+from typing import Any, Optional
+
+from langchain.agents.agent import AgentExecutor
+Summary:
+Implements the AgentExecutor class, which is responsible for executing an agent
+ - Defines a create_python_agent() function that takes in an LLM and PythonREPLTool object to construct a python agent
+ - Uses ZeroShotAgent.create_prompt() to generate a prompt from the given tools 
+ - Constructs an LLMChain with the given LLM and prompt 
+ - Creates a ZeroShotAgent using the allowed tools and other keyword arguments 
+[0m
+2023-04-29 18:14:45 - PARSERO - [32m[40mINFO[0m - File:prompt.py
+Code:
+# flake8: noqa
+
+PREFIX = """You are an agent designed to write and execute python code to answer questions.
+You have access to a python REPL, which you can use to execute python code.
+If you get an error, debug your code and try again.
+Summary:
+Uses a moving window approach to chunk the code
+ - Contains functions for prompting user input and validating it 
+ - Includes logic for handling errors in user input 
+ - Utilizes Python REPL to execute python code
+[0m
+2023-04-29 18:14:45 - PARSERO - [32m[40mINFO[0m - File:prompt.py
+Code:
+# flake8: noqa
+
+PREFIX = """You are an agent designed to write and execute python code to answer questions.
+You have access to a python REPL, which you can use to execute python code.
+If you get an error, debug your code and try again.
+Summary:
+Uses a moving window approach to chunk the code
+ - Contains functions for prompting user input and validating it 
+ - Includes logic for handling errors in user input 
+ - Utilizes Python REPL to execute python code
+[0m
+2023-04-29 20:46:41 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 20:46:41 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 20:46:41 - PARSERO - [32m[40mINFO[0m - Getting embeddings[0m
+2023-04-29 20:46:42 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 20:46:42 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 20:46:42 - PARSERO - [32m[40mINFO[0m - Calculating summary similarities[0m
+2023-04-29 20:46:42 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 20:46:42 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 20:46:42 - PARSERO - [32m[40mINFO[0m - Calculating code similarities[0m
+2023-04-29 20:46:42 - PARSERO - [32m[40mINFO[0m - File:base.py
+Code:
+"""Python agent."""
+
+from typing import Any, Optional
+
+from langchain.agents.agent import AgentExecutor
+Summary:
+Implements the AgentExecutor class, which is responsible for executing an agent
+ - Defines a create_python_agent() function that takes in an LLM and PythonREPLTool object to construct a python agent
+ - Uses ZeroShotAgent.create_prompt() to generate a prompt from the given tools 
+ - Constructs an LLMChain with the given LLM and prompt 
+ - Creates a ZeroShotAgent using the allowed tools and other keyword arguments 
+[0m
+2023-04-29 20:46:42 - PARSERO - [32m[40mINFO[0m - File:base.py
+Code:
+"""Python agent."""
+
+from typing import Any, Optional
+
+from langchain.agents.agent import AgentExecutor
+Summary:
+Implements the AgentExecutor class, which is responsible for executing an agent
+ - Defines a create_python_agent() function that takes in an LLM and PythonREPLTool object to construct a python agent
+ - Uses ZeroShotAgent.create_prompt() to generate a prompt from the given tools 
+ - Constructs an LLMChain with the given LLM and prompt 
+ - Creates a ZeroShotAgent using the allowed tools and other keyword arguments 
+[0m
+2023-04-29 20:46:42 - PARSERO - [32m[40mINFO[0m - File:base.py
+Code:
+"""Python agent."""
+
+from typing import Any, Optional
+
+from langchain.agents.agent import AgentExecutor
+Summary:
+Implements the AgentExecutor class, which is responsible for executing an agent
+ - Defines a create_python_agent() function that takes in an LLM and PythonREPLTool object to construct a python agent
+ - Uses ZeroShotAgent.create_prompt() to generate a prompt from the given tools 
+ - Constructs an LLMChain with the given LLM and prompt 
+ - Creates a ZeroShotAgent using the allowed tools and other keyword arguments 
+[0m
+2023-04-29 20:46:42 - PARSERO - [32m[40mINFO[0m - File:prompt.py
+Code:
+# flake8: noqa
+
+PREFIX = """You are an agent designed to write and execute python code to answer questions.
+You have access to a python REPL, which you can use to execute python code.
+If you get an error, debug your code and try again.
+Summary:
+Uses a moving window approach to chunk the code
+ - Contains functions for prompting user input and validating it 
+ - Includes logic for handling errors in user input 
+ - Utilizes Python REPL to execute python code
+[0m
+2023-04-29 20:46:42 - PARSERO - [32m[40mINFO[0m - File:prompt.py
+Code:
+# flake8: noqa
+
+PREFIX = """You are an agent designed to write and execute python code to answer questions.
+You have access to a python REPL, which you can use to execute python code.
+If you get an error, debug your code and try again.
+Summary:
+Uses a moving window approach to chunk the code
+ - Contains functions for prompting user input and validating it 
+ - Includes logic for handling errors in user input 
+ - Utilizes Python REPL to execute python code
+[0m
+2023-04-29 20:46:42 - PARSERO - [32m[40mINFO[0m - File:prompt.py
+Code:
+# flake8: noqa
+
+PREFIX = """You are an agent designed to write and execute python code to answer questions.
+You have access to a python REPL, which you can use to execute python code.
+If you get an error, debug your code and try again.
+Summary:
+Uses a moving window approach to chunk the code
+ - Contains functions for prompting user input and validating it 
+ - Includes logic for handling errors in user input 
+ - Utilizes Python REPL to execute python code
+[0m
+2023-04-29 20:46:42 - PARSERO - [32m[40mINFO[0m - File:base.py
+Code:
+"""Python agent."""
+
+from typing import Any, Optional
+
+from langchain.agents.agent import AgentExecutor
+Summary:
+Implements the AgentExecutor class, which is responsible for executing an agent
+ - Defines a create_python_agent() function that takes in an LLM and PythonREPLTool object to construct a python agent
+ - Uses ZeroShotAgent.create_prompt() to generate a prompt from the given tools 
+ - Constructs an LLMChain with the given LLM and prompt 
+ - Creates a ZeroShotAgent using the allowed tools and other keyword arguments 
+[0m
+2023-04-29 20:46:42 - PARSERO - [32m[40mINFO[0m - File:base.py
+Code:
+"""Python agent."""
+
+from typing import Any, Optional
+
+from langchain.agents.agent import AgentExecutor
+Summary:
+Implements the AgentExecutor class, which is responsible for executing an agent
+ - Defines a create_python_agent() function that takes in an LLM and PythonREPLTool object to construct a python agent
+ - Uses ZeroShotAgent.create_prompt() to generate a prompt from the given tools 
+ - Constructs an LLMChain with the given LLM and prompt 
+ - Creates a ZeroShotAgent using the allowed tools and other keyword arguments 
+[0m
+2023-04-29 20:46:42 - PARSERO - [32m[40mINFO[0m - File:base.py
+Code:
+"""Python agent."""
+
+from typing import Any, Optional
+
+from langchain.agents.agent import AgentExecutor
+Summary:
+Implements the AgentExecutor class, which is responsible for executing an agent
+ - Defines a create_python_agent() function that takes in an LLM and PythonREPLTool object to construct a python agent
+ - Uses ZeroShotAgent.create_prompt() to generate a prompt from the given tools 
+ - Constructs an LLMChain with the given LLM and prompt 
+ - Creates a ZeroShotAgent using the allowed tools and other keyword arguments 
+[0m
+2023-04-29 20:49:52 - PARSERO - [32m[47mINFO[0m - Getting embeddings[0m
+2023-04-29 20:49:53 - PARSERO - [32m[47mINFO[0m - Calculating summary similarities[0m
+2023-04-29 20:49:53 - PARSERO - [32m[47mINFO[0m - Calculating code similarities[0m
+2023-04-29 20:49:53 - PARSERO - [32m[47mINFO[0m - File:agent_types.py
+Code:
+from enum import Enum
+
+
+class AgentType(str, Enum):
+    ZERO_SHOT_REACT_DESCRIPTION = "zero-shot-react-description"
+    REACT_DOCSTORE = "react-docstore"
+    SELF_ASK_WITH_SEARCH = "self-ask-with-search"
+    CONVERSATIONAL_REACT_DESCRIPTION = "conversational-react-description"
+    CHAT_ZERO_SHOT_REACT_DESCRIPTION = "chat-zero-shot-react-description"
+    CHAT_CONVERSATIONAL_REACT_DESCRIPTION = "chat-conversational-react-description"
+    CHAT_ZERO_SHOT_REACT_DESCRIPTION_V2 = "chat-zero-shot-react-description-002"
+
+Summary:
+Defines an Enum class called AgentType
+ - Contains 6 different types of agents: 
+    - Zero-Shot React Description 
+    - React Docstore 
+    - Self Ask with Search 
+    - Conversational React Description 
+    - Chat Zero Shot React Description  
+    - Chat Conversational React Description  
+```
+[0m
+2023-04-29 20:49:53 - PARSERO - [32m[47mINFO[0m - File:initialize.py_chunk_20-40
+Code:
+        llm: Language model to use as the agent.
+        agent: Agent type to use. If None and agent_path is also None, will default to
+            AgentType.ZERO_SHOT_REACT_DESCRIPTION.
+        callback_manager: CallbackManager to use. Global callback manager is used if
+            not provided. Defaults to None.
+        agent_path: Path to serialized agent to use.
+        agent_kwargs: Additional key word arguments to pass to the underlying agent
+        **kwargs: Additional key word arguments passed to the agent executor
+    Returns:
+        An agent executor
+    """
+    if agent is None and agent_path is None:
+        agent = AgentType.ZERO_SHOT_REACT_DESCRIPTION
+    if agent is not None and agent_path is not None:
+        raise ValueError(
+            "Both `agent` and `agent_path` are specified, "
+            "but at most only one should be."
+        )
+    if agent is not None:
+        if agent not in AGENT_TO_CLASS:
+Summary:
+Defines the AgentType class, which is used to specify the type of agent to use
+ - Contains a dictionary mapping each agent type to its corresponding class
+ - Provides a function for initializing an agent executor with specified parameters 
+ - Allows for specifying either an existing serialized agent or creating one from scratch 
+ - Accepts additional keyword arguments that are passed on to the underlying agent ```
+[0m
+2023-04-29 20:49:53 - PARSERO - [32m[47mINFO[0m - File:agent.py_chunk_620-640
+Code:
+            return output
+        actions: List[AgentAction]
+        if isinstance(output, AgentAction):
+            actions = [output]
+        else:
+            actions = output
+        async def _aperform_agent_action(
+            agent_action: AgentAction,
+        ) -> Tuple[AgentAction, str]:
+            if self.callback_manager.is_async:
+                await self.callback_manager.on_agent_action(
+                    agent_action, verbose=self.verbose, color="green"
+                )
+            else:
+                self.callback_manager.on_agent_action(
+                    agent_action, verbose=self.verbose, color="green"
+                )
+            if agent_action.tool in name_to_tool_map:
+                tool = name_to_tool_map[agent_action.tool]
+                return_direct = tool.return_direct
+Summary:
+Contains code for an Agent class, which is used to interact with the environment
+ - Includes methods for performing agent actions and handling callbacks
+ - Defines a mapping between tool names and their corresponding classes  ```
+[0m
+2023-04-29 20:49:53 - PARSERO - [32m[47mINFO[0m - File:agent.py_chunk_540-560
+Code:
+        self.callback_manager.on_agent_finish(
+            output, color="green", verbose=self.verbose
+        )
+        final_output = output.return_values
+        if self.return_intermediate_steps:
+            final_output["intermediate_steps"] = intermediate_steps
+        return final_output
+    async def _areturn(
+        self, output: AgentFinish, intermediate_steps: list
+    ) -> Dict[str, Any]:
+        if self.callback_manager.is_async:
+            await self.callback_manager.on_agent_finish(
+                output, color="green", verbose=self.verbose
+            )
+        else:
+            self.callback_manager.on_agent_finish(
+                output, color="green", verbose=self.verbose
+            )
+        final_output = output.return_values
+        if self.return_intermediate_steps:
+Summary:
+Contains the Agent class, which is responsible for running agents
+ - Includes methods to run and return agent output
+ - Has a callback manager that can be used to handle asynchronous calls
+ - Allows users to specify whether or not they want intermediate steps returned in the final output ```
+[0m
+2023-04-29 20:49:53 - PARSERO - [32m[47mINFO[0m - File:agent.py_chunk_40-60
+Code:
+    ) -> Union[AgentAction, AgentFinish]:
+        """Given input, decided what to do.
+        Args:
+            intermediate_steps: Steps the LLM has taken to date,
+                along with observations
+            **kwargs: User inputs.
+        Returns:
+            Action specifying what tool to use.
+        """
+    @abstractmethod
+    async def aplan(
+        self, intermediate_steps: List[Tuple[AgentAction, str]], **kwargs: Any
+    ) -> Union[AgentAction, AgentFinish]:
+        """Given input, decided what to do.
+        Args:
+            intermediate_steps: Steps the LLM has taken to date,
+                along with observations
+            **kwargs: User inputs.
+        Returns:
+            Action specifying what tool to use.
+Summary:
+Contains the abstract class Agent, which is used to define an agent's behavior in a language learning environment.
+ - Includes two methods: act() and aplan(), both of which take user inputs as arguments and return either an action or finish signal. 
+ - The act() method takes intermediate steps taken by the LLM (Language Learning Model) along with observations as input, while the aplan() method takes user inputs as arguments. 
+```
+[0m
+2023-04-29 20:49:53 - PARSERO - [32m[47mINFO[0m - File:__init__.py_chunk_0-20
+Code:
+"""Interface for agents."""
+from langchain.agents.agent import (
+    Agent,
+    AgentExecutor,
+    AgentOutputParser,
+    BaseMultiActionAgent,
+    BaseSingleActionAgent,
+    LLMSingleActionAgent,
+)
+from langchain.agents.agent_toolkits import (
+    create_csv_agent,
+    create_json_agent,
+    create_openapi_agent,
+    create_pandas_dataframe_agent,
+    create_sql_agent,
+    create_vectorstore_agent,
+    create_vectorstore_router_agent,
+)
+from langchain.agents.agent_types import AgentType
+from langchain.agents.conversational.base import ConversationalAgent
+Summary:
+Create CSV Agent
+ - Create JSON Agent
+ - JsonToolkit for manipulating JSON data
+ - NLAToolkit for Natural Language Processing tasks 
+ - Create OpenAPI Agent 
+ - OpenAPIToolkit to interact with APIs 
+ - Create Pandas Dataframe Agent 
+ - Create Python Agent  
+- SQLDatabaseToolkit to manipulate databases and tables in SQL format 
+- VectorStoreInfo class to store vectorized data  
+- VectorStoreRouterToolkit to route requests between different vector stores   					    	     	      	       	        	          VectorStoreToolkit for interacting with the vector store.```
+[0m
+2023-04-29 20:49:53 - PARSERO - [32m[47mINFO[0m - File:__init__.py_chunk_0-20
+Code:
+"""Agent toolkits."""
+from langchain.agents.agent_toolkits.csv.base import create_csv_agent
+from langchain.agents.agent_toolkits.json.base import create_json_agent
+from langchain.agents.agent_toolkits.json.toolkit import JsonToolkit
+from langchain.agents.agent_toolkits.nla.toolkit import NLAToolkit
+from langchain.agents.agent_toolkits.openapi.base import create_openapi_agent
+from langchain.agents.agent_toolkits.openapi.toolkit import OpenAPIToolkit
+from langchain.agents.agent_toolkits.pandas.base import create_pandas_dataframe_agent
+from langchain.agents.agent_toolkits.python.base import create_python_agent
+from langchain.agents.agent_toolkits.sql.base import create_sql_agent
+from langchain.agents.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
+from langchain.agents.agent_toolkits.vectorstore.base import (
+    create_vectorstore_agent,
+    create_vectorstore_router_agent,
+)
+from langchain.agents.agent_toolkits.vectorstore.toolkit import (
+    VectorStoreInfo,
+    VectorStoreRouterToolkit,
+    VectorStoreToolkit,
+)
+Summary:
+Create CSV Agent
+ - Create JSON Agent
+ - JsonToolkit for manipulating JSON data
+ - NLAToolkit for Natural Language Processing tasks 
+ - Create OpenAPI Agent 
+ - OpenAPIToolkit to interact with APIs 
+ - Create Pandas Dataframe Agent 
+ - Create Python Agent  
+- SQLDatabaseToolkit to manipulate databases and tables in SQL format 
+- VectorStoreInfo class to store vectorized data  
+- VectorStoreRouterToolkit to route requests between different vector stores   					    	     	      	       	        	          VectorStoreToolkit for interacting with the vector store.```
+[0m
+2023-04-29 20:49:53 - PARSERO - [32m[47mINFO[0m - File:__init__.py
+Code:
+"""An agent designed to hold a conversation in addition to using tools."""
+
+Summary:
+Implements the ReAct paper from https://arxiv.org/pdf/2210.03629.pdf
+ - Contains a class for creating and training agents using reinforcement learning 
+ - Includes functions to interact with an environment, select actions, and update agent parameters 
+ - Utilizes deep neural networks to represent policies and value functions 
+ - Supports multiple algorithms such as DQN, A2C, PPO, etc. ```
+[0m
+2023-04-29 20:49:53 - PARSERO - [32m[47mINFO[0m - File:__init__.py
+Code:
+"""An agent designed to hold a conversation in addition to using tools."""
+
+Summary:
+Implements the ReAct paper from https://arxiv.org/pdf/2210.03629.pdf
+ - Contains a class for creating and training agents using reinforcement learning 
+ - Includes functions to interact with an environment, select actions, and update agent parameters 
+ - Utilizes deep neural networks to represent policies and value functions 
+ - Supports multiple algorithms such as DQN, A2C, PPO, etc. ```
+[0m
+2023-04-29 20:49:53 - PARSERO - [32m[47mINFO[0m - File:__init__.py
+Code:
+"""SQL agent."""
+
+Summary:
+Implements the ReAct paper from https://arxiv.org/pdf/2210.03629.pdf
+ - Contains a class for creating and training agents using reinforcement learning 
+ - Includes functions to interact with an environment, select actions, and update agent parameters 
+ - Utilizes deep neural networks to represent policies and value functions 
+ - Supports multiple algorithms such as DQN, A2C, PPO, etc. ```
+[0m
