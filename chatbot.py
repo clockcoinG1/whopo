@@ -7,7 +7,6 @@ import pandas as pd
 import requests
 import tiktoken
 import tqdm
-from openai.embeddings_utils import cosine_similarity, get_embedding
 
 from constants import (
     EMBEDDING_ENCODING,
@@ -251,11 +250,11 @@ def df_search_sum(df, summary_query, n=10, pprint=True, n_lines=20):
         embedding = get_embedding(engine="text-embedding-ada-002", text=summary_query)
         logger.info("Calculating summary similarities")
         df['summary_similarities'] = df.summary_embedding.apply(
-            lambda x: cosine_similarity(x, embedding) if x is not None else 0.00
+            lambda x: openai.Embedding.create(input=x, model='text-embedding-ada-002') if x is not None else 0.00
         )
         logger.info("Calculating code similarities")
         df['code_similarities'] = df.code_embedding.apply(
-            lambda x: cosine_similarity(x, embedding) if x is not None else 0.00
+            lambda x: openai.Embedding.create(input=x, model='text-embedding-ada-002') if x is not None else 0.00
         )
         logger.log(1, "Sorting results")
         indexes = abs(n // 2)

@@ -2,11 +2,10 @@ import argparse
 import os
 import re
 import sys
-from pathlib import Path
+from pathlib import path
 
 import pandas as pd
 import tiktoken
-from openai.embeddings_utils import get_embedding
 
 from chatbot import chatbot, df_search_sum, generate_summary
 from constants import EMBEDDING_ENCODING
@@ -36,7 +35,7 @@ def process_arguments():
     parser.add_argument(
         '--root',
         type=str,
-        default=f"{os.environ['CODE_EXTRACTOR_DIR']}",
+        default=f"{os.getcwd() if not os.environ['CODE_EXTRACTOR_DIR'] else os.environ['CODE_EXTRACTOR_DIR]}",
         help='Where root of project is or env $CODE_EXTRACTOR_DIR',
     )
     parser.add_argument('-n', type=int, default=10, help='number of context chunks to use')
@@ -106,20 +105,25 @@ def main():
             df = df[df['summary'] != ''].dropna()
             logger.info('Processing summaries')
             df['summary_embedding'] = df['summary'].apply(
-                lambda x: get_embedding(x, engine='text-embedding-ada-002') if x else None
+                lambda x: openai.embeddings.create(input=x, model='text-embedding-ada-002') if x else None
             )
             df.to_pickle(proj_dir_pikl)
             logger.info(f"Embeddings saved to {proj_dir_pikl}")
             while True:
                 ask = input(f"\n{TerminalColors.OKCYAN}USER:{TerminalColors.ENDC} ")
                 result = df_search_sum(df, ask, n=n, n_lines=context)
-                chatbot(df, f"Context from embeddings: {result}\nUSER: {ask}")
+                chatbot(
+                    df,
+                    f"Context from embeddings: {result}\nUSER: {ask}",
+                    n=n,
+                )
 
     except ValueError as e:
         logger.error(f"Error: {e}")
         sys.exit(1)
     except Exception as e:
         logger.error(f"Unexpected error: {e}")
+    finally:
         sys.exit(1)
 
 
