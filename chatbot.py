@@ -144,7 +144,7 @@ def get_tokens(df, colname):
 
 
 def df_search(df, summary_query, n=3, pprint=True):
-    embedding = openai.embeddings.create(engine="text-embedding-ada-002", text=summary_query).data[0].embedding
+    embedding = openai.embeddings.create(model="text-embedding-ada-002", input=summary_query).data[0].embedding
 
     # df['summary_similarities'] = df.summary_embedding.apply(lambda x: cosine_similarity(x, embedding))
     df['code_similarities'] = df.code.apply(lambda x: cosine_similarity(x, embedding))
@@ -246,7 +246,7 @@ def df_search_sum(df, summary_query, n=10, pprint=True, n_lines=20):
     logger = setup_logger()
     try:
         logger.info("Getting embeddings")
-        embedding = openai.embeddings.create(engine="text-embedding-ada-002", text=summary_query).data[0].embedding
+        embedding = openai.embeddings.create(model="text-embedding-ada-002", input=summary_query).data[0].embedding
 
         logger.info("Calculating code similarities")
 

@@ -30,3 +30,35 @@
 2023-11-06 15:56:13 - Splitting code by lines - [32m[47mINFO[0m - Rows: 278[0m
 2023-11-06 15:56:13 - Splitting code by lines - [32m[47mINFO[0m - Columns: 5
 =============================[0m
+2023-11-06 15:57:33 - Indexing codebase - [32m[47mINFO[0m - Indexed 276 rows[0m
+2023-11-06 15:57:33 - PARSERO - [32m[47mINFO[0m - Getting embeddings[0m
+2023-11-06 15:57:33 - PARSERO - [31m[40mERROR[0m - Error found: Embeddings.create() got an unexpected keyword argument 'engine'[0m
+2023-11-06 15:59:12 - Splitting code by lines - [32m[47mINFO[0m - Created new dataframe[0m
+2023-11-06 15:59:12 - Splitting code by lines - [32m[47mINFO[0m - Created new dataframe[0m
+2023-11-06 15:59:12 - Splitting code by lines - [32m[47mINFO[0m - Rows: 278[0m
+2023-11-06 15:59:12 - Splitting code by lines - [32m[47mINFO[0m - Rows: 278[0m
+2023-11-06 15:59:12 - Splitting code by lines - [32m[47mINFO[0m - Columns: 5
+=============================[0m
+2023-11-06 15:59:12 - Splitting code by lines - [32m[47mINFO[0m - Columns: 5
+=============================[0m
+2023-11-06 15:59:13 - Indexing codebase - [32m[47mINFO[0m - Indexed 276 rows[0m
+2023-11-06 15:59:13 - Indexing codebase - [32m[47mINFO[0m - Indexed 276 rows[0m
+2023-11-06 15:59:21 - Splitting code by lines - [32m[47mINFO[0m - Created new dataframe[0m
+2023-11-06 15:59:21 - Splitting code by lines - [32m[47mINFO[0m - Created new dataframe[0m
+2023-11-06 15:59:21 - Splitting code by lines - [32m[47mINFO[0m - Created new dataframe[0m
+2023-11-06 15:59:21 - Splitting code by lines - [32m[47mINFO[0m - Rows: 278[0m
+2023-11-06 15:59:21 - Splitting code by lines - [32m[47mINFO[0m - Rows: 278[0m
+2023-11-06 15:59:21 - Splitting code by lines - [32m[47mINFO[0m - Rows: 278[0m
+2023-11-06 15:59:21 - Splitting code by lines - [32m[47mINFO[0m - Columns: 5
+=============================[0m
+2023-11-06 15:59:21 - Splitting code by lines - [32m[47mINFO[0m - Columns: 5
+=============================[0m
+2023-11-06 15:59:21 - Splitting code by lines - [32m[47mINFO[0m - Columns: 5
+=============================[0m
+2023-11-06 16:00:57 - Indexing codebase - [32m[47mINFO[0m - Indexed 276 rows[0m
+2023-11-06 16:00:57 - Indexing codebase - [32m[47mINFO[0m - Indexed 276 rows[0m
+2023-11-06 16:00:57 - Indexing codebase - [32m[47mINFO[0m - Indexed 276 rows[0m
+2023-11-06 16:00:57 - PARSERO - [32m[47mINFO[0m - Getting embeddings[0m
+2023-11-06 16:00:57 - PARSERO - [32m[47mINFO[0m - Getting embeddings[0m
+2023-11-06 16:00:57 - PARSERO - [31m[40mERROR[0m - Error found: Embeddings.create() got an unexpected keyword argument 'engine'[0m
+2023-11-06 16:00:57 - PARSERO - [31m[40mERROR[0m - Error found: Embeddings.create() got an unexpected keyword argument 'engine'[0m
