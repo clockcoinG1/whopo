@@ -144,17 +144,16 @@ def get_tokens(df, colname):
 
 
 def df_search(df, summary_query, n=3, pprint=True):
-    embedding = get_embedding(engine="text-embedding-ada-002", text=summary_query).data[0].embedding
+    embedding = openai.embeddings.create(engine="text-embedding-ada-002", text=summary_query).data[0].embedding
 
-    df = df.loc[df.summary_embedding.notnull(), 'summary_embedding']
-
-    df['summary_similarities'] = df.summary_embedding.apply(lambda x: cosine_similarity(x, embedding))
+    # df['summary_similarities'] = df.summary_embedding.apply(lambda x: cosine_similarity(x, embedding))
     df['code_similarities'] = df.code.apply(lambda x: cosine_similarity(x, embedding))
+
     res2 = df.sort_values('code_similarities', ascending=False).head(n)
-    res = df.sort_values('summary_similarities', ascending=False).head(n)
+    # res = df.sort_values('summary_similarities', ascending=False).head(n)
     res_str = ""
-    for index, r in res.iterrows():
-        res_str += f"Filename:\n{r[1].file_name}\nSummary:\n{r[1].summary}\n"
+    # for index, r in res.iterrows():
+    #     res_str += f"Filename:\n{r[1].file_name}\nSummary:\n{r[1].summary}\n"
     for index, r in res2.iterrows():
         res_str += f"File:\b{r[1].file_name}\nCode:\n{r[1].code}\n"
     return res
@@ -247,35 +246,28 @@ def df_search_sum(df, summary_query, n=10, pprint=True, n_lines=20):
     logger = setup_logger()
     try:
         logger.info("Getting embeddings")
-        embedding = get_embedding(engine="text-embedding-ada-002", text=summary_query).data[0].embedding
-        logger.info("Calculating summary similarities")
-        df['summary_similarities'] = df.summary_embedding.apply(
-            lambda x: (
-                openai.Embedding.create(input=x, model='text-embedding-ada-002').data[0].embedding
-                if x is not None
-                else 0.00
-            )
-        )
+        embedding = openai.embeddings.create(engine="text-embedding-ada-002", text=summary_query).data[0].embedding
+
         logger.info("Calculating code similarities")
+
         df['code_similarities'] = df.code_embedding.apply(
             lambda x: (
-                openai.Embedding.create(input=x, model='text-embedding-ada-002').data[0].embedding
+                openai.embeddings.create(input=x, model='text-embedding-ada-002').data[0].embedding
                 if x is not None
                 else 0.00
             )
         )
         logger.log(1, "Sorting results")
         indexes = abs(n // 2)
-        res = df.sort_values('summary_similarities', ascending=False).head()
-        res = pd.concat([res, df.sort_values('code_similarities', ascending=False).head(indexes)], ignore_index=True)
+
+        res = df.sort_values('code_similarities', ascending=False).head(indexes)
 
         res_str = ""
         if pprint:
             for r in res.iterrows():
-                summary = "\n".join(r[1].summary.split("\n")[:n_lines])
                 code = "\n".join(r[1].code.split("\n")[:n_lines])
-                logger.info(f"File:{r[1].file_name}\nCode:\n{code}\nSummary:\n{summary}\n")
-                res_str += summary + "\n" + code + "\n\n"
+                logger.info(f"File:{r[1].file_name}\nCode:\n{code}")
+                res_str += code + "\n------\n"
 
         return res_str
     except Exception as e:

@@ -9,7 +9,6 @@ import re
 import openai
 import tiktoken
 
-# from openai.embeddings_utils import get_embedding
 from df_logger import setup_logger
 
 
