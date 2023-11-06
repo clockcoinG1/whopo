@@ -101,7 +101,7 @@ def generate_summary(
             },
         )
         summary = ""
-        print(f"\n\n\x1b[33m{filepath}\x1b[0m", end="\n", flush=True)
+        print(f"\n\n\x1b[33m{filepath}\n{summary}\n\x1b[0m", end="\n", flush=True)
         for line in r.iter_lines():
             data = line.decode("utf-8")
             if data.startswith("data: ") and data != "data: [DONE]":
