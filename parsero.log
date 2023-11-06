@@ -1,1 +1,16 @@
 
+2023-11-06 14:36:16 - SOTA_Logger - [31m[40mERROR[0m - Unexpected error: 'CODE_EXTRACTOR_DIR'[0m
+2023-11-06 14:37:32 - SOTA_Logger - [31m[40mERROR[0m - Unexpected error: 'CODE_EXTRACTOR_DIR'[0m
+2023-11-06 14:38:06 - SOTA_Logger - [32m[47mINFO[0m - Summarizing temp/codex/
+Using 10 context chunks
+Prompt: What does this code do?[0m
+2023-11-06 14:38:06 - SOTA_Logger - [31m[40mERROR[0m - Unexpected error: 'code'[0m
+2023-11-06 14:38:33 - SOTA_Logger - [32m[47mINFO[0m - Summarizing temp/codex/
+Using 10 context chunks
+Prompt: What does this code do?[0m
+2023-11-06 14:38:33 - SOTA_Logger - [31m[40mERROR[0m - Unexpected error: 'code'[0m
+2023-11-06 14:44:42 - Splitting code by lines - [32m[47mINFO[0m - Created new dataframe[0m
+2023-11-06 14:44:42 - Splitting code by lines - [32m[47mINFO[0m - Rows: 278[0m
+2023-11-06 14:44:42 - Splitting code by lines - [32m[47mINFO[0m - Columns: 5
+=============================[0m
+2023-11-06 14:45:57 - Indexing codebase - [32m[47mINFO[0m - Indexed 276 rows[0m

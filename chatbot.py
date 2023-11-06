@@ -144,7 +144,7 @@ def get_tokens(df, colname):
 
 
 def df_search(df, summary_query, n=3, pprint=True):
-    embedding = get_embedding(engine="text-embedding-ada-002", text=summary_query)
+    embedding = get_embedding(engine="text-embedding-ada-002", text=summary_query).data[0].embedding
 
     df = df.loc[df.summary_embedding.notnull(), 'summary_embedding']
 
@@ -247,14 +247,22 @@ def df_search_sum(df, summary_query, n=10, pprint=True, n_lines=20):
     logger = setup_logger()
     try:
         logger.info("Getting embeddings")
-        embedding = get_embedding(engine="text-embedding-ada-002", text=summary_query)
+        embedding = get_embedding(engine="text-embedding-ada-002", text=summary_query).data[0].embedding
         logger.info("Calculating summary similarities")
         df['summary_similarities'] = df.summary_embedding.apply(
-            lambda x: openai.Embedding.create(input=x, model='text-embedding-ada-002') if x is not None else 0.00
+            lambda x: (
+                openai.Embedding.create(input=x, model='text-embedding-ada-002').data[0].embedding
+                if x is not None
+                else 0.00
+            )
         )
         logger.info("Calculating code similarities")
         df['code_similarities'] = df.code_embedding.apply(
-            lambda x: openai.Embedding.create(input=x, model='text-embedding-ada-002') if x is not None else 0.00
+            lambda x: (
+                openai.Embedding.create(input=x, model='text-embedding-ada-002').data[0].embedding
+                if x is not None
+                else 0.00
+            )
         )
         logger.log(1, "Sorting results")
         indexes = abs(n // 2)

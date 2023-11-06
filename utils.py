@@ -8,7 +8,8 @@ from typing import List
 import re
 import openai
 import tiktoken
-#from openai.embeddings_utils import get_embedding
+
+# from openai.embeddings_utils import get_embedding
 from df_logger import setup_logger
 
 
@@ -99,6 +100,8 @@ def index_codebase(df: pd.DataFrame, col_name: str) -> pd.DataFrame:
         df[f"{col_name}_total_tokens"] = [len(code) for code in df[f"{col_name}_tokens"]]
         df[f"{col_name}_embedding"] = df[f"{col_name}"].apply(
             lambda x: openai.embeddings.create(input=x if x is not None else float(0), model='text-embedding-ada-002')
+            .data[0]
+            .embedding
         )
         return df
     except Exception as e:

@@ -2,7 +2,7 @@ import argparse
 import os
 import re
 import sys
-from pathlib import path
+from pathlib import Path
 
 import pandas as pd
 import tiktoken
@@ -35,7 +35,7 @@ def process_arguments():
     parser.add_argument(
         '--root',
         type=str,
-        default=f"{os.getcwd() if not os.environ['CODE_EXTRACTOR_DIR'] else os.environ['CODE_EXTRACTOR_DIR]}",
+        default=f"{os.getcwd()}",
         help='Where root of project is or env $CODE_EXTRACTOR_DIR',
     )
     parser.add_argument('-n', type=int, default=10, help='number of context chunks to use')
@@ -70,8 +70,8 @@ def main():
         args.prompt.strip()
         ext = args.ext
         n = args.n
-        context = args.context
         max_tokens = args.max_tokens
+        context = args.context
         split_by = args.split_by
         if args.P:
             df = pd.read_pickle(args.P)
@@ -81,10 +81,8 @@ def main():
                 result = df_search_sum(df, ask)
                 chatbot(
                     df,
-                    (
-                        f"{TerminalColors.OKGREEN}{result}{TerminalColors.ENDC}\n\n{TerminalColors.OKCYAN}USER:"
-                        f" {ask}{TerminalColors.ENDC}"
-                    ),
+                    f"{TerminalColors.OKGREEN}{result}{TerminalColors.ENDC}\n\n{TerminalColors.OKCYAN}USER:"
+                    f" {ask}{TerminalColors.ENDC}",
                 )
 
         else:
@@ -105,7 +103,9 @@ def main():
             df = df[df['summary'] != ''].dropna()
             logger.info('Processing summaries')
             df['summary_embedding'] = df['summary'].apply(
-                lambda x: openai.embeddings.create(input=x, model='text-embedding-ada-002') if x else None
+                lambda x: (
+                    openai.embeddings.create(input=x, model='text-embedding-ada-002').data[0].embedding if x else None
+                )
             )
             df.to_pickle(proj_dir_pikl)
             logger.info(f"Embeddings saved to {proj_dir_pikl}")
